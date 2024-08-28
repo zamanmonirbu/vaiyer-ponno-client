@@ -1,11 +1,11 @@
 import BannerAndOfferView from "./BannerAndOfferView";
 import CategoryProductView from "./CategoryProductView";
 import FeaturedImage from "./FeaturedImage";
-import MostLovedCategories from "./MostLovedCategories ";
+import MostLovedCategories from "./CategoriesHorizontal ";
 
 const AllProductViews = () => {
     return (
-        <div className="bg-gray-200">
+        <div className="bg-white">
             <MostLovedCategories/>
             <CategoryProductView/>
             <BannerAndOfferView/>

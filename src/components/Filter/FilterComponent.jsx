@@ -1,60 +1,100 @@
-import { useState } from 'react';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCategories } from '../../actions/categoryActions';
+import { getBanners } from '../../actions/bannerActions';
 
-const FilterComponent = () => {
-    const [activeSection, setActiveSection] = useState(null);
-    const [selectedOptions, setSelectedOptions] = useState({});
+const CategoryBanner = () => {
+    const dispatch = useDispatch();
+    const banners = useSelector((state) => state.banner.banners);
+    const categories = useSelector((state) => state.categories.categories);
+    const loading = useSelector((state) => state.categories.loading);
+    const error = useSelector((state) => state.categories.error);
 
-    const toggleSection = (section) => {
-        setActiveSection(activeSection === section ? null : section);
-    };
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [selectedCategory, setSelectedCategory] = useState('All'); // Default to "All"
 
-    const handleOptionChange = (section, value) => {
-        setSelectedOptions({ ...selectedOptions, [section]: value });
-    };
+    // Fetch categories only on initial render
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
 
-    const sections = [
-        { name: 'Customer Rating', options: ['Above 5', 'Above 4', 'Above 3', 'Above 2', 'Above 1'] },
-        { name: 'Beyond Plastic™', options: ['Option 1', 'Option 2', 'Option 3'] },
-        { name: 'Subscribe and Save', options: ['Yes', 'No'] },
-        { name: 'Brand', options: ['Brand A', 'Brand B', 'Brand C'] },
-        { name: 'Certifications', options: ['Certified A', 'Certified B', 'Certified C'] },
-        { name: 'Star Ingredient', options: ['Ingredient A', 'Ingredient B', 'Ingredient C'] },
-    ];
+    // Fetch banners only on initial render
+    useEffect(() => {
+        dispatch(getBanners());
+    }, [dispatch]);
+
+    // Update banner image index every 2 seconds
+    useEffect(() => {
+        if (banners.length > 0) {
+            const interval = setInterval(() => {
+                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % banners.length);
+            }, 2000);
+
+            return () => clearInterval(interval);
+        }
+    }, [banners.length]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
-        <div className="p-4 bg-gray-100 rounded-lg">
-            {sections.map((section) => (
-                <div key={section.name} className="mb-4">
-                    <div
-                        onClick={() => toggleSection(section.name)}
-                        className="text-xl font-bold cursor-pointer mb-2 flex items-center justify-between text-[#033B4C]"
-                    >
-                        <span>{section.name}</span>
-                        {activeSection === section.name ? <FaChevronUp /> : <FaChevronDown />}
-                    </div>
-                    <hr className="border-t-2 border-[#033B4C] mb-2" /> {/* Strike line */}
-                    {activeSection === section.name && (
-                        <div className="ml-4">
-                            {section.options.map((option) => (
-                                <label key={option} className="block mb-2 text-xl text-[#033B4C]">
-                                    <input
-                                        type="radio"
-                                        name={section.name}
-                                        value={option}
-                                        checked={selectedOptions[section.name] === option}
-                                        onChange={() => handleOptionChange(section.name, option)}
-                                        className="mr-3 w-6 h-6" // Larger radio input
-                                    />
-                                    {option}
-                                </label>
-                            ))}
+        <div className="flex h-64">
+            {/* Categories Section */}
+            <div className="w-1/5 bg-gray-50 p-4 overflow-y-auto"> {/* Added overflow-y-auto */}
+                <fieldset>
+                    <legend className="text-xl font-bold mb-2 text-[#033B4C]">Categories</legend>
+                    <div className="space-y-2">
+                        <div className="flex items-center">
+                            <input
+                                type="radio"
+                                id="all"
+                                name="category"
+                                value="All"
+                                checked={selectedCategory === 'All'}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="w-4 h-4 mr-2"
+                            />
+                            <label htmlFor="all" className="text-lg text-[#033B4C] cursor-pointer">
+                                All
+                            </label>
                         </div>
-                    )}
-                </div>
-            ))}
+                        {categories.map((category) => (
+                            <div key={category._id} className="flex items-center">
+                                <input
+                                    type="radio"
+                                    id={category._id}
+                                    name="category"
+                                    value={category.category}
+                                    checked={selectedCategory === category.category}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    className="w-4 h-4 mr-2"
+                                />
+                                <label htmlFor={category._id} className="text-lg text-[#033B4C] cursor-pointer">
+                                    {category.category} {/* Ensure this is the correct property */}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                </fieldset>
+            </div>
+
+            {/* Banner Section */}
+            <div className="w-3/4">
+                {banners.length > 0 && (
+                    <img
+                        src={banners[currentImageIndex]?.imageUrl}
+                        alt="Banner"
+                        className="h-full w-full object-cover"
+                    />
+                )}
+            </div>
         </div>
     );
 };
 
-export default FilterComponent;
+export default CategoryBanner;

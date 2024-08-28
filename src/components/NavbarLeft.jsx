@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import logo from '../images/farmer.jpg';
+// import logo from '../images/farmer.jpg';
 import { IoSearchOutline } from 'react-icons/io5';
 
 const NavbarLeft = () => {
@@ -12,12 +12,12 @@ const NavbarLeft = () => {
     return (
         <div className="flex items-center space-x-4">
             {/* Amazon Logo */}
-            <img
+            {/* <img
                 src={logo}
                 alt="Amazon Logo"
                 className={`h-8 rounded-md cursor-pointer ${active === 'logo' ? 'border-2 border-white' : ''}`}
                 onClick={() => handleClick('logo')}
-            />
+            /> */}
             {/* Location and Search Bar */}
             <div className="flex items-center space-x-2 space-y-2">
                 <div

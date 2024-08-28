@@ -1,5 +1,6 @@
 import  { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'; // Import icons from react-icons
+import StrikeLine from './StrikeLine';
 
 const products = [
     // Same product data as before...
@@ -117,6 +118,7 @@ const CategoryProductView = () => {
 
     return (
         <div className="relative w-full">
+            <StrikeLine/>
             {/* Previous Button */}
             {currentIndex > 0 && (
                 <button

@@ -1,12 +1,19 @@
 import { combineReducers } from 'redux';
 import userReducer from './reducers/userReducer';
 import notificationReducer from './reducers/notificationReducer';
-import propleReducer from './reducers/propleReducer';
+import { bannerReducer } from './reducers/bannerReducer';
+import  categoryReducer  from './reducers/categoryReducer';
+import { galleryReducer } from './reducers/galleryReducer';
+
 
 const rootReducer = combineReducers({
   user: userReducer,
   notifications: notificationReducer,
-  prople:propleReducer
+  categories:categoryReducer,
+  banner:bannerReducer,
+  galleryItems:galleryReducer,
+  
+
   
 });
 

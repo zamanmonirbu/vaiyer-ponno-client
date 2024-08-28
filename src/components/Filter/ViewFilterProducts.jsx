@@ -14,6 +14,7 @@ const ViewFilterProducts = () => {
 
     const products = [
         { id: 1, title: 'Smartphone', subCategory: 'Mobiles' },
+        
         { id: 2, title: 'Laptop', subCategory: 'Laptops' },
         { id: 3, title: 'Camera', subCategory: 'Cameras' },
         // Add more products as needed
