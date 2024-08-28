@@ -5,7 +5,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import StrikeLine from './StrikeLine';
 import { Link } from 'react-router-dom';
 
-const MostLovedCategories = () => {
+const CategoriesHorizontal  = () => {
     const dispatch = useDispatch();
     const categories = useSelector((state) => state.categories.categories);
     const loading = useSelector((state) => state.categories.loading);
@@ -87,4 +87,4 @@ const MostLovedCategories = () => {
     );
 };
 
-export default MostLovedCategories;
+export default CategoriesHorizontal ;

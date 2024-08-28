@@ -15,17 +15,14 @@ const CategoryBanner = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [fade, setFade] = useState(true);
 
-    // Fetch categories only on initial render
     useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);
 
-    // Fetch banners only on initial render
     useEffect(() => {
         dispatch(getBanners());
     }, [dispatch]);
 
-    // Update banner image index every 3 seconds with a smooth transition
     useEffect(() => {
         if (banners.length > 0) {
             const interval = setInterval(() => {
@@ -33,8 +30,8 @@ const CategoryBanner = () => {
                 setTimeout(() => {
                     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % banners.length);
                     setFade(true);
-                }, 1000); // 1000ms for transition duration
-            }, 3000); // 2000ms display + 1000ms transition = 3000ms total
+                }, 1000);
+            }, 3000); 
 
             return () => clearInterval(interval);
         }
@@ -51,17 +48,17 @@ const CategoryBanner = () => {
     return (
         <div className="w-full">
            <StrikeLine/>
-            <div className="flex h-64">
+            <div className="flex h-96">
                 {/* Categories Section */}
-                <div className="w-1/5 bg-[#033B4C] text-white rounded-lg px-2 py-2">
+                <div className="w-2/5 bg-[#033B4C] text-white rounded-lg px-2 py-2">
                     <fieldset>
-                        <legend className="text-xl font-bold mb-2">Categories</legend>
+                        <legend className="text-xl font-bold mb-2 text-center">Categories</legend>
                         <div className="space-y-2">
                             {categories.map((category) => (
                                 <div key={category._id} className="flex items-center">
                                     <Link
                                         to={`/category/${category.category}`}
-                                        className="text-lg cursor-pointer hover:underline pl-4"
+                                        className="text-lg cursor-pointer hover:bg-gray-200 p-1 bg-white w-[100%] rounded text-[#033B4C]"
                                     >
                                         {category.category}
                                     </Link>
@@ -72,7 +69,7 @@ const CategoryBanner = () => {
                 </div>
 
                 {/* Banner Section */}
-                <div className="w-3/5 ml-2 relative">
+                <div className="w-full ml-2 relative">
                     {banners.length > 0 && (
                         <img
                             src={banners[currentImageIndex]?.imageUrl}

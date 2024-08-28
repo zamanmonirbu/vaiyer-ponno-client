@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories } from '../../actions/categoryActions';
 import { getBanners } from '../../actions/bannerActions';
 
-const CategoryBanner = () => {
+const FilterComponent = () => {
     const dispatch = useDispatch();
     const banners = useSelector((state) => state.banner.banners);
     const categories = useSelector((state) => state.categories.categories);
@@ -97,4 +97,4 @@ const CategoryBanner = () => {
     );
 };
 
-export default CategoryBanner;
+export default FilterComponent;

@@ -1,8 +1,10 @@
 import  { useState } from 'react';
 import FilterComponent from './FilterComponent';
 import AllNavSections from '../AllNavSections';
+import { useParams } from 'react-router-dom';
 
 const ViewFilterProducts = () => {
+    const {category}=useParams()
     const [selectedCategory] = useState('Electronics'); // Example category
     const [selectedSubCategory, setSelectedSubCategory] = useState('Mobiles'); // Example sub-category
 
@@ -26,6 +28,7 @@ const ViewFilterProducts = () => {
     return (
         <>
         <AllNavSections/>
+        <p>{category}</p>
         <div className="flex w-full p-4 space-x-4">
             {/* Left Side: Filter Section */}
             <div className="w-1/6 bg-gray-100 p-4 rounded-lg">

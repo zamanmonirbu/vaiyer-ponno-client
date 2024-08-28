@@ -13,6 +13,11 @@ import CategoryView from './components/CategoryView';
 import ProductInput from './components/ProductInput';
 import BannerManager from './components/BannerManager';
 import ManageGallery from './components/ManageGallery';
+import AdminLogin from './components/AdminLogin';
+import SellerLogin from './components/SellerLogin';
+import SellerRegister from './components/SellerRegister';
+import AdminRegister from './components/AdminRegister';
+import ProductManager from './components/ProductManager';
 
  
 const App = () => {
@@ -21,10 +26,17 @@ const App = () => {
             <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
+
                 <Route path="/register" element={<RegisterForm />} />
                 <Route path="/login" element={<LoginForm />} />
-                <Route path="/filter/product" element={<ViewFilterProducts/>} />
+                <Route path="/seller/register" element={<SellerRegister/>} />
+                <Route path="/seller/login" element={<SellerLogin/>} />
+                <Route path="/admin/register" element={<AdminRegister/>} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+
+                <Route path="/category/:category" element={<ViewFilterProducts/>} />
                 <Route path="/user/profile" element={<UserProfile/>} />
+                <Route path="/seller/profile" element={<ProductManager/>} />
                 <Route path="/product/view" element={<ProductView/>} />
                 <Route path="/input/category" element={<CategoryInput/>} />
                 <Route path="/input/product" element={<ProductInput/>} />
