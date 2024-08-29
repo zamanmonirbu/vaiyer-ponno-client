@@ -6,7 +6,6 @@ import { fetchCategories } from '../actions/categoryActions';
 const ProductManager = () => {
   const [product, setProduct] = useState({
     name: '',
-    seller: '',
     imageURL: '',
     subImages: [],
     unitPrice: '',
@@ -14,17 +13,16 @@ const ProductManager = () => {
     video: '',
     category: '',
     subCategory: '',
-    ratings: '',
-    comments: ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [newSubImage, setNewSubImage] = useState('');
 
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(state => state.product);
   const { categories = [] } = useSelector(state => state.categories);
-console.log(products,categories)
+  
   useEffect(() => {
     dispatch(getProducts());
     dispatch(fetchCategories());
@@ -54,6 +52,20 @@ console.log(products,categories)
     setSelectedCategory(selectedCat ? (Array.isArray(selectedCat.subCategories) ? selectedCat.subCategories : []) : []);
   };
 
+  const handleSubImageChange = (e) => {
+    setNewSubImage(e.target.value);
+  };
+
+  const addSubImage = () => {
+    if (newSubImage) {
+      setProduct(prevProduct => ({
+        ...prevProduct,
+        subImages: [...prevProduct.subImages, newSubImage]
+      }));
+      setNewSubImage('');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -64,7 +76,6 @@ console.log(products,categories)
       }
       setProduct({
         name: '',
-        seller: '',
         imageURL: '',
         subImages: [],
         unitPrice: '',
@@ -72,8 +83,6 @@ console.log(products,categories)
         video: '',
         category: '',
         subCategory: '',
-        ratings: '',
-        comments: ''
       });
       setIsEditing(false);
       setEditingId(null);
@@ -97,7 +106,6 @@ console.log(products,categories)
     }
   };
 
-  console.log(selectedCategory)
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">{isEditing ? 'Edit Product' : 'Add Product'}</h1>
@@ -108,15 +116,6 @@ console.log(products,categories)
           value={product.name}
           onChange={handleChange}
           placeholder="Name"
-          className="w-full p-2 mb-2 border border-gray-300 rounded"
-          required
-        />
-        <input
-          type="text"
-          name="seller"
-          value={product.seller}
-          onChange={handleChange}
-          placeholder="Seller"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
           required
         />
@@ -181,21 +180,24 @@ console.log(products,categories)
           ))}
         </select>
         <input
-          type="number"
-          name="ratings"
-          value={product.ratings}
-          onChange={handleChange}
-          placeholder="Ratings"
-          className="w-full p-2 mb-2 border border-gray-300 rounded"
-        />
-        <input
           type="text"
-          name="comments"
-          value={product.comments}
-          onChange={handleChange}
-          placeholder="Comments"
+          value={newSubImage}
+          onChange={handleSubImageChange}
+          placeholder="Add Sub Image URL"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         />
+        <button
+          type="button"
+          onClick={addSubImage}
+          className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-2"
+        >
+          Add Sub Image
+        </button>
+        <ul className="mb-2">
+          {product.subImages.map((img, index) => (
+            <li key={index} className="border-b py-1">{img}</li>
+          ))}
+        </ul>
         <button
           type="submit"
           className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

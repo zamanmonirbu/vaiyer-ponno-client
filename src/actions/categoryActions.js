@@ -14,13 +14,25 @@ import {
 } from './actionTypes';
 import axiosInstance from '../api/axiosInstance'; // Adjust the path if needed
 
+// Helper function to get auth headers
+const getAuthHeaders = () => {
+    const adminToken = localStorage.getItem('adminAuthToken');
+    const adminAuth = localStorage.getItem('adminAuth');
+    return {
+        headers: {
+            Authorization: `Bearer ${adminToken}`,
+            'x-admin-auth': adminAuth,
+        }
+    };
+};
+
 // Fetch categories
 export const fetchCategories = () => async (dispatch) => {
     dispatch({ type: FETCH_CATEGORIES_REQUEST });
 
     try {
-        const response = await axiosInstance.get('/api/categories');
-        const {data}=response.data;
+        const response = await axiosInstance.get('/api/categories', getAuthHeaders());
+        const { data } = response.data;
         dispatch({ type: FETCH_CATEGORIES_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: FETCH_CATEGORIES_FAILURE, payload: error.message });
@@ -32,10 +44,12 @@ export const createCategory = (categoryData) => async (dispatch) => {
     dispatch({ type: CREATE_CATEGORY_REQUEST });
 
     try {
-        const response = await axiosInstance.post('/api/categories', categoryData);
-        const {data}=response.data;
+        const response = await axiosInstance.post('/api/categories', categoryData, getAuthHeaders());
+        const { data } = response.data;
+        console.log(data)
         dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: data });
     } catch (error) {
+        console.log(error.message)
         dispatch({ type: CREATE_CATEGORY_FAILURE, payload: error.message });
     }
 };
@@ -45,8 +59,8 @@ export const updateCategory = (id, categoryData) => async (dispatch) => {
     dispatch({ type: UPDATE_CATEGORY_REQUEST });
 
     try {
-        const response = await axiosInstance.put(`/api/categories/${id}`, categoryData);
-        const {data}=response.data;
+        const response = await axiosInstance.put(`/api/categories/${id}`, categoryData, getAuthHeaders());
+        const { data } = response.data;
         dispatch({ type: UPDATE_CATEGORY_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: UPDATE_CATEGORY_FAILURE, payload: error.message });
@@ -58,7 +72,7 @@ export const deleteCategory = (id) => async (dispatch) => {
     dispatch({ type: DELETE_CATEGORY_REQUEST });
 
     try {
-        await axiosInstance.delete(`/api/categories/${id}`);
+        await axiosInstance.delete(`/api/categories/${id}`, getAuthHeaders());
         dispatch({ type: DELETE_CATEGORY_SUCCESS, payload: id });
     } catch (error) {
         dispatch({ type: DELETE_CATEGORY_FAILURE, payload: error.message });

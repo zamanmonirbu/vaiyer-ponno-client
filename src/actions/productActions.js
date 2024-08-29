@@ -13,8 +13,8 @@ import axiosInstance from '../api/axiosInstance';
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('authToken');
-    const sellerId = localStorage.getItem('sellerAuthId');
+    const token = localStorage.getItem('sellerAuthToken');
+    const sellerId = localStorage.getItem('sellerAuth');
 
     return {
         headers: {
@@ -28,6 +28,7 @@ const getAuthHeaders = () => {
 export const getProducts = () => async (dispatch) => {
     try {
         const res = await axiosInstance.get('/api/products', getAuthHeaders());
+        // console.log(res.data);
         dispatch({
             type: GET_PRODUCTS,
             payload: res.data
@@ -60,6 +61,7 @@ export const getProduct = (id) => async (dispatch) => {
 export const createProduct = (productData) => async (dispatch) => {
     try {
         const res = await axiosInstance.post('/api/products', productData, getAuthHeaders());
+        console.log(res.data);
         dispatch({
             type: CREATE_PRODUCT,
             payload: res.data

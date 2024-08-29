@@ -60,7 +60,7 @@ const CategoriesHorizontal  = () => {
                         >
                            <Link to={`category/${category.category}`}>
                                <img
-                                    src={category.imageUrl}
+                                    src={category.categoryImage}
                                     alt={category.category}
                                     className="h-8 w-8 transition-transform duration-300 ease-in-out transform hover:scale-110 mx-auto"
                                 />

@@ -21,3 +21,21 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Round edges */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker on hover */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #033B4C; /* Background of the scrollbar track */
+}
