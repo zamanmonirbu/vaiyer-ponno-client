@@ -7,7 +7,9 @@ const CategoryView = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/categories");
+        const response = await axios.get(
+          "http://localhost:5000/api/categories"
+        );
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -28,13 +30,16 @@ const CategoryView = () => {
               {category.subCategories.map((subCategory, subIndex) => (
                 <li key={subIndex} className="mb-2">
                   <span className="font-medium">{subCategory.name}</span>
-                  {subCategory.subSubCategories && subCategory.subSubCategories.length > 0 && (
-                    <ul className="ml-4 mt-1">
-                      {subCategory.subSubCategories.map((subSubCategory, subSubIndex) => (
-                        <li key={subSubIndex}>{subSubCategory}</li>
-                      ))}
-                    </ul>
-                  )}
+                  {subCategory.subSubCategories &&
+                    subCategory.subSubCategories.length > 0 && (
+                      <ul className="ml-4 mt-1">
+                        {subCategory.subSubCategories.map(
+                          (subSubCategory, subSubIndex) => (
+                            <li key={subSubIndex}>{subSubCategory}</li>
+                          )
+                        )}
+                      </ul>
+                    )}
                 </li>
               ))}
             </ul>

@@ -5,7 +5,7 @@ import { bannerReducer } from './reducers/bannerReducer';
 import  categoryReducer  from './reducers/categoryReducer';
 import { galleryReducer } from './reducers/galleryReducer';
 import productReducer from './reducers/productReducer';
-import { adminLoginReducer, adminRegisterReducer } from './reducers/adminReducer';
+import { adminCreateReducer, adminDeleteReducer, adminLoginReducer, adminReadReducer, adminRegisterReducer, adminRequestsReducer, adminUpdateReducer } from './reducers/adminReducer';
 import { sellerLoginReducer, sellerRegisterReducer } from './reducers/sellerReducer';
 
 
@@ -21,8 +21,11 @@ const rootReducer = combineReducers({
   adminLogin:adminLoginReducer,
   sellerRegister:sellerRegisterReducer,
   sellerLogin:sellerLoginReducer,
-
-  
+  adminCreateReducer,
+  adminReadReducer,
+  adminUpdateReducer,
+  adminDeleteReducer,
+  adminRequests: adminRequestsReducer,
 });
 
 export default rootReducer;
