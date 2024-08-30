@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import seller from '../images/seller.png'
-
+// import { useDispatch, useSelector } from 'react-redux';
+// import {fetchSellers,fetchSellerById,updateSeller,deleteSeller,} from '../../actions/sellerActions';
 import SidebarLinkGroup from "./SidebarLinkGroup";
+
+
+
 
 function Sidebar({
   sidebarOpen,
@@ -48,6 +52,11 @@ function Sidebar({
     }
   }, [sidebarExpanded]);
 
+
+  const sellerAuthData = localStorage.getItem('sellerAuth');
+  const seller = sellerAuthData ? JSON.parse(sellerAuthData) : null;
+  
+// console.log(seller)
   return (
     <div className="min-w-fit">
       {/* Sidebar backdrop (mobile only) */}
@@ -202,7 +211,7 @@ function Sidebar({
                               <path d="M9 6.855A3.502 3.502 0 0 0 8 0a3.5 3.5 0 0 0-1 6.855v1.656L5.534 9.65a3.5 3.5 0 1 0 1.229 1.578L8 10.267l1.238.962a3.5 3.5 0 1 0 1.229-1.578L9 8.511V6.855ZM6.5 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm4.803 8.095c.005-.005.01-.01.013-.016l.012-.016a1.5 1.5 0 1 1-.025.032ZM3.5 11c.474 0 .897.22 1.171.563l.013.016.013.017A1.5 1.5 0 1 1 3.5 11Z" />
                             </svg>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              E-Commerce
+                              Product 
                             </span>
                           </div>
                           {/* Icon */}
@@ -218,13 +227,13 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/seller/dashboard"
+                              to="/seller/dashboard/input/product"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Customers
+                               Input Product
                               </span>
                             </NavLink>
                           </li>
@@ -829,7 +838,7 @@ function Sidebar({
                               <path d="M10.5 1a3.502 3.502 0 0 1 3.355 2.5H15a1 1 0 1 1 0 2h-1.145a3.502 3.502 0 0 1-6.71 0H1a1 1 0 0 1 0-2h6.145A3.502 3.502 0 0 1 10.5 1ZM9 4.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM5.5 9a3.502 3.502 0 0 1 3.355 2.5H15a1 1 0 1 1 0 2H8.855a3.502 3.502 0 0 1-6.71 0H1a1 1 0 1 1 0-2h1.145A3.502 3.502 0 0 1 5.5 9ZM4 12.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Z" fillRule="evenodd" />
                             </svg>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Settings
+                              Profile
                             </span>
                           </div>
                           {/* Icon */}
@@ -845,7 +854,8 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/seller/dashboard"
+                               to={`/seller/profile/${seller.id}`}
+                              
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }

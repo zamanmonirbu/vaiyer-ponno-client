@@ -233,31 +233,51 @@ const ProductManager = () => {
           {isEditing ? "Update Product" : "Add Product"}
         </button>
       </form>
+
       <h2 className="text-xl font-bold mb-2">Products List</h2>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p className="text-red-500">Error: {error}</p>
       ) : (
-        <ul className="list-disc pl-5">
-          {products.map((product) => (
-            <li key={product._id} className="mb-2 flex items-center">
-              <span className="flex-1">{product.name}</span>
-              <button
-                onClick={() => handleEdit(product)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 mr-2"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(product._id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <table className="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border">Name</th>
+              <th className="py-2 px-4 border">Category</th>
+              <th className="py-2 px-4 border">Price</th>
+              <th className="py-2 px-4 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td className="py-2 px-4 border">{product.name}</td>
+                <td className="py-2 px-4 border">
+                  {
+                    categories.find((cat) => cat._id === product.category)
+                      ?.category
+                  }
+                </td>
+                <td className="py-2 px-4 border">{product.unitPrice}</td>
+                <td className="py-2 px-4 border flex justify-center">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

@@ -22,30 +22,36 @@ const AdminRegister = () => {
         {loading && <p className="text-blue-500 text-center">Registering...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
         {success && <p className="text-green-500 text-center">Registration successful!</p>}
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} 
-          placeholder="Name" 
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-        />
-        <input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          placeholder="Email" 
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-        />
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          placeholder="Password" 
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-        />
+        <div className="mb-4">
+          <input 
+            type="text" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+            placeholder="Name" 
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            placeholder="Email" 
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            placeholder="Password" 
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
         <button 
           onClick={handleRegister} 
-          className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="w-full py-2 bg-blue-500 text-white rounded border border-blue-500 hover:bg-blue-600"
         >
           Register
         </button>

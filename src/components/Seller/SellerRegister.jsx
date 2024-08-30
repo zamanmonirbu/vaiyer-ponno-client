@@ -11,7 +11,7 @@ const SellerRegister = () => {
 
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector(
-    (state) => state.sellerRegister
+    (state) => state.seller
   );
 
   const handleRegister = () => {

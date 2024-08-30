@@ -45,7 +45,7 @@ const UserLogin = () => {
           Login
         </button>
         <div className="flex justify-between mt-4">
-          <Link to="/register" className="text-blue-500 hover:underline">
+          <Link to="/user/register" className="text-blue-500 hover:underline">
             Create an Account
           </Link>
           <Link

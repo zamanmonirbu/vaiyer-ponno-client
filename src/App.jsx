@@ -1,89 +1,147 @@
-import { useEffect } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate, Route, Routes } from "react-router-dom";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+import ManageAdmin from "./admin/pages/ManageAdmin";
+import ManageBanner from "./admin/pages/ManageBanner";
+import AdminCategory from "./admin/pages/ManageCategory";
+import ManageNotification from "./admin/pages/ManageNotification";
+import ManageRequestAdmin from "./admin/pages/ManageRequestAdmin";
+import ManageRequestSeller from "./admin/pages/ManageRequestSeller";
+import ManageGallery from "./admin/pages/ManageGallery";
+import ManageSeller from "./admin/pages/ManageSeller";
+import AdminLogin from "./components/Admin/AdminLogin";
+import AdminRegister from "./components/Admin/AdminRegister";
+import ViewFilterProducts from "./components/Filter/ViewFilterProducts";
+import NotFound from "./components/NotFound";
+import ProductView from "./components/Product/ProductView";
+import SellerLogin from "./components/Seller/SellerLogin";
+import SellerManager from "./components/Seller/SellerManager";
+import SellerRegister from "./components/Seller/SellerRegister";
+import SellerRequests from "./components/Seller/SellerRequests";
+import UserLogin from "./components/UserProfile/UserLogin";
+import UserProfile from "./components/UserProfile/UserProfile";
+import UserRegister from "./components/UserProfile/UserRegister";
 import Home from "./pages/Home";
 import "./seller/charts/ChartjsConfig";
 import "./seller/css/style.css";
-import AdminDashboard from "./admin/pages/AdminDashboard";
-import AdminLogin from "./components/Admin/AdminLogin";
-import AdminPrivateRoute from "./components/Admin/AdminPrivateRoute";
-import AdminRegister from "./components/Admin/AdminRegister";
-import BannerManager from "./components/Admin/BannerManager";
-// import CategoryInput from "./components/Admin/CategoryInput";
-import ManageGallery from "./components/Admin/ManageGallery";
-import CategoryView from "./components/CategoryView";
-import ViewFilterProducts from "./components/Filter/ViewFilterProducts";
-import ProductView from "./components/Product/ProductView";
-import ProductInput from "./components/Seller/ProductInput";
-import ProductManager from "./components/Seller/ProductManager";
-import SellerLogin from "./components/Seller/SellerLogin";
-import SellerPrivateRoute from "./components/Seller/SellerPrivateRoute";
-import SellerRegister from "./components/Seller/SellerRegister";
-import UserProfile from "./components/UserProfile/UserProfile";
-import UserLogin from "./components/UserProfile/UserLogin";
-import UserPrivateRoute from "./components/UserProfile/UserPrivateRoute";
-import UserRegister from "./components/UserProfile/UserRegister";
 import SellerDashboard from "./seller/pages/SellerDashboard";
-import AdminCategory from "./admin/pages/ManageCategory";
-import Admins from "./components/Admin/Admins";
-// import ManageRequestAdmin from "./admin/pages/ManageRequestAdmin";
-import AdminRequests from "./components/Admin/AdminRequests";
-import ManageRequestAdmin from "./admin/pages/ManageRequestAdmin";
-import ManageAdmin from "./admin/pages/ManageAdmin";
+import InputProductSeller from "./seller/pages/InputProductSeller";
+import SellerProfile from "./components/Seller/SellerProfile";
 
-const App = () => {
-  const location = useLocation();
-  useEffect(() => {
-    document.querySelector("html").style.scrollBehavior = "auto";
-    window.scroll({ top: 0 });
-    document.querySelector("html").style.scrollBehavior = "";
-  }, [location.pathname]);
+function App() {
+  const user = useSelector((state) => state.user.currentUser);
+  const admin = useSelector((state) => state.adminLogin.adminInfo);
+  const seller = useSelector((state) => state.seller.seller);
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/category/:category" element={<ViewFilterProducts />} />
+        <Route path="/user/profile" element={<UserProfile />} />
+        <Route path="/product/view" element={<ProductView />} />
 
-      <Route path="/register" element={<UserRegister />} />
-      <Route path="/login" element={<UserLogin />} />
-      <Route path="/seller/register" element={<SellerRegister />} />
-      <Route path="/seller/login" element={<SellerLogin />} />
-      <Route path="/admin/register" element={<AdminRegister />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
+        {/* User Routes */}
+        <Route
+          path="/user/dashboard"
+          element={user ? <SellerDashboard /> : <Navigate to="/user/login" />}
+        />
+        <Route
+          path="/user/login"
+          element={user ? <Navigate to="/seller/dashboard" /> : <UserLogin />}
+        />
+        <Route
+          path="/user/register"
+          element={
+            user ? <Navigate to="/seller/dashboard" /> : <UserRegister />
+          }
+        />
 
-      <Route path="/category/:category" element={<ViewFilterProducts />} />
-      <Route path="/user/profile" element={<UserProfile />} />
-      <Route path="/seller/profile" element={<ProductManager />} />
-      <Route path="/product/view" element={<ProductView />} />
-      {/* <Route path="/input/category" element={<CategoryInput />} /> */}
-      <Route path="/admin/dashboard/category" element={<AdminCategory/>} />
-      <Route path="/input/product" element={<ProductInput />} />
-      <Route path="/view/category" element={<CategoryView />} />
-      <Route path="/view/banner" element={<BannerManager />} />
-      <Route path="/view/gallery" element={<ManageGallery />} />
-      <Route path="/seller/dashboard" element={<SellerDashboard />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/dashboard/all/admin" element={<ManageAdmin/>} />
-      <Route path="/admin/dashboard/request/admin" element={<ManageRequestAdmin/>} />
+        {/* Seller Routes */}
+        <Route
+          path="/seller/dashboard"
+          element={
+            seller ? <SellerDashboard /> : <Navigate to="/seller/login" />
+          }
+        />
+        <Route
+          path="/seller/login"
+          element={
+            seller ? <Navigate to="/seller/dashboard" /> : <SellerLogin />
+          }
+        />
+        <Route
+          path="/seller/register"
+          element={
+            seller ? <Navigate to="/seller/dashboard" /> : <SellerRegister />
+          }
+        />
+        <Route
+          path="/seller/dashboard/input/product"
+          element={seller ? <InputProductSeller/> : <SellerLogin />}
+        />
+        <Route
+          path="/seller/profile/:id"
+          element={seller ? <SellerProfile/> : <SellerLogin />}
+        />
+        
 
-      {/* Private Routes for Users */}
-      <Route element={<UserPrivateRoute />}>
-        {/* <Route path="/seller/dashboard" element={<SellerDashboard />} /> */}
-      </Route>
+        {/* Admin Routes */}
+        <Route
+          path="/admin/dashboard"
+          element={admin ? <AdminDashboard /> : <Navigate to="/admin/login" />}
+        />
+        <Route
+          path="/admin/login"
+          element={admin ? <Navigate to="/admin/dashboard" /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/register"
+          element={
+            admin ? <Navigate to="/admin/dashboard" /> : <AdminRegister />
+          }
+        />
+        <Route
+          path="/admin/dashboard/all/admin"
+          element={admin ? <ManageAdmin /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/request/admin"
+          element={admin ? <ManageRequestAdmin /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/category"
+          element={admin ? <AdminCategory /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/manage/banner"
+          element={admin ? <ManageBanner /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/manage/gallery"
+          element={admin ?<ManageGallery/>  : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/notification"
+          element={admin ? <ManageNotification /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/request/seller"
+          element={admin ? <ManageRequestSeller /> : <AdminLogin />}
+        />
+        <Route
+          path="/admin/dashboard/view/seller"
+          element={admin ? <ManageSeller /> : <AdminLogin />}
+        />
 
-      {/* Private Routes for Seller */}
-      <Route element={<SellerPrivateRoute />}>
-        {/* <Route path="/seller/dashboard" element={<SellerDashboard />} /> */}
-      </Route>
+        <Route path="/view/seller" element={<SellerManager />} />
+        <Route path="/request/seller" element={<SellerRequests />} />
 
-      {/* Private Routes for Admins */}
-      <Route element={<AdminPrivateRoute />}>
-        {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
-      </Route>
-
-      {/* Redirect to Home if no route matches */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        {/* Fallback Route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
-};
+}
 
 export default App;

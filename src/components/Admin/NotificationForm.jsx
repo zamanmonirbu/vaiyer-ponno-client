@@ -2,17 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNotification, clearNotificationState } from '../slices/notificationSlice';
+import { createNotification, clearNotificationState, fetchNotifications } from '../slices/notificationSlice';
 
 const NotificationForm = () => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.notifications);
+  const { loading, error, success, notifications } = useSelector((state) => state.notifications);
 
   const [formData, setFormData] = useState({
     title: '',
     message: '',
     type: 'info', // info, warning, error, success
   });
+
+  useEffect(() => {
+    dispatch(fetchNotifications()); // Fetch notifications on component mount
+  }, [dispatch]);
 
   useEffect(() => {
     if (success) {
@@ -32,9 +36,9 @@ const NotificationForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ 
-      ...formData, 
-      [name]: value 
+    setFormData({
+      ...formData,
+      [name]: value,
     });
   };
 
@@ -104,6 +108,31 @@ const NotificationForm = () => {
           {loading ? 'Creating...' : 'Create Notification'}
         </button>
       </form>
+
+      {/* Notifications Table */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-4">Notifications List</h2>
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-2">No.</th>
+              <th className="border border-gray-300 px-4 py-2">Title</th>
+              <th className="border border-gray-300 px-4 py-2">Message</th>
+              <th className="border border-gray-300 px-4 py-2">Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {notifications.map((notification, index) => (
+              <tr key={notification.id} className="even:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2 text-center">{index + 1}</td>
+                <td className="border border-gray-300 px-4 py-2">{notification.title}</td>
+                <td className="border border-gray-300 px-4 py-2">{notification.message}</td>
+                <td className="border border-gray-300 px-4 py-2 capitalize">{notification.type}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

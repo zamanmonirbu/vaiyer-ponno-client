@@ -7,8 +7,8 @@ const SellerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { loading, error, sellerInfo } = useSelector(
-    (state) => state.sellerLogin
+  const { loading, error } = useSelector(
+    (state) => state.seller
   );
 
   const handleLogin = () => {
@@ -21,11 +21,6 @@ const SellerLogin = () => {
         <h2 className="text-2xl font-bold mb-4 text-center">Seller Login</h2>
         {loading && <p className="text-blue-500 text-center">Loading...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
-        {sellerInfo && (
-          <p className="text-green-500 text-center">
-            Welcome, {sellerInfo.name}
-          </p>
-        )}
         <input
           type="email"
           value={email}

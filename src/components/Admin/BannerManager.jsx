@@ -52,29 +52,37 @@ const BannerManager = () => {
 
       <div className="mt-4">
         <h3 className="text-xl mb-2">Current Banners:</h3>
-        <ul className="list-disc pl-6">
-          {banners.map((banner) => (
-            <li
-              key={banner._id}
-              className="flex justify-between items-center mb-2"
-            >
-              <a
-                href={banner.imageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                <img src={banner.imageUrl} alt="" />
-              </a>
-              <button
-                onClick={() => handleDeleteBanner(banner._id)}
-                className="ml-4 bg-red-500 text-white px-2 py-1 rounded"
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr className="bg-gray-100 border-b border-gray-300">
+              <th className="p-2 border-r border-gray-300">#</th>
+              <th className="p-2 border-r border-gray-300">Banner Image</th>
+              <th className="p-2 border-r border-gray-300">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {banners.map((banner, index) => (
+              <tr key={banner._id} className="border-b border-gray-300">
+                <td className="p-2 text-center border-r border-gray-300">{index + 1}</td>
+                <td className="p-2 text-center border-r border-gray-300">
+                  <img
+                    src={banner.imageUrl}
+                    alt="Banner"
+                    className="w-24 h-16 object-cover rounded"
+                  />
+                </td>
+                <td className="p-2 text-center">
+                  <button
+                    onClick={() => handleDeleteBanner(banner._id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

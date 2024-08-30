@@ -6,7 +6,7 @@ import  categoryReducer  from './reducers/categoryReducer';
 import { galleryReducer } from './reducers/galleryReducer';
 import productReducer from './reducers/productReducer';
 import { adminCreateReducer, adminDeleteReducer, adminLoginReducer, adminReadReducer, adminRegisterReducer, adminRequestsReducer, adminUpdateReducer } from './reducers/adminReducer';
-import { sellerLoginReducer, sellerRegisterReducer } from './reducers/sellerReducer';
+import sellerReducer from './reducers/sellerReducer';
 
 
 
@@ -19,8 +19,7 @@ const rootReducer = combineReducers({
   product: productReducer,
   adminRegister:adminRegisterReducer,
   adminLogin:adminLoginReducer,
-  sellerRegister:sellerRegisterReducer,
-  sellerLogin:sellerLoginReducer,
+  seller: sellerReducer,
   adminCreateReducer,
   adminReadReducer,
   adminUpdateReducer,

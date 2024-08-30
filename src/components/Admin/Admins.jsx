@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createAdmin,
@@ -97,9 +97,9 @@ const Admins = () => {
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : (
-        <table className="min-w-full border-collapse">
+        <table className="min-w-full border-collapse border border-gray-300">
           <thead>
-            <tr>
+            <tr className="bg-gray-100 border-b border-gray-300">
               <th className="border p-2">Name</th>
               <th className="border p-2">Email</th>
               <th className="border p-2">Actions</th>
@@ -107,7 +107,7 @@ const Admins = () => {
           </thead>
           <tbody>
             {adminList?.map((admin) => (
-              <tr key={admin._id}>
+              <tr key={admin._id} className="border-b border-gray-300">
                 <td className="border p-2">{admin.name}</td>
                 <td className="border p-2">{admin.email}</td>
                 <td className="border p-2">

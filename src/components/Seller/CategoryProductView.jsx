@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import StrikeLine from "./StrikeLine";
-import { getProducts } from "../actions/productActions";
+import { getProducts } from "../../actions/productActions";
+import StrikeLine from "../StrikeLine";
 
 const CategoryProductView = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

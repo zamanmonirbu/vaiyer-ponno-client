@@ -1,11 +1,12 @@
+// index.js
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import App from "./App";
 import store from "./store";
 import Modal from "react-modal";
-import "./index.css";
 import ThemeProvider from "./seller/utils/ThemeContext";
-import { BrowserRouter as Router } from "react-router-dom";
+import "./index.css";
 
 // Set the app element for react-modal
 Modal.setAppElement("#root");

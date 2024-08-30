@@ -1,8 +1,8 @@
 import AllNavSections from "../AllNavSections";
-import CategoryProductView from "../CategoryProductView";
-import AboutCategory from "./AboutCategory";
-import UserDetails from "./UserDetails";
-import Video from "./Video";
+import AboutCategory from "../Seller/AboutCategory";
+import CategoryProductView from "../Seller/CategoryProductView";
+import UserDetails from "../Seller/UserDetails";
+import Video from "../Seller/Video";
 
 const UserProfile = () => {
   return (
