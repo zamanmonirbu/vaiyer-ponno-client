@@ -65,7 +65,7 @@ export const loginAdmin = (credentials) => async (dispatch) => {
   try {
     const response = await axiosInstance.post('/api/admin/login', credentials);
     const data = response.data;
-    console.log(data);
+    // console.log(data);
     dispatch(adminLoginSuccess(data));
     // Save admin auth and token to localStorage if needed
     localStorage.setItem('adminAuth', JSON.stringify(data.admin));

@@ -19,6 +19,7 @@ const CategoryInput = () => {
     (state) => state.categories
   );
 
+
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
@@ -40,10 +41,11 @@ const CategoryInput = () => {
     }
 
     const categoryData = {
-      category,
+      name: category,  // Ensure this matches the backend model
       categoryImage,
       subCategories,
     };
+
 
     if (editMode) {
       dispatch(updateCategory(editCategoryId, categoryData));
@@ -59,9 +61,9 @@ const CategoryInput = () => {
   };
 
   const handleEdit = (category) => {
-    setCategory(category.category);
+    setCategory(category.name);
     setImageURL(category.categoryImage);
-    setSubCategories(category.subCategories);
+    setSubCategories(category.subCategories.map(sub => ({ name: sub.name })));
     setEditMode(true);
     setEditCategoryId(category._id);
   };
@@ -141,49 +143,41 @@ const CategoryInput = () => {
         </button>
       </div>
 
-      <div className="mx-auto max-w-4xl mt-8 p-6 bg-white shadow-md rounded-lg">
-        <h3 className="text-lg font-bold mb-4 text-center">Existing Categories:</h3>
-        {categories &&
-          categories.map((cat) => (
-            <div key={cat._id} className="mb-4 p-4 border border-gray-300 rounded-md">
-              <img src={cat.categoryImage} alt="" className="m-auto" />
-              <h4 className="font-bold text-xl">{cat.category}</h4>
-              {/* <p className="text-gray-700">Image URL: {cat.categoryImage}</p> */}
-              <div className="mt-4">
-                <h5 className="font-medium mb-2">Subcategories:</h5>
-                <table className="min-w-full divide-y divide-gray-200 border border-gray-300">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subcategory Name</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {cat.subCategories.map((sub, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.name}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="mt-4">
-                <button
-                  onClick={() => handleEdit(cat)}
-                  className="mr-2 bg-indigo-600 text-white py-1 px-3 rounded-md hover:bg-indigo-700"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(cat._id)}
-                  className="bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-      </div>
+      <div className="mx-auto max-w-[85%] mt-8 p-6 bg-white shadow-md rounded-lg">
+  <h3 className="text-lg font-bold mb-4 text-center">Existing Categories:</h3>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {categories &&
+      categories.map((cat) => (
+        <div key={cat?._id} className="p-4 border border-gray-300 rounded-md">
+          <img src={cat?.categoryImage} alt="" className="w-32 h-32 object-cover mb-4 rounded-full mx-auto" />
+          <h4 className="font-bold text-xl mb-2 mx-auto">{cat?.name}</h4>
+          <div className="mb-4">
+            <h5 className="font-medium mb-2">Subcategories:</h5>
+            <ul className="list-disc list-inside">
+              {cat?.subCategories?.map((sub, index) => (
+                <li key={index} className="text-sm text-gray-500">{sub.name}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleEdit(cat)}
+              className="bg-indigo-600 text-white py-1 px-3 rounded-md hover:bg-indigo-700"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(cat._id)}
+              className="bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+  </div>
+</div>
+      
     </>
   );
 };

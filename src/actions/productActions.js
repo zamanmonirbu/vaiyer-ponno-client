@@ -28,7 +28,7 @@ const getAuthHeaders = () => {
 export const getProducts = () => async (dispatch) => {
     try {
         const res = await axiosInstance.get('/api/products', getAuthHeaders());
-        // console.log(res.data);
+        console.log(res.data);
         dispatch({
             type: GET_PRODUCTS,
             payload: res.data
@@ -59,6 +59,7 @@ export const getProduct = (id) => async (dispatch) => {
 
 // Create a new product
 export const createProduct = (productData) => async (dispatch) => {
+    
     try {
         const res = await axiosInstance.post('/api/products', productData, getAuthHeaders());
         console.log(res.data);

@@ -18,6 +18,7 @@ const ProductManager = () => {
     video: "",
     category: "",
     subCategory: "",
+    ratings: "", // Keep ratings field
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -28,6 +29,7 @@ const ProductManager = () => {
   const { products, loading, error } = useSelector((state) => state.product);
   const { categories = [] } = useSelector((state) => state.categories);
 
+  console.log(products,categories)
   useEffect(() => {
     dispatch(getProducts());
     dispatch(fetchCategories());
@@ -39,10 +41,8 @@ const ProductManager = () => {
         (cat) => cat._id === product.category
       );
       setSelectedCategory(
-        selectedCat
-          ? Array.isArray(selectedCat.subCategories)
-            ? selectedCat.subCategories
-            : []
+        selectedCat && Array.isArray(selectedCat.subCategories)
+          ? selectedCat.subCategories
           : []
       );
     }
@@ -63,10 +63,8 @@ const ProductManager = () => {
 
     const selectedCat = categories.find((cat) => cat._id === categoryId);
     setSelectedCategory(
-      selectedCat
-        ? Array.isArray(selectedCat.subCategories)
-          ? selectedCat.subCategories
-          : []
+      selectedCat && Array.isArray(selectedCat.subCategories)
+        ? selectedCat.subCategories
         : []
     );
   };
@@ -102,6 +100,7 @@ const ProductManager = () => {
         video: "",
         category: "",
         subCategory: "",
+        ratings: "", // Reset ratings field
       });
       setIsEditing(false);
       setEditingId(null);
@@ -115,8 +114,7 @@ const ProductManager = () => {
     setIsEditing(true);
     setEditingId(product._id);
     setSelectedCategory(
-      categories.find((cat) => cat._id === product.category)?.subCategories ||
-        []
+      categories.find((cat) => cat._id === product.category)?.subCategories || []
     );
   };
 
@@ -177,6 +175,15 @@ const ProductManager = () => {
           placeholder="Video URL"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         />
+        <input
+          type="number"
+          name="ratings"
+          value={product.ratings} // Capture ratings
+          onChange={handleChange}
+          placeholder="Ratings"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        />
         <select
           name="category"
           value={product.category}
@@ -187,7 +194,7 @@ const ProductManager = () => {
           {categories.length > 0 &&
             categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
-                {cat.category}
+                {cat.name}
               </option>
             ))}
         </select>
@@ -245,31 +252,43 @@ const ProductManager = () => {
             <tr>
               <th className="py-2 px-4 border">Name</th>
               <th className="py-2 px-4 border">Category</th>
+              <th className="py-2 px-4 border">Sub-Category</th>
               <th className="py-2 px-4 border">Price</th>
+              <th className="py-2 px-4 border">Ratings</th> {/* Add Ratings */}
               <th className="py-2 px-4 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
               <tr key={product._id}>
-                <td className="py-2 px-4 border">{product.name}</td>
+                <td className="py-2 px-4 border">{product?.name}</td>
                 <td className="py-2 px-4 border">
-                  {
-                    categories.find((cat) => cat._id === product.category)
-                      ?.category
-                  }
+                  {/* {categories.find((cat) => cat._id === product.category)
+                    ?.category || "N/A"} */}
+                    {
+                      product?.category?.name
+                    }
                 </td>
-                <td className="py-2 px-4 border">{product.unitPrice}</td>
-                <td className="py-2 px-4 border flex justify-center">
+                <td className="py-2 px-4 border">
+                  {/* {selectedCategory.find(
+                    (sub) => sub._id === product.subCategory
+                  )?.name || "N/A"} */}
+                  {
+                      product?.subCategory?.name
+                    }
+                </td>
+                <td className="py-2 px-4 border">{product?.unitPrice}</td>
+                <td className="py-2 px-4 border">{product?.ratings}</td>
+                <td className="py-2 px-4 border">
                   <button
                     onClick={() => handleEdit(product)}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 mr-2"
+                    className="mr-2 py-1 px-3 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(product._id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    className="py-1 px-3 bg-red-500 text-white rounded hover:bg-red-600"
                   >
                     Delete
                   </button>
