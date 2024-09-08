@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { registerSeller } from "../../actions/sellerActions"; // Assume you have this action
+import { Link, useNavigate } from "react-router-dom";
+import { registerSeller } from "../../actions/sellerActions";
+import AllNavSections from "../AllNavSections";
 
 const SellerRegister = () => {
   const [name, setName] = useState("");
@@ -10,6 +11,7 @@ const SellerRegister = () => {
   const [businessName, setBusinessName] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Added navigate hook
   const { loading, error, success } = useSelector(
     (state) => state.seller
   );
@@ -18,7 +20,13 @@ const SellerRegister = () => {
     dispatch(registerSeller({ name, email, password, businessName }));
   };
 
+  if (success) {
+    navigate("/seller/login"); // Navigate to login on success
+  }
+
   return (
+    <>
+    <AllNavSections/>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">
@@ -70,6 +78,7 @@ const SellerRegister = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

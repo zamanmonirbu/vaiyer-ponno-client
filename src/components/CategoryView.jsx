@@ -1,23 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { fetchCategories } from "../actions/categoryActions";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const CategoryView = () => {
-  const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
+
+  const categories = useSelector((state) => state.categories.categories);
+  // const loading = useSelector((state) => state.categories.loading);
+  // const error = useSelector((state) => state.categories.error);
+
+
+  console.log("Category",categories)
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/categories"
-        );
-        setCategories(response.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   return (
     <div className="container mx-auto p-4">

@@ -16,6 +16,8 @@ const CategoryProductView = () => {
   // Get products from the Redux store
   const products = useSelector((state) => state.product.products);
 
+  console.log("Product view",products)
+
   const handleNext = () => {
     if (currentIndex < products.length - 2) {
       setCurrentIndex(currentIndex + 2);
@@ -31,6 +33,7 @@ const CategoryProductView = () => {
   return (
     <div className="relative w-full">
       <StrikeLine />
+      <h3 className="text-2xl font-bold">Latest products</h3>
       {/* Previous Button */}
       {currentIndex > 0 && (
         <button

@@ -3,32 +3,35 @@ import { Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../actions/categoryActions";
-import Modal from "react-modal"; // Import react-modal
+import { fetchCategories } from "../actions/categoryActions"; // Import category fetching action
+import Modal from "react-modal";
 import "./Nav.css";
 
 const Navbar = () => {
-  const categories = useSelector((state) => state.categories.categories);
-  const [active, setActive] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
   const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories.categories);
+  const { cartItems } = useSelector((state) => state.cart); // Access cart items from Redux state
+  const [active, setActive] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Total number of items in the cart
+  const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const handleClick = (section) => {
     setActive(section);
   };
 
   const handleAllClick = () => {
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true); 
   };
 
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
   };
-
-  // Fetch categories only on initial render
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
 
   return (
     <div className="bg-gray-900 p-2 flex justify-between items-center">
@@ -36,6 +39,7 @@ const Navbar = () => {
       <div className="flex items-center space-x-4 flex-1 w-4/5">
         {/* Location and Search Bar */}
         <div className="flex items-center space-x-8 ml-4 space-y-2 w-full">
+          <Link to={'/'}>
           <div className="text-white text-sm flex items-center">
             <span role="img" aria-label="Bangladesh Flag" className="text-3xl">
               🇧🇩
@@ -46,6 +50,7 @@ const Navbar = () => {
               <p className="font-bold">Bangladesh</p>
             </div>
           </div>
+          </Link>
           <div
             className={`flex flex-1 ml-8 ${
               active === "search" ? "border-2 border-white p-1 rounded-md" : ""
@@ -64,8 +69,7 @@ const Navbar = () => {
               className="flex-1 p-2 w-3/5 border-none outline-none"
             />
             <button className="bg-yellow-400 p-2 flex items-center justify-center">
-              <IoSearchOutline className="text-3xl" />{" "}
-              {/* Larger search icon */}
+              <IoSearchOutline className="text-3xl" /> {/* Larger search icon */}
             </button>
           </div>
         </div>
@@ -74,7 +78,7 @@ const Navbar = () => {
       {/* Right Section */}
       <div className="flex items-center space-x-8 ml-8 text-white text-sm w-1/5">
         <div>
-          <Link to={"/user/profile"}>
+          <Link to="/user/dashboard">
             <span>
               Hello,
               <br /> sign in
@@ -85,9 +89,12 @@ const Navbar = () => {
           <p>Returns</p>
           <p className="font-bold">& Orders</p>
         </div>
+        {/* Cart Icon */}
         <div className="flex items-center">
-          <FiShoppingCart className="text-3xl" />
-          <p className="ml-2">Cart</p>
+          <Link to="/cart">
+            <FiShoppingCart className="text-3xl" />
+            <p className="ml-2">Cart ({totalItems})</p> {/* Show total items */}
+          </Link>
         </div>
       </div>
 
@@ -101,12 +108,12 @@ const Navbar = () => {
       >
         <h2 className="text-xl font-bold mb-4">All Categories</h2>
         <ul>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <li
-              key={category._id}
+              key={category?._id}
               className="py-2 px-4 hover:bg-gray-200 cursor-pointer"
             >
-              {category.category} {/* Ensure this is the correct property */}
+              <Link to={`/category/${category?.name}`}>{category?.name}</Link>
             </li>
           ))}
         </ul>

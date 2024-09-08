@@ -61,12 +61,12 @@ const CategoryBanner = () => {
               {" "}
               {/* Added custom-scrollbar class */}
               {categories.map((category) => (
-                <div key={category._id} className="flex items-center">
+                <div key={category?._id} className="flex items-center">
                   <Link
-                    to={`/category/${category.category}`}
+                    to={`/category/${category?.name}`}
                     className="text-lg cursor-pointer hover:bg-gray-200 p-1 bg-white w-[100%] rounded text-[#033B4C]"
                   >
-                    {category.category}
+                    {category?.name}
                   </Link>
                 </div>
               ))}

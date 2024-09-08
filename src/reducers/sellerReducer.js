@@ -20,6 +20,9 @@ import {
   FETCH_DEACTIVATED_SELLERS_START,
   FETCH_DEACTIVATED_SELLERS_SUCCESS,
   FETCH_DEACTIVATED_SELLERS_FAILURE,
+  FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START,
+  FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
+  FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
 } from '../actions/actionTypes';
 
 
@@ -27,9 +30,11 @@ import {
 const initialState = {
   sellers: [],
   seller: null,
+  success:null,
   deactivatedSellers: [],
   loading: false,
   error: null,
+  products: [],
 };
 
 const sellerReducer = (state = initialState, action) => {
@@ -58,7 +63,7 @@ const sellerReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        seller: action.payload,
+        success: action.payload,
       };
 
     case FETCH_SELLERS_SUCCESS:
@@ -108,7 +113,26 @@ const sellerReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
-
+      case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START:
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+  
+      case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          products: action.payload,
+        };
+  
+      case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload,
+        };
     default:
       return state;
   }

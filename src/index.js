@@ -7,6 +7,9 @@ import { galleryReducer } from './reducers/galleryReducer';
 import productReducer from './reducers/productReducer';
 import { adminCreateReducer, adminDeleteReducer, adminLoginReducer, adminReadReducer, adminRegisterReducer, adminRequestsReducer, adminUpdateReducer } from './reducers/adminReducer';
 import sellerReducer from './reducers/sellerReducer';
+import { offerBannerReducer } from './reducers/offerBannerReducer';
+import { commentCreateReducer, commentDeleteReducer, commentListReducer, commentUpdateReducer } from './reducers/commentReducers';
+import {cartReducer} from './reducers/cartReducer';
 
 
 
@@ -25,6 +28,14 @@ const rootReducer = combineReducers({
   adminUpdateReducer,
   adminDeleteReducer,
   adminRequests: adminRequestsReducer,
+  offerBanner: offerBannerReducer,
+  commentCreate: commentCreateReducer,
+  commentList: commentListReducer,
+  commentUpdate: commentUpdateReducer,
+  commentDelete: commentDeleteReducer,
+  cart: cartReducer,
+
+  
 });
 
 export default rootReducer;

@@ -11,10 +11,18 @@ import {
     DELETE_CATEGORY_REQUEST,
     DELETE_CATEGORY_SUCCESS,
     DELETE_CATEGORY_FAILURE,
+    FETCH_PRODUCTS_BY_CATEGORY_REQUEST,
+    FETCH_PRODUCTS_BY_CATEGORY_SUCCESS,
+    FETCH_PRODUCTS_BY_CATEGORY_FAILURE,
+    FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_REQUEST,
+    FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_SUCCESS,
+    FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_FAILURE,
 } from '../actions/actionTypes';
 
 const initialState = {
     categories: [],
+    productsByCategory: [],
+    limitedCategoriesWithProducts: [],
     loading: false,
     error: null,
 };
@@ -25,6 +33,8 @@ const categoryReducer = (state = initialState, action) => {
         case CREATE_CATEGORY_REQUEST:
         case UPDATE_CATEGORY_REQUEST:
         case DELETE_CATEGORY_REQUEST:
+        case FETCH_PRODUCTS_BY_CATEGORY_REQUEST:
+        case FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -61,10 +71,26 @@ const categoryReducer = (state = initialState, action) => {
                 loading: false,
             };
 
+        case FETCH_PRODUCTS_BY_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                productsByCategory: action.payload,
+                loading: false,
+            };
+
+        case FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_SUCCESS:
+            return {
+                ...state,
+                limitedCategoriesWithProducts: action.payload,
+                loading: false,
+            };
+
         case FETCH_CATEGORIES_FAILURE:
         case CREATE_CATEGORY_FAILURE:
         case UPDATE_CATEGORY_FAILURE:
         case DELETE_CATEGORY_FAILURE:
+        case FETCH_PRODUCTS_BY_CATEGORY_FAILURE:
+        case FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_FAILURE:
             return {
                 ...state,
                 loading: false,

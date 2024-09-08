@@ -11,7 +11,6 @@ import ManageGallery from "./admin/pages/ManageGallery";
 import ManageSeller from "./admin/pages/ManageSeller";
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminRegister from "./components/Admin/AdminRegister";
-import ViewFilterProducts from "./components/Filter/ViewFilterProducts";
 import NotFound from "./components/NotFound";
 import ProductView from "./components/Product/ProductView";
 import SellerLogin from "./components/Seller/SellerLogin";
@@ -19,7 +18,6 @@ import SellerManager from "./components/Seller/SellerManager";
 import SellerRegister from "./components/Seller/SellerRegister";
 import SellerRequests from "./components/Seller/SellerRequests";
 import UserLogin from "./components/UserProfile/UserLogin";
-import UserProfile from "./components/UserProfile/UserProfile";
 import UserRegister from "./components/UserProfile/UserRegister";
 import Home from "./pages/Home";
 import "./seller/charts/ChartjsConfig";
@@ -27,6 +25,14 @@ import "./seller/css/style.css";
 import SellerDashboard from "./seller/pages/SellerDashboard";
 import InputProductSeller from "./seller/pages/InputProductSeller";
 import SellerProfile from "./components/Seller/SellerProfile";
+import InputBannerOffer from "./components/Admin/InputBannerOffer";
+import FilterComponent from "./components/Filter/FilterComponent";
+import ManageAllCategory from "./components/ManageAllCategory";
+import GetCategoriesWithLimitedProducts from "./components/getCategoriesWithLimitedProducts";
+import CartPage from "./components/CartPage";
+import VisitUserProfile from "./components/UserProfile/VisitUserProfile";
+import UserDashboard from "./components/UserProfile/UserDashBoard";
+
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -37,24 +43,29 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/category/:category" element={<ViewFilterProducts />} />
-        <Route path="/user/profile" element={<UserProfile />} />
-        <Route path="/product/view" element={<ProductView />} />
+        <Route path="/category" element={<FilterComponent />} />
+        <Route path="/category/:categoryName" element={<ManageAllCategory/>} />
+        <Route path="/user/profile/:userId" element={<VisitUserProfile/>} />
+        <Route path="/seller/:id" element={<SellerProfile />} />
+        <Route path="/product/:id" element={<ProductView />} />
+        <Route path="/input/banner" element={<InputBannerOffer />} />
+        <Route path="/get/category" element={<GetCategoriesWithLimitedProducts/>} />
+        <Route path="/cart" component={<CartPage/>}/>
+
+
 
         {/* User Routes */}
         <Route
           path="/user/dashboard"
-          element={user ? <SellerDashboard /> : <Navigate to="/user/login" />}
+          element={user ? <UserDashboard /> : <Navigate to="/user/login" />}
         />
         <Route
           path="/user/login"
-          element={user ? <Navigate to="/seller/dashboard" /> : <UserLogin />}
+          element={user ? <UserLogin /> : <UserLogin />}
         />
         <Route
           path="/user/register"
-          element={
-            user ? <Navigate to="/seller/dashboard" /> : <UserRegister />
-          }
+          element={user ? <UserLogin /> : <UserRegister />}
         />
 
         {/* Seller Routes */}
@@ -78,13 +89,12 @@ function App() {
         />
         <Route
           path="/seller/dashboard/input/product"
-          element={seller ? <InputProductSeller/> : <SellerLogin />}
+          element={seller ? <InputProductSeller /> : <SellerLogin />}
         />
-        <Route
+        {/* <Route
           path="/seller/profile/:id"
           element={seller ? <SellerProfile/> : <SellerLogin />}
-        />
-        
+        /> */}
 
         {/* Admin Routes */}
         <Route
@@ -119,7 +129,7 @@ function App() {
         />
         <Route
           path="/admin/dashboard/manage/gallery"
-          element={admin ?<ManageGallery/>  : <AdminLogin />}
+          element={admin ? <ManageGallery /> : <AdminLogin />}
         />
         <Route
           path="/admin/dashboard/notification"

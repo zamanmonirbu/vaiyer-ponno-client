@@ -1,174 +1,144 @@
 import { useState, useEffect } from "react";
-
-const banners = [
-  "https://via.placeholder.com/600x400?text=Banner+1",
-  "https://via.placeholder.com/600x400?text=Banner+2",
-  "https://via.placeholder.com/600x400?text=Banner+3",
-];
-
-const products = [
-  {
-    id: 1,
-    imageUrl: "https://via.placeholder.com/150",
-    brand: "GROVE CO.",
-    title: "Glass Cleaner Starter Set",
-    rating: 4.5,
-    reviews: 89,
-    discount: 20,
-    regularPrice: "$19.53",
-    discountedPrice: "$15.62",
-  },
-  {
-    id: 2,
-    imageUrl: "https://via.placeholder.com/150",
-    brand: "NEW CHAPTER",
-    title: "Every Woman™'s One Daily 40+ Multivitamin",
-    rating: 4.5,
-    reviews: 187,
-    discount: 15,
-    regularPrice: "$25.99",
-    discountedPrice: "$20.79",
-  },
-  {
-    id: 3,
-    imageUrl: "https://via.placeholder.com/150",
-    brand: "DR. TUNG'S",
-    title: "Smart Floss®",
-    rating: 4.5,
-    reviews: 345,
-    discount: 5, // Less than 10%, should not be shown
-    regularPrice: "$5.79",
-    discountedPrice: "$4.63",
-  },
-  {
-    id: 4,
-    imageUrl: "https://via.placeholder.com/150",
-    brand: "GROVE CO.",
-    title: "Hand & Dish Soap Set",
-    rating: 4.5,
-    reviews: 67,
-    discount: 30,
-    regularPrice: "$8.53",
-    discountedPrice: "$6.82",
-  },
-  // More products as needed...
-];
+import { useDispatch, useSelector } from "react-redux";
+import StrikeLine from "./StrikeLine";
+import { getOfferBanners } from "../actions/offerBannerActions";
+import { getProductsWithHighOffer } from "../actions/productActions";
+import { Link } from "react-router-dom";
 
 const BannerAndOfferView = () => {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [currentProduct, setCurrentProduct] = useState(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBanner((prevBanner) => (prevBanner + 1) % banners.length);
-    }, 3000); // Change banner every 3 seconds
-    return () => clearInterval(interval);
-  }, []);
+    dispatch(getOfferBanners());
+    dispatch(getProductsWithHighOffer());
+  }, [dispatch]);
 
-  const handleNextBanner = () => {
-    setCurrentBanner((prevBanner) => (prevBanner + 1) % banners.length);
-  };
+  const {
+    offerBanners,
+    loading: bannerLoading,
+    error: bannerError,
+  } = useSelector((state) => state.offerBanner);
+  const {
+    highOfferProducts,
+    loading: productLoading,
+    error: productError,
+  } = useSelector((state) => state.product);
 
-  const handlePrevBanner = () => {
-    setCurrentBanner(
-      (prevBanner) => (prevBanner - 1 + banners.length) % banners.length
-    );
-  };
+  useEffect(() => {
+    if (offerBanners.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentBanner((prevBanner) => (prevBanner + 1) % offerBanners.length);
+      }, 3000); // Change banner every 3 seconds
+
+      return () => clearInterval(interval); // Clean up the interval on unmount
+    }
+  }, [offerBanners]);
 
   const handleNextProduct = () => {
-    setCurrentProduct(
-      (prevProduct) => (prevProduct + 1) % offeredProducts.length
-    );
+    setCurrentProduct((prevProduct) => (prevProduct + 1) % highOfferProducts.length);
   };
 
   const handlePrevProduct = () => {
     setCurrentProduct(
-      (prevProduct) =>
-        (prevProduct - 1 + offeredProducts.length) % offeredProducts.length
+      (prevProduct) => (prevProduct - 1 + highOfferProducts.length) % highOfferProducts.length
     );
   };
 
-  const offeredProducts = products.filter((product) => product.discount > 10);
-
   return (
-    <div className="flex w-full p-4 space-x-4">
-      {/* Left Side: Rotating Banner */}
-      <div className="w-1/2 h-64 relative">
-        <img
-          src={banners[currentBanner]}
-          alt={`Banner ${currentBanner + 1}`}
-          className="w-full h-full object-cover rounded-lg"
-        />
-        {/* Previous Button */}
-        <button
-          onClick={handlePrevBanner}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full"
-        >
-          &#9664;
-        </button>
-        {/* Next Button */}
-        <button
-          onClick={handleNextBanner}
-          className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full"
-        >
-          &#9654;
-        </button>
-      </div>
+    <div>
+      <StrikeLine />
+      <h3 className="font-bold mb-4 text-2xl text-center">
+        <span className="text-yellow-400">High Offers </span>Product Details
+      </h3>
 
-      {/* Right Side: Offered Products */}
-      <div className="w-1/2 relative">
-        <div className="overflow-hidden">
-          <div
-            className="flex space-x-4"
-            style={{
-              transform: `translateX(-${currentProduct * 100}%)`,
-              transition: "transform 0.3s ease",
-            }}
-          >
-            {offeredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white border rounded-lg p-4 w-64 flex-shrink-0"
-              >
+      <div className="flex w-full p-4 space-x-4">
+        {/* Left Side: Rotating Banner */}
+        <div className="w-1/5 h-64 relative">
+          {bannerLoading ? (
+            <p>Loading...</p>
+          ) : bannerError ? (
+            <p>Error: {bannerError}</p>
+          ) : (
+            offerBanners.length > 0 && (
+              <div className="relative">
                 <img
-                  src={product.imageUrl}
-                  alt={product.title}
-                  className="w-full h-48 object-cover mb-4"
+                  src={offerBanners[currentBanner]?.imageUrl}
+                  alt={`Banner ${currentBanner + 1}`}
+                  className="w-full h-72 object-cover rounded-lg"
                 />
-                <div className="text-sm text-gray-600">{product.brand}</div>
-                <div className="text-lg font-semibold mb-2">
-                  {product.title}
-                </div>
-                <div className="flex items-center mb-2">
-                  <span className="text-yellow-500">★ {product.rating}</span>
-                  <span className="text-sm text-gray-500 ml-2">
-                    ({product.reviews})
-                  </span>
-                </div>
-                <div className="text-sm text-green-600 mb-1">
-                  {product.discountedPrice} with {product.discount}% off
-                </div>
-                <div className="text-lg font-bold line-through">
-                  {product.regularPrice}
-                </div>
               </div>
-            ))}
-          </div>
+            )
+          )}
         </div>
-        {/* Previous Button */}
-        <button
-          onClick={handlePrevProduct}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full"
-        >
-          &#9664;
-        </button>
-        {/* Next Button */}
-        <button
-          onClick={handleNextProduct}
-          className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full"
-        >
-          &#9654;
-        </button>
+
+        {/* Right Side: Offered Products */}
+        <div className="w-4/5 relative">
+          {productLoading ? (
+            <p>Loading...</p>
+          ) : productError ? (
+            <p>Error: {productError}</p>
+          ) : (
+            <div className="relative overflow-hidden">
+              <div
+                className="flex space-x-4"
+                style={{
+                  transform: `translateX(-${currentProduct * 100}%)`,
+                  transition: "transform 0.3s ease",
+                }}
+              >
+                {highOfferProducts.map((product) => (
+                  <Link to={`/product/${product._id}`} key={product._id}>
+                    <div className="bg-white border rounded-lg p-4 w-72 flex-shrink-0">
+                      <img
+                        src={product.imageURL}
+                        alt={product.name}
+                        className="w-32 h-32 rounded-full mx-auto object-cover mb-4"
+                      />
+                      <div className="text-lg font-semibold mb-2">
+                        {product.name.substring(0, 50)}
+                      </div>
+                      <div className="flex items-center mb-2">
+                        <div className="w-1/2">
+                          <div className="text-lg font-bold line-through">
+                            ${product.unitPrice}
+                          </div>
+                        </div>
+                        <div className="text-yellow-500 ">
+                          ★ {product.rating}
+                        </div>
+                        <div className="text-sm text-gray-500 ml-2">
+                          ({product.reviews || 0})
+                        </div>
+                      </div>
+                      <span className="text-sm text-green-600 mb-1">
+                        ${Math.round(
+                          product.unitPrice - product.unitPrice * (product.offer / 100)
+                        )}{" "}
+                        with {product.offer}% off
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              {/* Previous Button */}
+              <button
+                onClick={handlePrevProduct}
+                className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-500 bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full mr-8"
+              >
+                &#8249; {/* Left-pointing triangle */}
+              </button>
+              {/* Next Button */}
+              <button
+                onClick={handleNextProduct}
+                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-500 bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full"
+              >
+                &#8250; {/* Right-pointing triangle */}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

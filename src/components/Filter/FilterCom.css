@@ -1,0 +1,63 @@
+/* Custom Radio Button */
+.custom-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid #033B4C;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .custom-radio:checked::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    background-color: #033B4C;
+    border-radius: 50%;
+  }
+  
+  /* Custom Checkbox */
+  .custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid #033B4C;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .custom-checkbox:checked::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 5px;
+    height: 10px;
+    border: solid #033B4C;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Remove outer border */
+.filter-component {
+    border: none;
+  }
+  
+  /* Increase font weight */
+  .text-weight {
+    font-weight: 900; /* Adjust weight as needed (e.g., 700 for bold) */
+  }
+  
+  /* Style for smaller icons */
+  .icon-small {
+    font-size: 0.25rem; /* Adjust size as needed */
+  }
+  

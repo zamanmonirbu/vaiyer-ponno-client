@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginSeller } from "../../actions/sellerActions";
+import AllNavSections from "../AllNavSections";
 
 const SellerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(
+  const navigate = useNavigate(); // Added navigate hook
+  const { loading, error, currentSeller } = useSelector(
     (state) => state.seller
   );
 
@@ -15,7 +17,13 @@ const SellerLogin = () => {
     dispatch(loginSeller({ email, password }));
   };
 
+  if (currentSeller) {
+    navigate("/seller/dashboard"); // Navigate to dashboard on success
+  }
+
   return (
+    <>
+    <AllNavSections/>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Seller Login</h2>
@@ -54,6 +62,7 @@ const SellerLogin = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -4,8 +4,8 @@ import { fetchCategories } from "../../actions/categoryActions";
 import {
   createProduct,
   deleteProduct,
-  getProducts,
   updateProduct,
+  getSellerProducts,
 } from "../../actions/productActions";
 
 const ProductManager = () => {
@@ -18,7 +18,8 @@ const ProductManager = () => {
     video: "",
     category: "",
     subCategory: "",
-    ratings: "", // Keep ratings field
+    offer: "",
+    gender: "", // Added gender field
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -29,9 +30,8 @@ const ProductManager = () => {
   const { products, loading, error } = useSelector((state) => state.product);
   const { categories = [] } = useSelector((state) => state.categories);
 
-  console.log(products,categories)
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getSellerProducts());
     dispatch(fetchCategories());
   }, [dispatch]);
 
@@ -100,7 +100,8 @@ const ProductManager = () => {
         video: "",
         category: "",
         subCategory: "",
-        ratings: "", // Reset ratings field
+        offer: "",
+        gender: "", // Reset gender field
       });
       setIsEditing(false);
       setEditingId(null);
@@ -114,7 +115,8 @@ const ProductManager = () => {
     setIsEditing(true);
     setEditingId(product._id);
     setSelectedCategory(
-      categories.find((cat) => cat._id === product.category)?.subCategories || []
+      categories.find((cat) => cat._id === product.category)?.subCategories ||
+        []
     );
   };
 
@@ -177,13 +179,49 @@ const ProductManager = () => {
         />
         <input
           type="number"
-          name="ratings"
-          value={product.ratings} // Capture ratings
+          name="offer"
+          value={product.offer}
           onChange={handleChange}
-          placeholder="Ratings"
+          placeholder="Offer"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
           required
         />
+        <div className="mb-2">
+          <span className="block mb-1">Gender</span>
+          <label className="mr-4">
+            <input
+              type="radio"
+              name="gender"
+              value="Male"
+              checked={product.gender === "Male"}
+              onChange={handleChange}
+              className="mr-1"
+            />
+            Male
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="Female"
+              checked={product.gender === "Female"}
+              onChange={handleChange}
+              className="mr-1"
+            />
+            Female
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="all"
+              checked={product.gender === "All"}
+              onChange={handleChange}
+              className="mx-2"
+            />
+            All
+          </label>
+        </div>
         <select
           name="category"
           value={product.category}
@@ -191,24 +229,24 @@ const ProductManager = () => {
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         >
           <option value="">Select Category</option>
-          {categories.length > 0 &&
-            categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
+          {categories?.length > 0 &&
+            categories?.map((cat) => (
+              <option key={cat?._id} value={cat?._id}>
+                {cat?.name}
               </option>
             ))}
         </select>
         <select
           name="subCategory"
-          value={product.subCategory}
+          value={product?.subCategory}
           onChange={handleChange}
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         >
           <option value="">Select Subcategory</option>
-          {selectedCategory.length > 0 &&
-            selectedCategory.map((sub) => (
-              <option key={sub._id} value={sub._id}>
-                {sub.name}
+          {selectedCategory?.length > 0 &&
+            selectedCategory?.map((sub) => (
+              <option key={sub?._id} value={sub?._id}>
+                {sub?.name}
               </option>
             ))}
         </select>
@@ -254,7 +292,8 @@ const ProductManager = () => {
               <th className="py-2 px-4 border">Category</th>
               <th className="py-2 px-4 border">Sub-Category</th>
               <th className="py-2 px-4 border">Price</th>
-              <th className="py-2 px-4 border">Ratings</th> {/* Add Ratings */}
+              <th className="py-2 px-4 border">Offer</th>
+              <th className="py-2 px-4 border">Gender</th> {/* Added Gender */}
               <th className="py-2 px-4 border">Actions</th>
             </tr>
           </thead>
@@ -263,22 +302,18 @@ const ProductManager = () => {
               <tr key={product._id}>
                 <td className="py-2 px-4 border">{product?.name}</td>
                 <td className="py-2 px-4 border">
-                  {/* {categories.find((cat) => cat._id === product.category)
-                    ?.category || "N/A"} */}
-                    {
-                      product?.category?.name
-                    }
+                  {categories?.find((cat) => cat?._id === product.category)
+                    ?.name || "N/A"}
                 </td>
                 <td className="py-2 px-4 border">
-                  {/* {selectedCategory.find(
+                  {selectedCategory.find(
                     (sub) => sub._id === product.subCategory
-                  )?.name || "N/A"} */}
-                  {
-                      product?.subCategory?.name
-                    }
+                  )?.name || "N/A"}
                 </td>
                 <td className="py-2 px-4 border">{product?.unitPrice}</td>
-                <td className="py-2 px-4 border">{product?.ratings}</td>
+                <td className="py-2 px-4 border">{product?.offer}</td>
+                <td className="py-2 px-4 border">{product?.gender}</td>{" "}
+                {/* Display Gender */}
                 <td className="py-2 px-4 border">
                   <button
                     onClick={() => handleEdit(product)}

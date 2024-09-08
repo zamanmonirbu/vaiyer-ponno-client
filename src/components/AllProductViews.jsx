@@ -1,17 +1,19 @@
 import BannerAndOfferView from "./BannerAndOfferView";
-import MostLovedCategories from "./CategoriesHorizontal ";
+import CategoriesHorizontal from "./CategoriesHorizontal ";
 import CategoryBanner from "./CategoryBanner";
-import FeaturedImage from "./FeaturedImage";
-import CategoryProductView from "./Seller/CategoryProductView";
+import GetCategoriesWithLimitedProducts from "./getCategoriesWithLimitedProducts";
+import ProductGridView from "./ProductGridView";
+import MostRatedProducts from "./Seller/MostRatedProducts";
 
 const AllProductViews = () => {
   return (
     <div className="bg-white">
-      <MostLovedCategories />
+      <CategoriesHorizontal />
+      <ProductGridView/>
       <CategoryBanner />
-      <CategoryProductView />
+      <MostRatedProducts/>
       <BannerAndOfferView />
-      <FeaturedImage />
+      <GetCategoriesWithLimitedProducts/>
     </div>
   );
 };

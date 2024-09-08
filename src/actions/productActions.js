@@ -4,7 +4,14 @@ import {
     CREATE_PRODUCT,
     UPDATE_PRODUCT,
     DELETE_PRODUCT,
-    PRODUCT_ERROR
+    PRODUCT_ERROR,
+    GET_SELLER_PRODUCTS,
+    GET_MOST_RATED_PRODUCTS_REQUEST,
+    GET_MOST_RATED_PRODUCTS_SUCCESS,
+    GET_MOST_RATED_PRODUCTS_FAILURE,
+    GET_PRODUCTS_WITH_HIGH_OFFER_REQUEST,
+    GET_PRODUCTS_WITH_HIGH_OFFER_SUCCESS,
+    GET_PRODUCTS_WITH_HIGH_OFFER_FAILURE,
 } from '../actions/actionTypes';
 import axiosInstance from '../api/axiosInstance';
 
@@ -28,7 +35,7 @@ const getAuthHeaders = () => {
 export const getProducts = () => async (dispatch) => {
     try {
         const res = await axiosInstance.get('/api/products', getAuthHeaders());
-        console.log(res.data);
+        // console.log(res.data);
         dispatch({
             type: GET_PRODUCTS,
             payload: res.data
@@ -56,6 +63,64 @@ export const getProduct = (id) => async (dispatch) => {
         });
     }
 };
+
+
+// Action to fetch most-rated products
+export const getMostRatedProducts = () => async (dispatch) => {
+    dispatch({ type: GET_MOST_RATED_PRODUCTS_REQUEST });
+
+    try {
+        const res = await axiosInstance.get('/api/products/most-rated-products');
+        // console.log(res.data)
+        dispatch({
+            type: GET_MOST_RATED_PRODUCTS_SUCCESS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: GET_MOST_RATED_PRODUCTS_FAILURE,
+            payload: err.response.data.message
+        });
+    }
+};
+
+
+export const getProductsWithHighOffer = () => async (dispatch) => {
+    dispatch({ type: GET_PRODUCTS_WITH_HIGH_OFFER_REQUEST });
+
+    try {
+        const res = await axiosInstance.get('/api/products/high-offer');
+        // console.log(res.data);
+        dispatch({
+            type: GET_PRODUCTS_WITH_HIGH_OFFER_SUCCESS,
+            payload: res.data,
+        });
+    } catch (err) {
+        dispatch({
+            type: GET_PRODUCTS_WITH_HIGH_OFFER_FAILURE,
+            payload: err.response.data.message,
+        });
+    }
+};
+
+
+// Get products by the authenticated seller
+export const getSellerProducts = () => async (dispatch) => {
+    try {
+        const res = await axiosInstance.get('/api/seller/products', getAuthHeaders());
+        // console.log(res.data)
+        dispatch({
+            type: GET_SELLER_PRODUCTS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: PRODUCT_ERROR,
+            payload: err.response.data.message
+        });
+    }
+};
+
 
 // Create a new product
 export const createProduct = (productData) => async (dispatch) => {

@@ -21,6 +21,9 @@ import {
   FETCH_DEACTIVATED_SELLERS_START,
   FETCH_DEACTIVATED_SELLERS_SUCCESS,
   FETCH_DEACTIVATED_SELLERS_FAILURE,
+  FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START,
+  FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
+  FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
 } from './actionTypes';
 
 // Action creators for seller login
@@ -89,6 +92,27 @@ export const fetchSellerById = (id) => async (dispatch) => {
     dispatch(fetchSellerByIdFailure(error.response?.data?.error || error.message));
   }
 };
+
+export const fetchProductsByCategoryOfSellerStart = () => ({ type: FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START });
+export const fetchProductsByCategoryOfSellerSuccess = (products) => ({ type: FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS, payload: products });
+export const fetchProductsByCategoryOfSellerFailure = (error) => ({ type: FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE, payload: error });
+
+export const fetchProductsByCategoryOfSeller = (sellerId, categoryId) => async (dispatch) => {
+  dispatch(fetchProductsByCategoryOfSellerStart());
+  try {
+    // /:sellerId/products/category/:category
+    console.log(sellerId,categoryId)
+    const response = await axiosInstance.get(`/api/seller/${sellerId}/products/category/${categoryId}`);
+    console.log("Seller category data", response.data);
+    const products = response.data;
+    dispatch(fetchProductsByCategoryOfSellerSuccess(products));
+  } catch (error) {
+    dispatch(fetchProductsByCategoryOfSellerFailure(error.response?.data?.error || error.message));
+  }
+};
+
+
+
 
 // Action creators for updating seller
 export const updateSellerStart = () => ({ type: UPDATE_SELLER_START });

@@ -1,31 +1,33 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { loginAdmin } from "../../actions/adminActions";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAdmin } from '../../actions/adminActions';
+import { Link, useNavigate } from 'react-router-dom';
+import AllNavSections from '../AllNavSections';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const { loading, error, adminInfo } = useSelector(
-    (state) => state.adminLogin
-  );
+  const navigate = useNavigate(); 
+  const { loading, error, adminInfo } = useSelector((state) => state.adminLogin);
 
   const handleLogin = () => {
-    dispatch(loginAdmin({ email, password, role: "admin" }));
+    dispatch(loginAdmin({ email, password }));
   };
 
+  if (adminInfo) {
+    navigate('/admin/dashboard'); 
+  }
+
   return (
+    <>
+    <AllNavSections/>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
         {loading && <p className="text-blue-500 text-center">Loading...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
-        {adminInfo && (
-          <p className="text-green-500 text-center">
-            Welcome, {adminInfo.name}
-          </p>
-        )}
+      
         <input
           type="email"
           value={email}
@@ -59,6 +61,8 @@ const AdminLogin = () => {
         </div>
       </div>
     </div>
+    </>
+   
   );
 };
 

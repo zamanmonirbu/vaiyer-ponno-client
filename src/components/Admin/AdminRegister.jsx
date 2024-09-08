@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerAdmin } from '../../actions/adminActions';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AllNavSections from '../AllNavSections';
 
 const AdminRegister = () => {
   const [name, setName] = useState('');
@@ -9,19 +11,25 @@ const AdminRegister = () => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Added navigate hook
   const { loading, error, success } = useSelector((state) => state.adminRegister);
 
   const handleRegister = () => {
     dispatch(registerAdmin({ name, email, password }));
   };
 
+  if (success) {
+    navigate('/admin/login'); // Navigate to login on success
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+   <>
+   <AllNavSections/>
+   <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Admin Registration</h2>
         {loading && <p className="text-blue-500 text-center">Registering...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
-        {success && <p className="text-green-500 text-center">Registration successful!</p>}
         <div className="mb-4">
           <input 
             type="text" 
@@ -60,6 +68,7 @@ const AdminRegister = () => {
         </div>
       </div>
     </div>
+   </>
   );
 };
 

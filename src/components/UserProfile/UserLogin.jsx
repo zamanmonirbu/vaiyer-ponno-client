@@ -1,29 +1,30 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom"; // For routing
+import { useNavigate, Link } from "react-router-dom"; 
 import { loginUser } from "../../actions/userActions";
+import AllNavSections from "../AllNavSections";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { loading, error, currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate(); 
+  const { loading, error } = useSelector((state) => state.user);
 
   const handleLogin = () => {
-    dispatch(loginUser({ email, password }));
+    dispatch(loginUser({ email, password }, navigate)); 
   };
 
   return (
+    <>
+    <AllNavSections/>
+    
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         {loading && <p className="text-blue-500 text-center">Loading...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
-        {currentUser && (
-          <p className="text-green-500 text-center">
-            Welcome, {currentUser.name}
-          </p>
-        )}
+        
         <input
           type="email"
           value={email}
@@ -57,6 +58,7 @@ const UserLogin = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

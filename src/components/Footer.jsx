@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <div>
-      <footer className="bg-white dark:bg-gray-900">
+      <footer className="bg-gray-50 dark:bg-gray-900">
         <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="lg:flex lg:items-start lg:gap-8">
             <div className="text-teal-600 dark:text-teal-300">
@@ -22,12 +22,11 @@ const Footer = () => {
               <div className="col-span-2">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Get the latest news!
+                    Get Best Products most savings!
                   </h2>
 
                   <p className="mt-4 text-gray-500 dark:text-gray-400">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Esse non cupiditate quae nam molestias.
+                    For the first time in Bangladesh we are the best company who are providing you to get products directly from manufacturer. 
                   </p>
                 </div>
               </div>
@@ -40,8 +39,8 @@ const Footer = () => {
                     <input
                       type="email"
                       id="UserEmail"
-                      placeholder="john@rhcp.com"
-                      className="w-full border-none focus:border-transparent focus:ring-transparent sm:text-sm dark:bg-gray-900 dark:text-white"
+                      placeholder="vaiyerponno@gamil.com"
+                      className="w-full border-none focus:border-transparent focus:ring-transparent sm:text-sm dark:bg-gray-900 dark:text-white p-4 bg-white"
                     />
 
                     <button className="mt-1 w-full bg-teal-500 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:shrink-0">
@@ -367,7 +366,7 @@ const Footer = () => {
           <div className="mt-8 border-t border-gray-100 pt-8 dark:border-gray-800">
             <div className="sm:flex sm:justify-between">
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                &copy; 2022. Company Name. All rights reserved.
+                &copy; 2024. Vaiyer Ponno E-Commerce. All rights reserved.
               </p>
 
               <ul className="mt-8 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
