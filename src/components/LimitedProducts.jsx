@@ -4,7 +4,7 @@ import { getCategoriesWithLimitedProducts } from '../actions/categoryActions';
 import { Link, useNavigate } from "react-router-dom";
 import StrikeLine from './StrikeLine';
 
-const GetCategoriesWithLimitedProducts = () => {
+const LimitedProducts = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { limitedCategoriesWithProducts, loading, error } = useSelector((state) => state.categories);
@@ -99,4 +99,4 @@ const GetCategoriesWithLimitedProducts = () => {
     );
 };
 
-export default GetCategoriesWithLimitedProducts;
+export default LimitedProducts;

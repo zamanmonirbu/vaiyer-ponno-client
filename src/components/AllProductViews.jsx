@@ -1,7 +1,7 @@
 import BannerAndOfferView from "./BannerAndOfferView";
 import CategoriesHorizontal from "./CategoriesHorizontal ";
 import CategoryBanner from "./CategoryBanner";
-import GetCategoriesWithLimitedProducts from "./getCategoriesWithLimitedProducts";
+import GetCategoriesWithLimitedProducts from "./LimitedProducts";
 import ProductGridView from "./ProductGridView";
 import MostRatedProducts from "./Seller/MostRatedProducts";
 
@@ -9,11 +9,11 @@ const AllProductViews = () => {
   return (
     <div className="bg-white">
       <CategoriesHorizontal />
-      <ProductGridView/>
+      <ProductGridView />
       <CategoryBanner />
-      <MostRatedProducts/>
+      <MostRatedProducts />
       <BannerAndOfferView />
-      <GetCategoriesWithLimitedProducts/>
+      <GetCategoriesWithLimitedProducts />
     </div>
   );
 };
