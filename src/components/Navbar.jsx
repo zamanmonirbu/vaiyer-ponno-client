@@ -4,21 +4,27 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../actions/categoryActions"; // Import category fetching action
+import { fetchLocation } from "../actions/locationActions"; // Import location fetching action
 import Modal from "react-modal";
 import "./Nav.css";
+import { FiMapPin } from "react-icons/fi";
+
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories.categories);
-  const { cartItems } = useSelector((state) => state.cart); // Access cart items from Redux state
+  const categories = useSelector((state) => state.categories.categories); // Fetch categories from state
+  const { cartItems } = useSelector((state) => state.cart); // Fetch cart items from state
+  const { city, road, postalCode, error } = useSelector((state) => state.location); // Fetch location from state
+
   const [active, setActive] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Total number of items in the cart
+  // Calculate total cart items
   const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchCategories()); // Fetch categories on mount
+    dispatch(fetchLocation()); // Fetch location on mount
   }, [dispatch]);
 
   const handleClick = (section) => {
@@ -26,11 +32,11 @@ const Navbar = () => {
   };
 
   const handleAllClick = () => {
-    setIsModalOpen(true); 
+    setIsModalOpen(true); // Open modal
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false); // Close modal
   };
 
   return (
@@ -39,17 +45,22 @@ const Navbar = () => {
       <div className="flex items-center space-x-4 flex-1 w-4/5">
         {/* Location and Search Bar */}
         <div className="flex items-center space-x-8 ml-4 space-y-2 w-full">
-          <Link to={'/'}>
-          <div className="text-white text-sm flex items-center">
-            <span role="img" aria-label="Bangladesh Flag" className="text-3xl">
-              🇧🇩
-            </span>{" "}
-            {/* Bangladeshi Flag */}
-            <div className="ml-2">
-              <p>Deliver to</p>
-              <p className="font-bold">Bangladesh</p>
+          <Link to={"/"}>
+            <div className="text-white text-sm flex items-center">
+            <FiMapPin className="text-xl" />
+
+              {/* Show the user's city, road, and postal code */}
+              <div className="ml-2">
+                {error ? (
+                  <p className="font-bold">{error}</p> // Display error if location is not fetched
+                ) : (
+                  <div>
+                    <p className="font-bold">{city || "City"}</p> {/* Show city */}
+                    <p>{road || "Road"}, {postalCode || "Postal Code"}</p> {/* Show road and postal code */}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
           </Link>
           <div
             className={`flex flex-1 ml-8 ${

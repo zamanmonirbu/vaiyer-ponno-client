@@ -13,7 +13,7 @@ const GalleryGrid = () => {
 
   return (
     <div className="grid grid-cols-4 gap-4 py-4">
-      {galleryItems.map((item) => {
+      {galleryItems?.map((item) => {
         const gridClasses = item.isLarge
           ? "col-span-2 row-span-2"
           : item.isMedium

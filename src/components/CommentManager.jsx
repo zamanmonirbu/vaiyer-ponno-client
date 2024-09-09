@@ -7,12 +7,15 @@ import RatingComponent from './RatingComponent';
 const CommentManager = ({ productId }) => {
   const dispatch = useDispatch();
   const comments = useSelector((state) => state.commentList.comments);
+  const userId = JSON.parse(localStorage.getItem("userAuth"))?.id;
+
 
   const [newComment, setNewComment] = useState('');
   const [editCommentId, setEditCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState('');
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [rating, setRating] = useState(0);
+  const [showLoginWarning, setShowLoginWarning] = useState(false); // For modal warning
 
   useEffect(() => {
     // Fetch comments when the component mounts
@@ -20,6 +23,10 @@ const CommentManager = ({ productId }) => {
   }, [dispatch, productId]);
 
   const handleAddComment = () => {
+    if (!userId) {
+      setShowLoginWarning(true); // Show warning modal if the user is not logged in
+      return;
+    }
     if (newComment.trim()) {
       dispatch(createComment(newComment, productId, rating));
       setNewComment('');
@@ -50,6 +57,10 @@ const CommentManager = ({ productId }) => {
 
   const handleRatingSubmit = (newRating) => {
     setRating(newRating);
+  };
+
+  const closeLoginWarning = () => {
+    setShowLoginWarning(false);
   };
 
   return (
@@ -128,6 +139,32 @@ const CommentManager = ({ productId }) => {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {showLoginWarning && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <h3 className="text-xl mb-4">You are not logged in</h3>
+            <p>Please log in to add a review or rating.</p>
+            <div className="mt-4">
+              <button
+                onClick={closeLoginWarning}
+                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  // Redirect to login or take any login action
+                  window.location.href = '/user/login';
+                }}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Go to Login
+              </button>
+            </div>
           </div>
         </div>
       )}

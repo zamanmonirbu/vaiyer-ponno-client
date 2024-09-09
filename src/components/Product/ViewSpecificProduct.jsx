@@ -16,7 +16,7 @@ const ViewSpecificProduct = ({ id }) => {
   const [quantity, setQuantity] = useState(1);
 
   // Fetch cart state from Redux to keep track of the cart count
-  const cart = useSelector((state) => state.cart.cartItems);
+  // const cart = useSelector((state) => state.cart.cartItems);
 
   useEffect(() => {
     dispatch(getProduct(id));

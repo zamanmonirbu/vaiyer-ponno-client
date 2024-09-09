@@ -60,7 +60,7 @@ const CategoryBanner = () => {
             <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
               {" "}
               {/* Added custom-scrollbar class */}
-              {categories.map((category) => (
+              {categories?.map((category) => (
                 <div key={category?._id} className="flex items-center">
                   <Link
                     to={`/category/${category?.name}`}

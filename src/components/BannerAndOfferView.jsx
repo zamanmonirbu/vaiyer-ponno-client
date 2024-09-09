@@ -88,7 +88,7 @@ const BannerAndOfferView = () => {
                   transition: "transform 0.3s ease",
                 }}
               >
-                {highOfferProducts.map((product) => (
+                {highOfferProducts?.map((product) => (
                   <Link to={`/product/${product._id}`} key={product._id}>
                     <div className="bg-white border rounded-lg p-4 w-72 flex-shrink-0">
                       <img

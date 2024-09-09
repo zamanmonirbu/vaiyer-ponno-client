@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://vaiyer-ponno-backend-1.onrender.com', // Ensure this is correct
+  baseURL: 'http://localhost:5000', // Ensure this is correct
   headers: {
     'Content-Type': 'application/json',
   },

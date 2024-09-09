@@ -10,6 +10,7 @@ import sellerReducer from './reducers/sellerReducer';
 import { offerBannerReducer } from './reducers/offerBannerReducer';
 import { commentCreateReducer, commentDeleteReducer, commentListReducer, commentUpdateReducer } from './reducers/commentReducers';
 import {cartReducer} from './reducers/cartReducer';
+import locationReducer from './reducers/locationReducer';
 
 
 
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   commentUpdate: commentUpdateReducer,
   commentDelete: commentDeleteReducer,
   cart: cartReducer,
+  location: locationReducer,
 
   
 });

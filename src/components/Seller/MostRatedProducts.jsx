@@ -49,7 +49,7 @@ const MostRatedProducts = () => {
 
       <div className="relative overflow-hidden">
         <div className="flex justify-between">
-          {visibleProducts.map((product) => (
+          {visibleProducts?.map((product) => (
             <div
               key={product?.product?._id}
               className="w-1/4 px-2 mb-4 transition-opacity duration-500"

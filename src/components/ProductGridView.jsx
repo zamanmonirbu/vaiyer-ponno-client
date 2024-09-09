@@ -31,7 +31,7 @@ const ProductGridView = () => {
         <span className="text-yellow-400">Latest Loved </span>Product Details
       </h3>
       <div className="flex w-full flex-wrap justify-between">
-        {columns.map((column, colIndex) => (
+        {columns?.map((column, colIndex) => (
           <div
             key={colIndex}
             className="w-1/4 px-2 mb-4 transition-opacity duration-500"

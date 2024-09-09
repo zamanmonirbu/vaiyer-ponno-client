@@ -32,6 +32,7 @@ import "./seller/css/style.css";
 import InputProductSeller from "./seller/pages/InputProductSeller";
 import SellerDashboard from "./seller/pages/SellerDashboard";
 import LimitedProducts from "./components/LimitedProducts";
+import LocationPage from "./components/LocationPage";
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -48,6 +49,7 @@ function App() {
         <Route path="/seller/:id" element={<SellerProfile />} />
         <Route path="/product/:id" element={<ProductView />} />
         <Route path="/input/banner" element={<InputBannerOffer />} />
+        <Route path="/location" element={<LocationPage/>} />
         <Route
           path="/get/category"
           element={<LimitedProducts />}
