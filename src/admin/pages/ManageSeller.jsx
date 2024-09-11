@@ -1,18 +1,14 @@
 import { useState } from 'react';
-
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import FilterButton from '../components/DropdownFilter';
 import Datepicker from '../components/Datepicker';
-
 import Banner from '../partials/Banner';
-// import CategoryInput from '../../components/Admin/CategoryInput';
-// import AdminRequests from '../../components/Admin/AdminRequests';
 import SellerManager from '../../components/Seller/SellerManager';
 
 function ManageSeller() {
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
 
   return (
     <div className="flex h-screen overflow-hidden">

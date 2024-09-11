@@ -14,6 +14,7 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   RESET_USER,
 } from "./actionTypes";
+import { updateUserLocation } from "./locationActions";
 
 
 // Action creator for login start
@@ -51,17 +52,31 @@ export const registerFailure = (error) => ({
 });
 
 // Thunk action for login
+// Thunk action for login
 export const loginUser = (credentials, navigate) => async (dispatch) => {
   dispatch(loginStart());
   try {
     const response = await axiosInstance.post("/api/auth/login", credentials);
     const data = response.data;
-    console.log(data)
+    console.log("For test data",data?.user);
     dispatch(loginSuccess(data));
 
     // Save user auth and token to localStorage
     localStorage.setItem("userAuth", JSON.stringify(data.user));
     localStorage.setItem("authToken", data.token);
+
+    // Check if location exists in localStorage
+    const storedLocation = JSON.parse(localStorage.getItem("userLocation"));
+    
+    // If location exists, send it to the backend after login
+    if (storedLocation) {
+      try {
+        dispatch(updateUserLocation(data.user.id,storedLocation))
+        localStorage.removeItem("userLocation");
+      } catch (error) {
+        console.error("Error saving location to backend:", error.message);
+      }
+    }
 
     // Navigate to user dashboard after successful login
     navigate(`/user/dashboard`);
@@ -69,6 +84,7 @@ export const loginUser = (credentials, navigate) => async (dispatch) => {
     dispatch(loginFailure(error.response?.data?.error || error.message));
   }
 };
+
 
 // Thunk action for registration
 export const registerUser = (userInfo, navigate) => async (dispatch) => {
@@ -140,3 +156,4 @@ export const logoutUser = (navigate) => (dispatch) => {
   // Navigate to the login page after logout
   navigate("/user/login");
 };
+

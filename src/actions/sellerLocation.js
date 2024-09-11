@@ -14,7 +14,7 @@ export const fetchLocation = () => async (dispatch) => {
   dispatch({ type: FETCH_LOCATION_REQUEST });
 
   const API_KEY = '3232c1153ab849e5ab17fce13ce22a94';
-  const userAuth = JSON.parse(localStorage.getItem("userAuth")); // Check if the user is logged in
+  const userAuth = JSON.parse(localStorage.getItem("sellerAuth")); // Check if the user is logged in
 
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(

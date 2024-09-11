@@ -2,23 +2,24 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfile, updateUserProfile } from "../../actions/userActions";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaSignOutAlt } from "react-icons/fa";
+import { FaEdit, FaSignOutAlt, FaMapMarkerAlt } from "react-icons/fa"; // Added Location Icon
 import AllNavSections from "../AllNavSections";
 
 const UserDashboard = () => {
   const dispatch = useDispatch();
   const userId = JSON.parse(localStorage.getItem("userAuth"))?.id;
-  
-  const navigate = useNavigate(); // Hook for navigation
+
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [lat, setLat] = useState(""); // Latitude state
+  const [lng, setLng] = useState(""); // Longitude state
   const [showOrders, setShowOrders] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // const currentUser = useSelector((state) => state.user.currentUser);
   const { userProfile, loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -31,20 +32,22 @@ const UserDashboard = () => {
       setEmail(userProfile.email || "");
       setAddress(userProfile.address || "");
       setImageUrl(userProfile.image || "");
+      setLat(userProfile.location?.lat || ""); // Set latitude from user profile
+      setLng(userProfile.location?.lng || ""); // Set longitude from user profile
     }
   }, [userProfile]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedData = { name, email, address, image: imageUrl };
-    dispatch(updateUserProfile(userId, updatedData, navigate)); // Pass navigate
+    const updatedData = { name, email, address, image: imageUrl, location: { lat, lng } };
+    dispatch(updateUserProfile(userId, updatedData, navigate)); // Pass updated location
     setIsEditMode(false);
   };
 
   const handleLogout = () => {
     localStorage.clear();
     dispatch({ type: "RESET_USER" });
-    navigate("/"); 
+    navigate("/");
   };
 
   const isOwner = userProfile?._id === userId;
@@ -134,6 +137,36 @@ const UserDashboard = () => {
                           />
                         ) : (
                           address || "No address available"
+                        )}
+                      </td>
+                    </tr>
+                    {/* Location View and Edit */}
+                    <tr className="border-b">
+                      <td className="px-4 py-2 font-semibold flex items-center">
+                        <FaMapMarkerAlt className="mr-2" /> Location:
+                      </td>
+                      <td className="px-4 py-2">
+                        {isOwner && isEditMode ? (
+                          <>
+                            <input
+                              type="text"
+                              placeholder="Latitude"
+                              value={lat}
+                              onChange={(e) => setLat(e.target.value)}
+                              className="border rounded px-2 py-1 w-full mb-2"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Longitude"
+                              value={lng}
+                              onChange={(e) => setLng(e.target.value)}
+                              className="border rounded px-2 py-1 w-full"
+                            />
+                          </>
+                        ) : (
+                          lat && lng
+                            ? `Lat: ${lat}, Lng: ${lng}`
+                            : "No location available"
                         )}
                       </td>
                     </tr>

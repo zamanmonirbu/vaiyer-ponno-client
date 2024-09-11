@@ -1,42 +1,47 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
-import { FiShoppingCart } from "react-icons/fi";
+import { FiShoppingCart, FiMapPin } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../actions/categoryActions"; // Import category fetching action
-import { fetchLocation } from "../actions/locationActions"; // Import location fetching action
+import { fetchCategories } from "../actions/categoryActions"; 
+import { fetchLocation, getUserLocation } from "../actions/locationActions"; 
 import Modal from "react-modal";
 import "./Nav.css";
-import { FiMapPin } from "react-icons/fi";
-
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories.categories); // Fetch categories from state
-  const { cartItems } = useSelector((state) => state.cart); // Fetch cart items from state
-  const { city, road, postalCode, error } = useSelector((state) => state.location); // Fetch location from state
+  const categories = useSelector((state) => state.categories.categories); 
+  const { cartItems } = useSelector((state) => state.cart); 
+  const { userProfile } = useSelector((state) => state.user);
+  const { city, road, postalCode, error } = useSelector(
+    (state) => state.location
+  );
 
   const [active, setActive] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Calculate total cart items
   const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   useEffect(() => {
-    dispatch(fetchCategories()); // Fetch categories on mount
-    dispatch(fetchLocation()); // Fetch location on mount
-  }, [dispatch]);
+    dispatch(fetchCategories()); 
+    const userAuth = JSON.parse(localStorage.getItem("userAuth")); 
+    const storedLocation = JSON.parse(localStorage.getItem("userLocation")); 
+    if (userAuth) {
+      dispatch(getUserLocation(userProfile?._id));
+    } else if (!storedLocation && !userAuth) {
+      dispatch(fetchLocation());
+    }
+  }, [dispatch, userProfile]);
 
   const handleClick = (section) => {
     setActive(section);
   };
 
   const handleAllClick = () => {
-    setIsModalOpen(true); // Open modal
+    setIsModalOpen(true); 
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Close modal
+    setIsModalOpen(false); 
   };
 
   return (
@@ -47,16 +52,18 @@ const Navbar = () => {
         <div className="flex items-center space-x-8 ml-4 space-y-2 w-full">
           <Link to={"/"}>
             <div className="text-white text-sm flex items-center">
-            <FiMapPin className="text-xl" />
+              <FiMapPin className="text-xl" />
 
               {/* Show the user's city, road, and postal code */}
               <div className="ml-2">
                 {error ? (
-                  <p className="font-bold">{error}</p> // Display error if location is not fetched
+                  <p className="font-bold">{error}</p>
                 ) : (
                   <div>
-                    <p className="font-bold">{city || "City"}</p> {/* Show city */}
-                    <p>{road || "Road"}, {postalCode || "Postal Code"}</p> {/* Show road and postal code */}
+                    <p className="font-bold">{city || "City"}</p>
+                    <p>
+                      {road || "Road"}, {postalCode || "Postal Code"}
+                    </p>
                   </div>
                 )}
               </div>
@@ -80,7 +87,8 @@ const Navbar = () => {
               className="flex-1 p-2 w-3/5 border-none outline-none"
             />
             <button className="bg-yellow-400 p-2 flex items-center justify-center">
-              <IoSearchOutline className="text-3xl" /> {/* Larger search icon */}
+              <IoSearchOutline className="text-3xl" />{" "}
+              {/* Larger search icon */}
             </button>
           </div>
         </div>

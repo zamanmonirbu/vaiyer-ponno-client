@@ -7,6 +7,7 @@ import {
   updateProduct,
   getSellerProducts,
 } from "../../actions/productActions";
+import { getUserLocation } from "../../actions/locationActions";
 
 const ProductManager = () => {
   const [product, setProduct] = useState({
@@ -29,11 +30,17 @@ const ProductManager = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
   const { categories = [] } = useSelector((state) => state.categories);
+  const { seller } = useSelector((state) => state.seller);
+  const { lat, lng, city, road, postalCode } = useSelector(
+    (state) => state.location
+  );
 
+  console.log(seller?.seller, lat, lng, city, road, postalCode);
   useEffect(() => {
     dispatch(getSellerProducts());
     dispatch(fetchCategories());
-  }, [dispatch]);
+    dispatch(getUserLocation(seller?.seller?.id));
+  }, [dispatch,seller]);
 
   useEffect(() => {
     if (product.category) {
