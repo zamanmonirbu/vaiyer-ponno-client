@@ -1,4 +1,4 @@
-import{ useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
@@ -14,6 +14,10 @@ const ProductDetails = ({
   offer,
   rating,
   order,
+  sellerLocation,
+  quantity,
+  area,
+  cities
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
@@ -41,7 +45,25 @@ const ProductDetails = ({
         Rating: {rating} ★
       </div>
 
-      <div className="text-[#033B4C]">Orders: {order}</div>
+      {/* <div className="text-[#033B4C]">Orders: {order}</div> */}
+      <p><strong>Orders:</strong> {order}</p>
+
+        {/* Displaying the additional fields */}
+        <div className="text-gray-800 mb-4">
+        <p><strong>Quantity:</strong> {quantity}</p>
+        {/* <p><strong>Area:</strong> {area} sq.m</p> */}
+        <p><strong>Seller Location:</strong> {sellerLocation?.city}</p>
+        {cities && cities.length > 0 && (
+          <div>
+            <strong>Available Product On</strong>
+            <ul className="list-disc list-inside">
+              {cities.map((city, index) => (
+                <li key={index}>{city}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
 
       <StrikeLine />
       <div>
@@ -76,10 +98,11 @@ const ProductDetails = ({
         )}
       </div>
 
+    
+
       <div className="mb-4">
         <CommentManager productId={productId} />
       </div>
-
     </div>
   );
 };
@@ -91,8 +114,16 @@ ProductDetails.propTypes = {
   description: PropTypes.string.isRequired,
   unitPrice: PropTypes.number.isRequired,
   offer: PropTypes.number,
-  rating: PropTypes.number.isRequired,
-  order: PropTypes.number.isRequired,
+  rating: PropTypes.array,
+  order: PropTypes.array,
+  sellerLocation: PropTypes.shape({
+    city: PropTypes.string,
+    lat: PropTypes.number,
+    lng: PropTypes.number,
+  }),
+  quantity: PropTypes.number.isRequired,
+  area: PropTypes.number.isRequired,
+  cities: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ProductDetails;

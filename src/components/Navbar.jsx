@@ -4,18 +4,16 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FiShoppingCart, FiMapPin } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../actions/categoryActions"; 
-import { fetchLocation, getUserLocation } from "../actions/locationActions"; 
+import { fetchLocation } from "../actions/locationActions"; 
 import Modal from "react-modal";
 import "./Nav.css";
+import { getUserProfile } from "../actions/userActions";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.categories.categories); 
   const { cartItems } = useSelector((state) => state.cart); 
   const { userProfile } = useSelector((state) => state.user);
-  const { city, road, postalCode, error } = useSelector(
-    (state) => state.location
-  );
 
   const [active, setActive] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,10 +23,13 @@ const Navbar = () => {
     dispatch(fetchCategories()); 
     const userAuth = JSON.parse(localStorage.getItem("userAuth")); 
     const storedLocation = JSON.parse(localStorage.getItem("userLocation")); 
-    if (userAuth) {
-      dispatch(getUserLocation(userProfile?._id));
-    } else if (!storedLocation && !userAuth) {
+
+    if (!storedLocation || !userAuth) {
       dispatch(fetchLocation());
+    }
+
+    if(userAuth){
+      getUserProfile(userAuth?.id);
     }
   }, [dispatch, userProfile]);
 
@@ -43,6 +44,8 @@ const Navbar = () => {
   const closeModal = () => {
     setIsModalOpen(false); 
   };
+
+  const {city,road,postalCode,error}=userProfile?.location;
 
   return (
     <div className="bg-gray-900 p-2 flex justify-between items-center">

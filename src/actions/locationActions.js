@@ -14,7 +14,8 @@ export const fetchLocation = () => async (dispatch) => {
   dispatch({ type: FETCH_LOCATION_REQUEST });
 
   const API_KEY = '3232c1153ab849e5ab17fce13ce22a94';
-  const userAuth = JSON.parse(localStorage.getItem("userAuth")); // Check if the user is logged in
+  const userAuth = JSON.parse(localStorage.getItem("userAuth")); // Check if the user is logged in 
+  const sellerAuth = JSON.parse(localStorage.getItem("sellerAuth")); // Check if the seller is logged in
 
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -35,13 +36,18 @@ export const fetchLocation = () => async (dispatch) => {
           // Prepare the location data
           const locationData = { city, road, postalCode, lat: latitude, lng: longitude };
 
+          // console.log("Fetch location",locationData)
+
           // If user is logged in, send the location to the backend
           if (userAuth) {
-            // Optionally update user location in the backend
             dispatch(updateUserLocation(userAuth.user.id, locationData));
-          } else {
-            // If not logged in, store the location in localStorage
+          } else if(!sellerAuth) {
             localStorage.setItem("userLocation", JSON.stringify(locationData));
+          }
+
+          // If seller is logged in, update seller location
+          if (sellerAuth) {
+            dispatch(updateSellerLocation(sellerAuth.id, locationData));
           }
 
           // Dispatch success action with the fetched location data
@@ -62,12 +68,32 @@ export const fetchLocation = () => async (dispatch) => {
   }
 };
 
+
 // Action to get user location from the backend
 export const getUserLocation = (userId) => async (dispatch) => {
   dispatch({ type: FETCH_LOCATION_REQUEST });
 
   try {
     const response = await axiosInstance.get(`/api/location/${userId}`);
+    // console.log("From action in location", response.data);
+
+    // Dispatch success action with the retrieved location data
+    dispatch({
+      type: FETCH_LOCATION_SUCCESS,
+      payload: response.data, // Assumes backend returns { city, road, postalCode, lat, lng }
+    });
+  } catch (error) {
+    dispatch({ type: FETCH_LOCATION_ERROR, payload: error.message || "Error retrieving location data" });
+  }
+};
+
+// Action to get seller location from the backend
+export const getSellerLocation = (sellerId) => async (dispatch) => {
+  dispatch({ type: FETCH_LOCATION_REQUEST });
+
+  try {
+    const response = await axiosInstance.get(`/api/location/${sellerId}`);
+    console.log("From action in seller location", response.data);
 
     // Dispatch success action with the retrieved location data
     dispatch({
@@ -98,3 +124,27 @@ export const updateUserLocation = (userId, locationData) => async (dispatch) => 
     });
   }
 };
+
+// Action to update seller location
+export const updateSellerLocation = (sellerId, locationData) => async (dispatch) => {
+  console.log("From seller location update",sellerId);
+  dispatch({ type: UPDATE_LOCATION_REQUEST });
+
+  try {
+    const response = await axiosInstance.post(`/api/location/update`, { sellerId, ...locationData });
+
+    // Dispatch success action with the updated seller location data
+    dispatch({
+      type: UPDATE_LOCATION_SUCCESS,
+      payload: response.data, // Assuming the backend returns the updated seller location data
+    });
+  } catch (error) {
+    console.log(error)
+    dispatch({
+    
+      type: UPDATE_LOCATION_FAILURE,
+      payload: error.response?.data?.error || "Error updating seller location",
+    });
+  }
+};
+

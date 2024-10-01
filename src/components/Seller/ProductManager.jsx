@@ -7,7 +7,7 @@ import {
   updateProduct,
   getSellerProducts,
 } from "../../actions/productActions";
-import { getUserLocation } from "../../actions/locationActions";
+import { fetchSellerById } from "../../actions/sellerActions";
 
 const ProductManager = () => {
   const [product, setProduct] = useState({
@@ -20,27 +20,42 @@ const ProductManager = () => {
     category: "",
     subCategory: "",
     offer: "",
-    gender: "", // Added gender field
+    gender: "",
+    sellerLocation: {
+      lat: "", // Latitude
+      lng: "", // Longitude
+      city: "", // City name  
+      road: "", // Road name
+      postalCode: "", // Postal code
+    },
+    area: "", // Area in square meters
+    cities: [], // Cities where the product is available
+    quantity: "", // Available stock quantity
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [newSubImage, setNewSubImage] = useState("");
+  const [newCity, setNewCity] = useState("");
 
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
   const { categories = [] } = useSelector((state) => state.categories);
   const { seller } = useSelector((state) => state.seller);
-  const { lat, lng, city, road, postalCode } = useSelector(
-    (state) => state.location
-  );
 
-  console.log(seller?.seller, lat, lng, city, road, postalCode);
   useEffect(() => {
     dispatch(getSellerProducts());
     dispatch(fetchCategories());
-    dispatch(getUserLocation(seller?.seller?.id));
-  }, [dispatch,seller]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (seller.location) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        sellerLocation: seller.location,
+      }));
+    }
+  }, [seller]);
 
   useEffect(() => {
     if (product.category) {
@@ -58,6 +73,14 @@ const ProductManager = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
+  };
+
+  const handleLocationChange = (e) => {
+    const { name, value } = e.target;
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      sellerLocation: { ...prevProduct.sellerLocation, [name]: value },
+    }));
   };
 
   const handleCategoryChange = (e) => {
@@ -90,8 +113,25 @@ const ProductManager = () => {
     }
   };
 
+  const handleCityChange = (e) => {
+    setNewCity(e.target.value);
+  };
+
+  const addCity = () => {
+    if (newCity && !product.cities.includes(newCity)) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        cities: [...prevProduct.cities, newCity],
+      }));
+      setNewCity("");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log(product);   
+
     try {
       if (isEditing) {
         await dispatch(updateProduct(editingId, product));
@@ -108,7 +148,17 @@ const ProductManager = () => {
         category: "",
         subCategory: "",
         offer: "",
-        gender: "", // Reset gender field
+        gender: "",
+        sellerLocation: {
+          lat: "",
+          lng: "",
+          city: "",
+          road: "",
+          postalCode: "",
+        },
+        area: "",
+        cities: [],
+        quantity: "",
       });
       setIsEditing(false);
       setEditingId(null);
@@ -123,7 +173,7 @@ const ProductManager = () => {
     setEditingId(product._id);
     setSelectedCategory(
       categories.find((cat) => cat._id === product.category)?.subCategories ||
-        []
+      []
     );
   };
 
@@ -193,152 +243,187 @@ const ProductManager = () => {
           className="w-full p-2 mb-2 border border-gray-300 rounded"
           required
         />
-        <div className="mb-2">
-          <span className="block mb-1">Gender</span>
-          <label className="mr-4">
-            <input
-              type="radio"
-              name="gender"
-              value="Male"
-              checked={product.gender === "Male"}
-              onChange={handleChange}
-              className="mr-1"
-            />
-            Male
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="Female"
-              checked={product.gender === "Female"}
-              onChange={handleChange}
-              className="mr-1"
-            />
-            Female
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="all"
-              checked={product.gender === "All"}
-              onChange={handleChange}
-              className="mx-2"
-            />
-            All
-          </label>
-        </div>
+        <select
+          name="gender"
+          value={product.gender}
+          onChange={handleChange}
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        >
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
         <select
           name="category"
           value={product.category}
           onChange={handleCategoryChange}
           className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
         >
           <option value="">Select Category</option>
-          {categories?.length > 0 &&
-            categories?.map((cat) => (
-              <option key={cat?._id} value={cat?._id}>
-                {cat?.name}
-              </option>
-            ))}
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
         </select>
         <select
           name="subCategory"
-          value={product?.subCategory}
+          value={product.subCategory}
           onChange={handleChange}
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         >
           <option value="">Select Subcategory</option>
-          {selectedCategory?.length > 0 &&
-            selectedCategory?.map((sub) => (
-              <option key={sub?._id} value={sub?._id}>
-                {sub?.name}
-              </option>
-            ))}
+          {selectedCategory.map((sub) => (
+            <option key={sub._id} value={sub._id}>
+              {sub.name}
+            </option>
+          ))}
         </select>
         <input
+          type="number"
+          name="area"
+          value={product.area}
+          onChange={handleChange}
+          placeholder="Area (sq. m)"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        />
+        <input
+          type="number"
+          name="quantity"
+          value={product.quantity}
+          onChange={handleChange}
+          placeholder="Quantity"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        />
+        <input
           type="text"
-          value={newSubImage}
-          onChange={handleSubImageChange}
-          placeholder="Add Sub Image URL"
+          name="city"
+          value={product.sellerLocation.city}
+          onChange={handleLocationChange}
+          placeholder="City"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        />
+        <input
+          type="text"
+          name="road"
+          value={product.sellerLocation.road}
+          onChange={handleLocationChange}
+          placeholder="Road"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         />
-        <button
-          type="button"
-          onClick={addSubImage}
-          className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-2"
-        >
-          Add Sub Image
-        </button>
-        <ul className="mb-2">
-          {product.subImages.map((img, index) => (
-            <li key={index} className="border-b py-1">
-              {img}
-            </li>
-          ))}
-        </ul>
+        <input
+          type="text"
+          name="postalCode"
+          value={product.sellerLocation.postalCode}
+          onChange={handleLocationChange}
+          placeholder="Postal Code"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+        />
+        <input
+          type="number"
+          name="lat"
+          value={product.sellerLocation.lat}
+          onChange={handleLocationChange}
+          placeholder="Latitude"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        />
+        <input
+          type="number"
+          name="lng"
+          value={product.sellerLocation.lng}
+          onChange={handleLocationChange}
+          placeholder="Longitude"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          required
+        />
+        <div className="flex mb-2">
+          <input
+            type="text"
+            value={newCity}
+            onChange={handleCityChange}
+            placeholder="Add City"
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          <button
+            type="button"
+            onClick={addCity}
+            className="ml-2 p-2 bg-blue-500 text-white rounded"
+          >
+            Add
+          </button>
+        </div>
+        <div>
+          <h3 className="font-semibold">Cities:</h3>
+          <ul>
+            {product.cities.map((city, index) => (
+              <li key={index}>{city}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex mb-2">
+          <input
+            type="text"
+            value={newSubImage}
+            onChange={handleSubImageChange}
+            placeholder="Add Sub Image URL"
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          <button
+            type="button"
+            onClick={addSubImage}
+            className="ml-2 p-2 bg-blue-500 text-white rounded"
+          >
+            Add
+          </button>
+        </div>
+        <div>
+          <h3 className="font-semibold">Sub Images:</h3>
+          <ul>
+            {product.subImages.map((subImage, index) => (
+              <li key={index}>{subImage}</li>
+            ))}
+          </ul>
+        </div>
         <button
           type="submit"
-          className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="mt-4 p-2 bg-green-500 text-white rounded"
         >
           {isEditing ? "Update Product" : "Add Product"}
         </button>
       </form>
-
-      <h2 className="text-xl font-bold mb-2">Products List</h2>
+      <h2 className="text-xl font-bold">Products</h2>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
-        <p className="text-red-500">Error: {error}</p>
+        <p>{error}</p>
       ) : (
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border">Name</th>
-              <th className="py-2 px-4 border">Category</th>
-              <th className="py-2 px-4 border">Sub-Category</th>
-              <th className="py-2 px-4 border">Price</th>
-              <th className="py-2 px-4 border">Offer</th>
-              <th className="py-2 px-4 border">Gender</th> {/* Added Gender */}
-              <th className="py-2 px-4 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td className="py-2 px-4 border">{product?.name}</td>
-                <td className="py-2 px-4 border">
-                  {categories?.find((cat) => cat?._id === product.category)
-                    ?.name || "N/A"}
-                </td>
-                <td className="py-2 px-4 border">
-                  {selectedCategory.find(
-                    (sub) => sub._id === product.subCategory
-                  )?.name || "N/A"}
-                </td>
-                <td className="py-2 px-4 border">{product?.unitPrice}</td>
-                <td className="py-2 px-4 border">{product?.offer}</td>
-                <td className="py-2 px-4 border">{product?.gender}</td>{" "}
-                {/* Display Gender */}
-                <td className="py-2 px-4 border">
-                  <button
-                    onClick={() => handleEdit(product)}
-                    className="mr-2 py-1 px-3 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="py-1 px-3 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul>
+          {products.map((product) => (
+            <li key={product._id} className="flex justify-between items-center">
+              <span>{product.name}</span>
+              <div>
+                <button
+                  onClick={() => handleEdit(product)}
+                  className="mr-2 p-1 bg-yellow-500 text-white rounded"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(product._id)}
+                  className="p-1 bg-red-500 text-white rounded"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

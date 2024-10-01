@@ -7,6 +7,13 @@ import AllNavSections from "../AllNavSections";
 const VisitUserProfile = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
+  // const storedLocation = JSON.parse(localStorage.getItem("userLocation")); 
+
+  // const { city, road, postalCode, error } = useSelector(
+  //   (state) => state.location
+  // );
+
+
   useEffect(() => {
     dispatch(getUserProfile(userId));
   }, [dispatch, userId]);

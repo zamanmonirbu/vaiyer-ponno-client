@@ -24,8 +24,12 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
+  CLEAR_SELLER_STATE,
 } from './actionTypes';
 
+export const clearSellerState = () => ({
+  type: CLEAR_SELLER_STATE,
+});
 // Action creators for seller login
 export const sellerLoginStart = () => ({ type: SELLER_LOGIN_START });
 export const sellerLoginSuccess = (data) => ({ type: SELLER_LOGIN_SUCCESS, payload: data });
@@ -36,9 +40,11 @@ export const loginSeller = (credentials) => async (dispatch) => {
   try {
     const response = await axiosInstance.post('/api/seller/login', credentials);
     const data = response.data;
+    console.log("Getting seller data",data);
     dispatch(sellerLoginSuccess(data));
     localStorage.setItem('sellerAuth', JSON.stringify(data.seller));
     localStorage.setItem('sellerAuthToken', data.token);
+    localStorage.removeItem('userLocation');
   } catch (error) {
     dispatch(sellerLoginFailure(error.response?.data?.error || error.message));
   }

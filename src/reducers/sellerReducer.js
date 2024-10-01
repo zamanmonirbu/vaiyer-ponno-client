@@ -23,14 +23,13 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
+  CLEAR_SELLER_STATE,  // Add this for clearing seller state
 } from '../actions/actionTypes';
-
-
 
 const initialState = {
   sellers: [],
   seller: null,
-  success:null,
+  success: null,
   deactivatedSellers: [],
   loading: false,
   error: null,
@@ -39,6 +38,7 @@ const initialState = {
 
 const sellerReducer = (state = initialState, action) => {
   switch (action.type) {
+    // Start actions
     case SELLER_LOGIN_START:
     case SELLER_REGISTER_START:
     case FETCH_SELLERS_START:
@@ -46,12 +46,14 @@ const sellerReducer = (state = initialState, action) => {
     case UPDATE_SELLER_START:
     case DELETE_SELLER_START:
     case FETCH_DEACTIVATED_SELLERS_START:
+    case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START:
       return {
         ...state,
         loading: true,
         error: null,
       };
 
+    // Success actions
     case SELLER_LOGIN_SUCCESS:
       return {
         ...state,
@@ -101,6 +103,14 @@ const sellerReducer = (state = initialState, action) => {
         deactivatedSellers: action.payload,
       };
 
+    case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        products: action.payload,
+      };
+
+    // Failure actions
     case SELLER_LOGIN_FAILURE:
     case SELLER_REGISTER_FAILURE:
     case FETCH_SELLERS_FAILURE:
@@ -108,31 +118,24 @@ const sellerReducer = (state = initialState, action) => {
     case UPDATE_SELLER_FAILURE:
     case DELETE_SELLER_FAILURE:
     case FETCH_DEACTIVATED_SELLERS_FAILURE:
+    case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-      case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START:
-        return {
-          ...state,
-          loading: true,
-          error: null,
-        };
-  
-      case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          products: action.payload,
-        };
-  
-      case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE:
-        return {
-          ...state,
-          loading: false,
-          error: action.payload,
-        };
+
+    // Clear seller state
+    case CLEAR_SELLER_STATE:
+      return {
+        ...state,
+        seller: null,
+        success: null,
+        products: [],
+        loading: false,
+        error: null,
+      };
+
     default:
       return state;
   }
