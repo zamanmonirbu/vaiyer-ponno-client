@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { FaMinus, FaPlus, FaShoppingCart, FaMapMarkerAlt, FaTimes } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLocation } from "../../actions/locationActions";
-// import { getUserProfile } from "../../actions/userActions";
-
+import { clearCart } from "../../actions/cartActions";
 
 // Haversine formula to calculate distance between two coordinates in km
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -14,17 +13,25 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const dLon = toRad(lon2 - lon1);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
   return distance; // Distance in kilometers
 };
 
-const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance, handleAddToCart }) => {
+const AddToCartSection = ({
+  unitPrice,
+  offer,
+  stock,
+  sellerLocation,
+  maxDistance,
+  handleAddToCart,
+}) => {
   const [quantity, setQuantity] = useState(1);
   const [warning, setWarning] = useState("");
-  const [userLocation, setUserLocation] = useState(null);
   const [locationAllowed, setLocationAllowed] = useState(false);
   const [locationMatched, setLocationMatched] = useState(false);
 
@@ -32,24 +39,15 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
 
   // Fetch userAuth from localStorage and userProfile location from the redux store
   const userAuth = JSON.parse(localStorage.getItem("userAuth"));
-  const {userProfile} = useSelector((state) => state.user);
+  const { userProfile } = useSelector((state) => state.user);
 
-  console.log(userProfile)
-
-//   useEffect(()=>{
-//    dispatch(getUserProfile(userAuth?.id)); 
-//   },[dispatch])
-
-  // UseEffect to check if userAuth exists and has a location
   useEffect(() => {
     if (userAuth) {
-      setUserLocation(userProfile.location);
       setLocationAllowed(true);
       checkLocationMatch(userProfile.location, sellerLocation);
     } else {
       const storedLocation = JSON.parse(localStorage.getItem("userLocation"));
       if (storedLocation) {
-        setUserLocation(storedLocation);
         setLocationAllowed(true);
         checkLocationMatch(storedLocation, sellerLocation); // Check location match
       }
@@ -59,13 +57,16 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
   // Function to compare user's and seller's lat/lng using Haversine formula
   const checkLocationMatch = (userLocation, sellerLocation) => {
     const distance = calculateDistance(
-      userLocation.lat,
-      userLocation.lng,
-      sellerLocation.lat,
-      sellerLocation.lng
+      userLocation?.lat,
+      userLocation?.lng,
+      sellerLocation?.lat,
+      sellerLocation?.lng
     );
-    
-    if ((distance <= maxDistance) ||(sellerLocation.cities.includes(userLocation.city)) ) {
+
+    if (
+      distance <= maxDistance ||
+      sellerLocation.city.includes(userLocation.city)
+    ) {
       setLocationMatched(true);
     } else {
       setLocationMatched(false);
@@ -77,7 +78,6 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
     dispatch(fetchLocation())
       .then((location) => {
         localStorage.setItem("userLocation", JSON.stringify(location));
-        setUserLocation(location);
         setLocationAllowed(true);
         checkLocationMatch(location, sellerLocation); // Check location match after fetching
       })
@@ -90,7 +90,9 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
   const increaseQuantity = () => {
     if (quantity < stock) {
       setQuantity((prevQuantity) => prevQuantity + 1);
-      setWarning("");
+      setWarning(""); 
+    } else {
+      setWarning(`Cannot add more than ${stock} items to the cart.`);
     }
   };
 
@@ -98,14 +100,15 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity((prevQuantity) => prevQuantity - 1);
-      setWarning("");
+      setWarning(""); 
+    } else {
+      setWarning("Quantity cannot be less than 1.");
     }
   };
 
   // Cancel selection
   const cancelSelection = () => {
-    setQuantity(1);
-    setWarning("");
+    dispatch(clearCart());
   };
 
   // Calculate subtotal
@@ -113,15 +116,19 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
   const subtotal = Math.ceil(discountedPrice * quantity);
 
   return (
-    <div className="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
-      <h3 className="text-2xl font-semibold mb-6">Add to Cart</h3>
+    <div className="w-5/6 bg-gray-100 p-6 rounded-lg shadow-lg">
+      <h3 className="text-2xl font-semibold mb-6 flex items-center">
+        <FaShoppingCart className="mr-2" />
+        Add to Cart
+      </h3>
 
-      {/* If location is not allowed */} 
+      {/* If location is not allowed */}
       {!locationAllowed ? (
         <button
-          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 mb-4"
+          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 mb-4 flex items-center justify-center"
           onClick={handleAllowLocation}
         >
+          <FaMapMarkerAlt className="mr-2" />
           Allow Location to Add to Cart
         </button>
       ) : (
@@ -129,6 +136,7 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
           {/* If location is allowed but doesn't match */}
           {!locationMatched ? (
             <p className="text-red-500 text-center mb-4">
+              <FaTimes className="mr-2 inline-block" />
               Product is not available in your area. The seller is too far away.
             </p>
           ) : (
@@ -170,29 +178,35 @@ const AddToCartSection = ({ unitPrice, offer, stock, sellerLocation, maxDistance
               </div>
 
               {/* Warning message */}
-              {warning && <p className="text-red-500 text-sm mb-4 text-center">{warning}</p>}
+              {warning && (
+                <p className="text-red-500 text-sm mb-4 text-center">{warning}</p>
+              )}
 
               {/* Add to Cart button */}
               <button
-                className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4"
+                className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4 flex items-center justify-center"
                 onClick={() => {
                   if (quantity > stock) {
                     setWarning(`Cannot add more than ${stock} items.`);
+                  } else if (quantity < 1) {
+                    setWarning("Quantity must be at least 1.");
                   } else {
                     setWarning("");
                     handleAddToCart(quantity);
                   }
                 }}
               >
+                <FaShoppingCart className="mr-2" />
                 Add to Cart
               </button>
 
               {/* Cancel button */}
               <button
-                className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition duration-300"
+                className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
                 onClick={cancelSelection}
               >
-                Cancel Selection
+                <FaTimes className="mr-2" />
+                Clear Cart
               </button>
             </>
           )}
@@ -214,6 +228,7 @@ AddToCartSection.propTypes = {
   sellerLocation: PropTypes.shape({
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
+    city: PropTypes.string.isRequired,
   }).isRequired,
   maxDistance: PropTypes.number.isRequired, // Max distance in km
   handleAddToCart: PropTypes.func.isRequired,

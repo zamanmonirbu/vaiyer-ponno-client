@@ -1,9 +1,22 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
-import StrikeLine from '../StrikeLine';
-import CommentManager from '../CommentManager';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import {
+  AiOutlineDown,
+  AiOutlineUp,
+  AiOutlineShop,
+  AiOutlineDollarCircle,
+  AiOutlineTag,
+} from "react-icons/ai";
+import {
+  FaBoxOpen,
+  FaCity,
+  FaClipboardList,
+  FaStar,
+  FaLocationArrow,
+} from "react-icons/fa";
+import StrikeLine from "../StrikeLine";
+import CommentManager from "../CommentManager";
 
 const ProductDetails = ({
   productId,
@@ -16,8 +29,7 @@ const ProductDetails = ({
   order,
   sellerLocation,
   quantity,
-  area,
-  cities
+  cities,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
@@ -33,49 +45,66 @@ const ProductDetails = ({
   return (
     <div className="p-6 border rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-2 text-[#033B4C]">{name}</h1>
-      <Link className="text-green-500 text-2xl" to={`/seller/${seller}`}>
-        Visit Store
+
+      <Link
+        className="text-yellow-500 text-2xl mb-2 flex items-center"
+        to={`/seller/${seller}`}
+      >
+        <AiOutlineShop className="mr-2" /> Visit Store
       </Link>
 
       <div
-        className={`text-lg font-bold ${
-          rating >= 4 ? 'text-green-500' : 'text-yellow-500'
+        className={`text-lg font-bold flex items-center ${
+          rating >= 4 ? "text-green-500" : "text-yellow-500"
         }`}
       >
-        Rating: {rating} ★
+        <FaStar className="mr-2" /> Rating: {rating} ★
       </div>
 
-      {/* <div className="text-[#033B4C]">Orders: {order}</div> */}
-      <p><strong>Orders:</strong> {order}</p>
+      <div className="text-gray-800 mb-4 flex items-center">
+        <FaClipboardList className="mr-2" /> <strong>Orders:</strong> {order}
+      </div>
 
-        {/* Displaying the additional fields */}
-        <div className="text-gray-800 mb-4">
-        <p><strong>Quantity:</strong> {quantity}</p>
-        {/* <p><strong>Area:</strong> {area} sq.m</p> */}
-        <p><strong>Seller Location:</strong> {sellerLocation?.city}</p>
+      <div className="text-gray-800 mb-4">
+        <div className="flex items-center mb-2">
+          <FaBoxOpen className="mr-2" /> <strong>Quantity:</strong> {quantity}
+        </div>
+        <div className="flex items-center mb-2">
+          <FaLocationArrow className="mr-2" /> <strong>Seller Location:</strong>{" "}
+          {sellerLocation?.city}
+        </div>
         {cities && cities.length > 0 && (
-          <div>
-            <strong>Available Product On</strong>
-            <ul className="list-disc list-inside">
+          <div className="flex items-start mb-2">
+            <FaCity className="mr-2" />
+            <div>
+              <strong>Available Product On:</strong>
               {cities.map((city, index) => (
-                <li key={index}>{city}</li>
-              ))}
-            </ul>
+                  <span key={index}>
+                    {/* <FaLocationArrow className="mr-2" /> Location icon */}
+                    {` `}{city}
+                  </span>
+                ))}
+            </div>
           </div>
         )}
       </div>
 
       <StrikeLine />
-      <div>
+      <div className="flex items-center">
+        <AiOutlineDollarCircle className="mr-2" />
         <span className="text-xl font-semibold">
           Price: <del>${unitPrice}</del>
         </span>
         {offer && (
-          <span className="text-sm text-red-500 ml-2">Offer: {offer}%</span>
+          <span className="text-sm text-red-500 ml-2 flex items-center">
+            <AiOutlineTag className="mr-1" /> Offer: {offer}%
+          </span>
         )}
       </div>
 
-      <div className="text-xl font-semibold">Total Price: ${totalPrice}</div>
+      <div className="flex items-center text-xl font-semibold mt-2">
+        <AiOutlineDollarCircle className="mr-2" /> Total Price: ${totalPrice}
+      </div>
       <StrikeLine />
 
       <div className="text-gray-800 mb-4">
@@ -98,8 +127,6 @@ const ProductDetails = ({
         )}
       </div>
 
-    
-
       <div className="mb-4">
         <CommentManager productId={productId} />
       </div>
@@ -114,15 +141,14 @@ ProductDetails.propTypes = {
   description: PropTypes.string.isRequired,
   unitPrice: PropTypes.number.isRequired,
   offer: PropTypes.number,
-  rating: PropTypes.array,
-  order: PropTypes.array,
+  rating: PropTypes.number,
+  order: PropTypes.number,
   sellerLocation: PropTypes.shape({
     city: PropTypes.string,
     lat: PropTypes.number,
     lng: PropTypes.number,
   }),
   quantity: PropTypes.number.isRequired,
-  area: PropTypes.number.isRequired,
   cities: PropTypes.arrayOf(PropTypes.string),
 };
 

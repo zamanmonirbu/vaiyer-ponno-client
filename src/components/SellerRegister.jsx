@@ -8,12 +8,15 @@ const SellerRegister = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [businessName, setBusinessName] = useState('');
+  const [address, setAddress] = useState('');   // New state for address
+  const [mobile, setMobile] = useState('');     // New state for mobile number
+  const [imgUrl, setImgUrl] = useState('');     // New state for image URL
 
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.sellerRegister);
 
   const handleRegister = () => {
-    dispatch(registerSeller({ name, email, password, businessName }));
+    dispatch(registerSeller({ name, email, password, businessName, address, mobile, imgUrl }));
   };
 
   return (
@@ -23,6 +26,8 @@ const SellerRegister = () => {
         {loading && <p className="text-blue-500 text-center">Registering...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
         {success && <p className="text-green-500 text-center">Registration successful!</p>}
+        
+        {/* Name Input */}
         <input 
           type="text" 
           value={name} 
@@ -30,6 +35,8 @@ const SellerRegister = () => {
           placeholder="Name" 
           className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
+        
+        {/* Email Input */}
         <input 
           type="email" 
           value={email} 
@@ -37,6 +44,8 @@ const SellerRegister = () => {
           placeholder="Email" 
           className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
+        
+        {/* Password Input */}
         <input 
           type="password" 
           value={password} 
@@ -44,6 +53,8 @@ const SellerRegister = () => {
           placeholder="Password" 
           className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
+        
+        {/* Business Name Input */}
         <input 
           type="text" 
           value={businessName} 
@@ -51,12 +62,43 @@ const SellerRegister = () => {
           placeholder="Business Name" 
           className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
+        
+        {/* Address Input */}
+        <input 
+          type="text" 
+          value={address} 
+          onChange={(e) => setAddress(e.target.value)} 
+          placeholder="Address" 
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+        />
+        
+        {/* Mobile Input */}
+        <input 
+          type="text" 
+          value={mobile} 
+          onChange={(e) => setMobile(e.target.value)} 
+          placeholder="Mobile Number" 
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+        />
+        
+        {/* Image URL Input */}
+        <input 
+          type="text" 
+          value={imgUrl} 
+          onChange={(e) => setImgUrl(e.target.value)} 
+          placeholder="Image URL" 
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+        />
+        
+        {/* Register Button */}
         <button 
           onClick={handleRegister} 
           className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Register
         </button>
+        
+        {/* Login Link */}
         <div className="flex justify-between mt-4">
           <Link to="/seller/login" className="text-blue-500 hover:underline">Already have an account? Login</Link>
         </div>

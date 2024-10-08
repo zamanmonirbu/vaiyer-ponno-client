@@ -20,7 +20,7 @@ const CategoryProducts = ({ productsByCategoryAll }) => {
                       {product.name.substring(0, 50)}
                     </h3>
                     <p className="text-sm text-gray-700 mt-2">
-                      {product.description.substring(0, 50)}...
+                      {product.description.substring(0, 40)}...
                     </p>
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-lg font-semibold text-gray-900">

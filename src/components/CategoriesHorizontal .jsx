@@ -4,6 +4,7 @@ import { fetchCategories } from "../actions/categoryActions";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import StrikeLine from "./StrikeLine";
 import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners"; // Import your desired spinner here
 
 const CategoriesHorizontal = () => {
   const dispatch = useDispatch();
@@ -37,7 +38,11 @@ const CategoriesHorizontal = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-32">
+        <ClipLoader color="#033B4C" loading={loading} size={50} />
+      </div>
+    );
   }
 
   if (error) {

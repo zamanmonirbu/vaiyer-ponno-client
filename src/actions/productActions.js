@@ -35,7 +35,7 @@ const getAuthHeaders = () => {
 export const getProducts = () => async (dispatch) => {
     try {
         const res = await axiosInstance.get('/api/products', getAuthHeaders());
-        console.log(res.data);
+        // console.log(res.data);
         dispatch({
             type: GET_PRODUCTS,
             payload: res.data

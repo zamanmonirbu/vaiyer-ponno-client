@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import StrikeLine from './StrikeLine';
+// import StrikeLine from './StrikeLine';
 import { getProducts } from '../actions/productActions';
 
 
@@ -32,7 +32,7 @@ const CategoryProductView = () => {
 console.log(products)
     return (
         <div className="relative w-full">
-            <StrikeLine/>
+            {/* <StrikeLine/> */}
             {/* Previous Button */}
             {currentIndex > 0 && (
                 <button

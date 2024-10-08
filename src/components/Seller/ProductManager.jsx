@@ -7,7 +7,7 @@ import {
   updateProduct,
   getSellerProducts,
 } from "../../actions/productActions";
-import { fetchSellerById } from "../../actions/sellerActions";
+// import { fetchSellerById } from "../../actions/sellerActions";
 
 const ProductManager = () => {
   const [product, setProduct] = useState({
@@ -130,7 +130,7 @@ const ProductManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(product);   
+    // console.log(product);   
 
     try {
       if (isEditing) {
@@ -168,11 +168,12 @@ const ProductManager = () => {
   };
 
   const handleEdit = (product) => {
+    // console.log("EDITING ID",product?._id);
     setProduct(product);
     setIsEditing(true);
-    setEditingId(product._id);
+    setEditingId(product?._id);
     setSelectedCategory(
-      categories.find((cat) => cat._id === product.category)?.subCategories ||
+      categories.find((cat) => cat?._id === product?.category)?.subCategories ||
       []
     );
   };
@@ -253,6 +254,7 @@ const ProductManager = () => {
           <option value="">Select Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
+          <option value="all">All</option>
         </select>
         <select
           name="category"

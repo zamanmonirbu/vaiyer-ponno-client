@@ -1,8 +1,13 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ProductViewLeft = ({ mainImageView, videoUrl, subImages }) => {
   const [mainImage, setMainImage] = useState(mainImageView);
+
+  // Synchronize mainImage with mainImageView when mainImageView prop changes
+  useEffect(() => {
+    setMainImage(mainImageView);
+  }, [mainImageView]);
 
   const handleImageClick = (image) => {
     setMainImage(image);
@@ -50,9 +55,9 @@ const ProductViewLeft = ({ mainImageView, videoUrl, subImages }) => {
 
 // Add PropTypes validation
 ProductViewLeft.propTypes = {
-    mainImageView: PropTypes.string.isRequired,
-    videoUrl: PropTypes.string.isRequired,
-    subImages: PropTypes.arrayOf(PropTypes.string).isRequired,
-  };
+  mainImageView: PropTypes.string.isRequired,
+  videoUrl: PropTypes.string.isRequired,
+  subImages: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export default ProductViewLeft;

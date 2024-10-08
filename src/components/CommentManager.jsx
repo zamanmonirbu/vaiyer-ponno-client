@@ -116,14 +116,14 @@ const CommentManager = ({ productId }) => {
                   </div>
                 ) : (
                   <div>
-                    <RatingComponent rating={comment.rating} onRatingSubmit={() => {}} /> {/* Display rating */}
+                    <RatingComponent rating={comment?.rating} onRatingSubmit={() => {}} /> {/* Display rating */}
                     <p>{comment.text}</p>
                     <div className="text-sm text-gray-500">
-                      Posted by: {comment.author.name}
+                      Posted by: {comment?.author?.name}
                     </div>
                     <div className="mt-2">
                       <button
-                        onClick={() => handleEditComment(comment._id, comment.text)}
+                        onClick={() => handleEditComment(comment?._id, comment?.text)}
                         className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
                       >
                         Edit

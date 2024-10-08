@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfile, updateUserProfile } from "../../actions/userActions";
-import {
-  getUserLocation,
-  updateUserLocation,
-} from "../../actions/locationActions"; // Import location actions
+import { getUserLocation } from "../../actions/locationActions"; // Import location actions
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaSignOutAlt, FaMapMarkerAlt } from "react-icons/fa";
 import AllNavSections from "../AllNavSections";
@@ -20,7 +17,7 @@ const UserDashboard = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [lat, setLat] = useState(""); // Latitude state
   const [lng, setLng] = useState(""); // Longitude state
-  const [showOrders, setShowOrders] = useState(false);
+  const [mobile, setMobile] = useState(""); // Mobile state
   const [isEditMode, setIsEditMode] = useState(false);
 
   const { userProfile, loading, error } = useSelector((state) => state.user);
@@ -35,8 +32,9 @@ const UserDashboard = () => {
       setEmail(userProfile.email || "");
       setAddress(userProfile.address || "");
       setImageUrl(userProfile.image || "");
-      setLat(userProfile.location?.lat || ""); // Set latitude from user profile
-      setLng(userProfile.location?.lng || ""); // Set longitude from user profile
+      setLat(userProfile.location?.lat || "");
+      setLng(userProfile.location?.lng || "");
+      setMobile(userProfile.mobile || ""); // Set mobile number
     }
   }, [userProfile]);
 
@@ -53,8 +51,9 @@ const UserDashboard = () => {
       address,
       image: imageUrl,
       location: { lat, lng },
+      mobile, // Include mobile in the updated data
     };
-    dispatch(updateUserProfile(userId, updatedData, navigate)); // Pass updated location
+    dispatch(updateUserProfile(userId, updatedData, navigate));
     setIsEditMode(false);
   };
 
@@ -65,8 +64,7 @@ const UserDashboard = () => {
   };
 
   const isOwner = userProfile?._id === userId;
-  // console.log("jhsdfsa",city, road, postalCode)
-  console.log("User data",userProfile)
+
   return (
     <>
       <AllNavSections />
@@ -106,10 +104,10 @@ const UserDashboard = () => {
                         {/* Location icon */}{" "}
                       </td>
                       <td className="px-4 py-2">
-                        {userProfile?(userProfile?.location?.city) : "No location"}
+                        {userProfile ? userProfile?.location?.city : "No location"}
                       </td>
                     </tr>
-                    {/* Other profile fields */}
+                    {/* Name field */}
                     <tr className="border-b">
                       <td className="px-4 py-2 font-semibold">Name:</td>
                       <td className="px-4 py-2">
@@ -125,6 +123,7 @@ const UserDashboard = () => {
                         )}
                       </td>
                     </tr>
+                    {/* Email field */}
                     <tr className="border-b">
                       <td className="px-4 py-2 font-semibold">Email:</td>
                       <td className="px-4 py-2">
@@ -140,6 +139,7 @@ const UserDashboard = () => {
                         )}
                       </td>
                     </tr>
+                    {/* Address field */}
                     <tr className="border-b">
                       <td className="px-4 py-2 font-semibold">Address:</td>
                       <td className="px-4 py-2">
@@ -152,6 +152,22 @@ const UserDashboard = () => {
                           />
                         ) : (
                           address || "No address available"
+                        )}
+                      </td>
+                    </tr>
+                    {/* Mobile field */}
+                    <tr className="border-b">
+                      <td className="px-4 py-2 font-semibold">Mobile:</td>
+                      <td className="px-4 py-2">
+                        {isOwner && isEditMode ? (
+                          <input
+                            type="text"
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                            className="border rounded px-2 py-1 w-full"
+                          />
+                        ) : (
+                          userProfile?.mobile || "No mobile number available"
                         )}
                       </td>
                     </tr>

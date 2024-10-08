@@ -4,8 +4,9 @@ import { fetchCategories } from "../actions/categoryActions";
 import { getBanners } from "../actions/bannerActions";
 import { Link } from "react-router-dom";
 import StrikeLine from "./StrikeLine";
+import { PulseLoader } from "react-spinners"; // Import react spinner
 
-const CategoryBanner = () => {
+const CategoryAdds = () => {
   const dispatch = useDispatch();
   const banners = useSelector((state) => state.banner.banners);
   const categories = useSelector((state) => state.categories.categories);
@@ -38,7 +39,12 @@ const CategoryBanner = () => {
   }, [banners.length]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    // Display spinner during loading
+    return (
+      <div className="flex justify-center items-center h-96">
+        <PulseLoader color="#033B4C" size={15} />
+      </div>
+    );
   }
 
   if (error) {
@@ -102,4 +108,4 @@ const CategoryBanner = () => {
   );
 };
 
-export default CategoryBanner;
+export default CategoryAdds;

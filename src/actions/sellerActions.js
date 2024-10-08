@@ -27,28 +27,7 @@ import {
   CLEAR_SELLER_STATE,
 } from './actionTypes';
 
-export const clearSellerState = () => ({
-  type: CLEAR_SELLER_STATE,
-});
-// Action creators for seller login
-export const sellerLoginStart = () => ({ type: SELLER_LOGIN_START });
-export const sellerLoginSuccess = (data) => ({ type: SELLER_LOGIN_SUCCESS, payload: data });
-export const sellerLoginFailure = (error) => ({ type: SELLER_LOGIN_FAILURE, payload: error });
 
-export const loginSeller = (credentials) => async (dispatch) => {
-  dispatch(sellerLoginStart());
-  try {
-    const response = await axiosInstance.post('/api/seller/login', credentials);
-    const data = response.data;
-    console.log("Getting seller data",data);
-    dispatch(sellerLoginSuccess(data));
-    localStorage.setItem('sellerAuth', JSON.stringify(data.seller));
-    localStorage.setItem('sellerAuthToken', data.token);
-    localStorage.removeItem('userLocation');
-  } catch (error) {
-    dispatch(sellerLoginFailure(error.response?.data?.error || error.message));
-  }
-};
 
 // Action creators for seller registration
 export const sellerRegisterStart = () => ({ type: SELLER_REGISTER_START });
@@ -60,11 +39,37 @@ export const registerSeller = (sellerInfo) => async (dispatch) => {
   try {
     const response = await axiosInstance.post('/api/seller/register', sellerInfo);
     const data = response.data;
+    // console.log(data)
     dispatch(sellerRegisterSuccess(data));
+    // dispatch(clearSellerState());
   } catch (error) {
-    dispatch(sellerRegisterFailure(error.response?.data?.error || error.message));
+    // console.log(error);
+    dispatch(sellerRegisterFailure(error.response?.data?.message));
   }
 };
+
+
+
+// Action creators for seller login
+export const sellerLoginStart = () => ({ type: SELLER_LOGIN_START });
+export const sellerLoginSuccess = (data) => ({ type: SELLER_LOGIN_SUCCESS, payload: data });
+export const sellerLoginFailure = (error) => ({ type: SELLER_LOGIN_FAILURE, payload: error });
+
+export const loginSeller = (credentials) => async (dispatch) => {
+  dispatch(sellerLoginStart());
+  try {
+    const response = await axiosInstance.post('/api/seller/login', credentials);
+    const data = response.data;
+    // console.log("Getting seller data",data);
+    dispatch(sellerLoginSuccess(data));
+    localStorage.setItem('sellerAuth', JSON.stringify(data.seller));
+    localStorage.setItem('sellerAuthToken', data.token);
+    localStorage.removeItem('userLocation');
+  } catch (error) {
+    dispatch(sellerLoginFailure(error.response?.data?.message));
+  }
+};
+
 
 // Action creators for fetching sellers
 export const fetchSellersStart = () => ({ type: FETCH_SELLERS_START });
@@ -107,9 +112,9 @@ export const fetchProductsByCategoryOfSeller = (sellerId, categoryId) => async (
   dispatch(fetchProductsByCategoryOfSellerStart());
   try {
     // /:sellerId/products/category/:category
-    console.log(sellerId,categoryId)
+    // console.log(sellerId,categoryId)
     const response = await axiosInstance.get(`/api/seller/${sellerId}/products/category/${categoryId}`);
-    console.log("Seller category data", response.data);
+    // console.log("Seller category data", response.data);
     const products = response.data;
     dispatch(fetchProductsByCategoryOfSellerSuccess(products));
   } catch (error) {
@@ -166,3 +171,7 @@ export const fetchDeactivatedSellers = () => async (dispatch) => {
     dispatch(fetchDeactivatedSellersFailure(error.response?.data?.error || error.message));
   }
 };
+
+export const clearSellerState = () => ({
+  type: CLEAR_SELLER_STATE,
+});

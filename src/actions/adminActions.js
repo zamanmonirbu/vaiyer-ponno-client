@@ -65,13 +65,12 @@ export const loginAdmin = (credentials) => async (dispatch) => {
   try {
     const response = await axiosInstance.post('/api/admin/login', credentials);
     const data = response.data;
-    // console.log(data);
     dispatch(adminLoginSuccess(data));
     // Save admin auth and token to localStorage if needed
     localStorage.setItem('adminAuth', JSON.stringify(data.admin));
     localStorage.setItem('adminAuthToken', data.token);
   } catch (error) {
-    dispatch(adminLoginFailure(error.response?.data?.error || error.message));
+    dispatch(adminLoginFailure(error?.response?.data?.error));
   }
 };
 
@@ -83,7 +82,8 @@ export const registerAdmin = (adminInfo) => async (dispatch) => {
     const data = response.data;
     dispatch(adminRegisterSuccess(data));
   } catch (error) {
-    dispatch(adminRegisterFailure(error.response?.data?.error || error.message));
+    console.log(error.response?.data?.message)
+    dispatch(adminRegisterFailure(error.response?.data?.message));
   }
 };
 
@@ -155,7 +155,7 @@ export const createAdmin = (adminData) => async (dispatch) => {
     const data = response.data;
     dispatch(adminCreateSuccess(data));
   } catch (error) {
-    dispatch(adminCreateFailure(error.response?.data?.error || error.message));
+    dispatch(adminCreateFailure(error.response?.data?.message || error.message));
   }
 };
 

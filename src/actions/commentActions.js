@@ -33,10 +33,7 @@ const getAuthHeaders = () => {
 export const createComment = (text, productId,rating) => async (dispatch) => {
   try {
     dispatch({ type: COMMENT_CREATE_REQUEST });
-    // console.log(text, productId,getAuthHeaders())
-    // console.log(rating)
     const res = await axiosInstance.post('/api/comments', { text, productId,rating }, getAuthHeaders());
-
     dispatch({ type: COMMENT_CREATE_SUCCESS, payload: res.data });
   } catch (err) {
     dispatch({

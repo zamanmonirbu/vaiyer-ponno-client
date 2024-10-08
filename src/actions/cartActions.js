@@ -11,8 +11,10 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       name: data.name,
       imageURL: data.imageURL,
       unitPrice: data.unitPrice,
+      offer:data.offer,
       description: data.description,
-      stock: data.stock,
+      stock: data.stock,   
+      seller:data.seller,
       qty,
     },
   });
@@ -20,6 +22,18 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
   // Save cart items to localStorage
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
+
+// Fetch cart products action
+export const getCartProducts = () => (dispatch) => {
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+  dispatch({
+    type: "GET_CART_PRODUCTS",
+    payload: cartItems,
+  });
+};
+
+
 
 // Remove from cart action
 export const removeFromCart = (id) => (dispatch, getState) => {
@@ -29,4 +43,12 @@ export const removeFromCart = (id) => (dispatch, getState) => {
   });
 
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+export const clearCart = () => (dispatch) => {
+  dispatch({
+    type: "CLEAR_CART",
+  });
+
+  localStorage.removeItem("cartItems");
 };

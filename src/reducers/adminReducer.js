@@ -29,6 +29,7 @@ export const adminRegisterReducer = (state = {}, action) => {
       case 'ADMIN_REGISTER_SUCCESS':
         return { loading: false, success: true };
       case 'ADMIN_REGISTER_FAIL':
+        console.log(action.payload)
         return { loading: false, error: action.payload };
       default:
         return state;
@@ -42,6 +43,7 @@ export const adminRegisterReducer = (state = {}, action) => {
       case 'ADMIN_LOGIN_SUCCESS':
         return { loading: false, adminInfo: action.payload };
       case 'ADMIN_LOGIN_FAIL':
+        console.log(action.payload)
         return { loading: false, error: action.payload };
       case 'ADMIN_LOGOUT':
         return {};

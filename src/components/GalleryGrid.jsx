@@ -12,12 +12,12 @@ const GalleryGrid = () => {
   }, [dispatch]);
 
   return (
-    <div className="grid grid-cols-4 gap-4 py-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 py-4">
       {galleryItems?.map((item) => {
         const gridClasses = item.isLarge
-          ? "col-span-2 row-span-2"
+          ? "col-span-2 row-span-2 lg:col-span-2 lg:row-span-2"
           : item.isMedium
-          ? "col-span-2"
+          ? "col-span-2 lg:col-span-1"
           : "col-span-1";
 
         return (

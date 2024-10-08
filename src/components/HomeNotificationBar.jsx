@@ -17,7 +17,7 @@ const HomeNotificationBar = () => {
     if (notifications.length > 0) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % notifications.length);
-      }, 5000); // Adjust timing as needed
+      }, 5000); 
       return () => clearInterval(interval);
     }
   }, [notifications]);

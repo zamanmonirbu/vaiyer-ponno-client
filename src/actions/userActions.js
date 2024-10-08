@@ -16,7 +16,6 @@ import {
 } from "./actionTypes";
 import { updateUserLocation } from "./locationActions";
 
-
 // Action creator for login start
 export const loginStart = () => ({
   type: LOGIN_START,
@@ -51,14 +50,27 @@ export const registerFailure = (error) => ({
   payload: error,
 });
 
+// Thunk action for registration
+export const registerUser = (userInfo, navigate) => async (dispatch) => {
+  dispatch(registerStart());
+  try {
+    const response = await axiosInstance.post("/api/auth/register", userInfo);
+    const data = response.data;
+    dispatch(registerSuccess(data));
+    dispatch(resetUser());
+    navigate("/user/login");
+  } catch (error) {
+    dispatch(registerFailure(error.response?.data?.message));
+  }
+};
+
 // Thunk action for login
 // Thunk action for login
-export const loginUser = (credentials, navigate) => async (dispatch) => {
+export const loginUser = (credentials, navigate, from) => async (dispatch) => {
   dispatch(loginStart());
   try {
     const response = await axiosInstance.post("/api/auth/login", credentials);
     const data = response.data;
-    console.log("For test data",data?.user);
     dispatch(loginSuccess(data));
 
     // Save user auth and token to localStorage
@@ -67,39 +79,24 @@ export const loginUser = (credentials, navigate) => async (dispatch) => {
 
     // Check if location exists in localStorage
     const storedLocation = JSON.parse(localStorage.getItem("userLocation"));
-    
+
     // If location exists, send it to the backend after login
     if (storedLocation) {
       try {
-        dispatch(updateUserLocation(data.user.id,storedLocation))
+        dispatch(updateUserLocation(data.user.id, storedLocation));
         localStorage.removeItem("userLocation");
       } catch (error) {
         console.error("Error saving location to backend:", error.message);
       }
     }
 
-    // Navigate to user dashboard after successful login
-    navigate(`/user/dashboard`);
+    // Navigate to the previous location after login
+    navigate(from); 
   } catch (error) {
-    dispatch(loginFailure(error.response?.data?.error || error.message));
+    dispatch(loginFailure(error?.response?.data?.message));
   }
 };
 
-
-// Thunk action for registration
-export const registerUser = (userInfo, navigate) => async (dispatch) => {
-  dispatch(registerStart());
-  try {
-    const response = await axiosInstance.post("/api/auth/register", userInfo);
-    const data = response.data;
-    dispatch(registerSuccess(data));
-
-    // Navigate to login page after successful registration
-    navigate("/user/login");
-  } catch (error) {
-    dispatch(registerFailure(error.response?.data?.error || error.message));
-  }
-};
 
 // Get User Profile
 export const getUserProfile = (userId) => async (dispatch) => {
@@ -108,6 +105,7 @@ export const getUserProfile = (userId) => async (dispatch) => {
     const { data } = await axiosInstance.get(`/api/users/profile/${userId}`);
     dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: USER_PROFILE_FAIL,
       payload:
@@ -156,4 +154,3 @@ export const logoutUser = (navigate) => (dispatch) => {
   // Navigate to the login page after logout
   navigate("/user/login");
 };
-

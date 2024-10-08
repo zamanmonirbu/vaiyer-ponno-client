@@ -24,6 +24,18 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         cartItems: state.cartItems.filter((x) => x.product !== action.payload),
       };
 
+    case "GET_CART_PRODUCTS":
+      return {
+        ...state,
+        cartItems: action.payload,
+      };
+
+    case "CLEAR_CART": // Handle clearing the cart
+      return {
+        ...state,
+        cartItems: [], // Clear all cart items
+      };
+
     default:
       return state;
   }

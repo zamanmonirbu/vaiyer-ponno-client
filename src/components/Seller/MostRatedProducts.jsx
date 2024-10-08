@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMostRatedProducts } from "../../actions/productActions";
 import { Link } from "react-router-dom";
 import StrikeLine from "../StrikeLine";
+import { ClipLoader } from "react-spinners"; // Import the spinner component
 
 const MostRatedProducts = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,12 @@ const MostRatedProducts = () => {
     (state) => state.product
   );
 
-  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <ClipLoader color="#033B4C" loading={loading} size={50} />
+      </div>
+    );
   if (error)
     return (
       <p className="text-center text-red-500">An error occurred: {error}</p>
@@ -41,6 +47,7 @@ const MostRatedProducts = () => {
   const visibleProducts = mostRatedProducts.slice(startIndex, startIndex + 4);
 
   return (
+    <div>
     <div className="relative">
       <StrikeLine />
       <h3 className="font-bold mb-4 text-2xl text-center">
@@ -48,11 +55,11 @@ const MostRatedProducts = () => {
       </h3>
 
       <div className="relative overflow-hidden">
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap">
           {visibleProducts?.map((product) => (
             <div
               key={product?.product?._id}
-              className="w-1/4 px-2 mb-4 transition-opacity duration-500"
+              className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4 transition-opacity duration-500"
             >
               <div className="bg-gray-100 p-4 rounded-lg shadow-lg">
                 <Link to={`/product/${product?.product?._id}`}>
@@ -67,7 +74,7 @@ const MostRatedProducts = () => {
                       </div>
                       <div className="w-1/2">
                         <span className="text-yellow-500">
-                          Rating: ★ {product?.product?.averageRating}
+                          Rating: ★ {product?.product?.rating}
                         </span>
                         <div className="text-lg font-bold">
                           Price: ${product?.product?.unitPrice}
@@ -87,7 +94,7 @@ const MostRatedProducts = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-lg font-semibold mb-2">
+                    <div className="text-lg font-semibold mb-2 text-center">
                       {product?.product?.name.substring(0, 40)}
                     </div>
                   </div>
@@ -115,6 +122,7 @@ const MostRatedProducts = () => {
           &#8250; {/* Unicode for a right-pointing triangle */}
         </button>
       </div>
+    </div>
     </div>
   );
 };

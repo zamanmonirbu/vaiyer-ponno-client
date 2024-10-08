@@ -1,19 +1,19 @@
-import BannerAndOfferView from "./BannerAndOfferView";
+import HighOffersProduct from "./HighOffersProduct";
 import CategoriesHorizontal from "./CategoriesHorizontal ";
-import CategoryBanner from "./CategoryBanner";
-import GetCategoriesWithLimitedProducts from "./LimitedProducts";
-import ProductGridView from "./ProductGridView";
+import CategoryAdds from "./CategoryAdds";
+import CategoryFourProduct from "./CategoryFourProduct";
+import LatestProduct from "./LatestProduct";
 import MostRatedProducts from "./Seller/MostRatedProducts";
 
 const AllProductViews = () => {
   return (
     <div className="bg-white">
       <CategoriesHorizontal />
-      <ProductGridView />
-      <CategoryBanner />
+      <CategoryFourProduct />
+      <CategoryAdds />
       <MostRatedProducts />
-      <BannerAndOfferView />
-      <GetCategoriesWithLimitedProducts />
+      <HighOffersProduct />
+      <LatestProduct />
     </div>
   );
 };

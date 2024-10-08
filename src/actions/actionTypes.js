@@ -140,3 +140,6 @@ export const FETCH_LOCATION_ERROR = 'FETCH_LOCATION_ERROR'; // Error occurred du
 export const UPDATE_LOCATION_REQUEST = 'UPDATE_LOCATION_REQUEST'; // To indicate the start of an update request
 export const UPDATE_LOCATION_SUCCESS = 'UPDATE_LOCATION_SUCCESS'; // Successfully updated location data
 export const UPDATE_LOCATION_FAILURE = 'UPDATE_LOCATION_FAILURE'; // Error occurred during updating location data
+export const PAYMENT_REQUEST = "PAYMENT_REQUEST";
+export const PAYMENT_SUCCESS = "PAYMENT_SUCCESS";
+export const PAYMENT_FAILURE = "PAYMENT_FAILURE";
