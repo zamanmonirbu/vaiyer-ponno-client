@@ -19,11 +19,12 @@ import {
     FETCH_CATEGORIES_WITH_LIMITED_PRODUCTS_FAILURE,
 } from './actionTypes';
 import axiosInstance from '../api/axiosInstance'; // Adjust the path if needed
+import { getCookie } from './cookieUtils';
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
-    const adminToken = localStorage.getItem('adminAuthToken');
-    const adminAuth = localStorage.getItem('adminAuth');
+    const adminToken = getCookie('adminAuthToken');
+    const adminAuth = getCookie('adminAuth');
     return {
         headers: {
             Authorization: `Bearer ${adminToken}`,

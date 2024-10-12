@@ -1,4 +1,3 @@
-// index.js
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -8,7 +7,7 @@ import Modal from "react-modal";
 import ThemeProvider from "./seller/utils/ThemeContext";
 import "./index.css";
 
-// Set the app element for react-modal
+
 Modal.setAppElement("#root");
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -11,7 +11,8 @@ const SellerLogin = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, currentSeller } = useSelector((state) => state.seller);
+  const { loading, error, seller } = useSelector((state) => state.seller);
+  // console.log(seller.token);
 
   const handleLogin = () => {
     dispatch(loginSeller({ email, password }));
@@ -19,12 +20,12 @@ const SellerLogin = () => {
 
   // Use useEffect to show success and error notifications
   useEffect(() => {
-    if (currentSeller) {
+    if (seller?.token) {
       toast.success("Login successful!", {
         position: "bottom-right",
         autoClose: 5000,
       });
-      navigate("/seller/dashboard"); // Navigate to dashboard on success
+      navigate("/seller/dashboard/test"); // Navigate to dashboard on success
     }
 
     if (error) {
@@ -34,7 +35,7 @@ const SellerLogin = () => {
         className: 'toast-error' // Custom class for error toasts
       });
     }
-  }, [currentSeller, error, navigate]);
+  }, [error, navigate,seller?.token]);
 
   return (
     <>

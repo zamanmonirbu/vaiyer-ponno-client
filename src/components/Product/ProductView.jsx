@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../actions/productActions";
 import { ClipLoader } from "react-spinners"; // Importing ClipLoader spinner
+import SuggestProducts from "./SuggestProducts";
 
 const ProductView = () => {
   const { id } = useParams(); // Fetching the product ID from the URL parameters
@@ -34,6 +35,7 @@ const ProductView = () => {
       <AllNavSections />
       {/* Ensure that the product exists before rendering */}
       {product && <ViewSpecificProduct product={product} />}
+      <SuggestProducts id={id}/> 
     </div>
   );
 };

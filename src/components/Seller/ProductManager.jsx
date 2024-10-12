@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../actions/categoryActions";
 import {
   createProduct,
   deleteProduct,
   updateProduct,
   getSellerProducts,
 } from "../../actions/productActions";
-// import { fetchSellerById } from "../../actions/sellerActions";
+import { fetchCategories } from "../../actions/categoryActions";
 
-const ProductManager = () => {
+const ProductManager = ({ seller }) => {
   const [product, setProduct] = useState({
     name: "",
     imageURL: "",
@@ -22,15 +21,15 @@ const ProductManager = () => {
     offer: "",
     gender: "",
     sellerLocation: {
-      lat: "", // Latitude
-      lng: "", // Longitude
-      city: "", // City name  
-      road: "", // Road name
-      postalCode: "", // Postal code
+      lat: "",
+      lng: "",
+      city: "",
+      road: "",
+      postalCode: "",
     },
-    area: "", // Area in square meters
-    cities: [], // Cities where the product is available
-    quantity: "", // Available stock quantity
+    area: "",
+    cities: [],
+    quantity: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -41,15 +40,16 @@ const ProductManager = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
   const { categories = [] } = useSelector((state) => state.categories);
-  const { seller } = useSelector((state) => state.seller);
 
+  // Fetch categories and seller products on component mount
   useEffect(() => {
     dispatch(getSellerProducts());
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  // Set seller location if available
   useEffect(() => {
-    if (seller.location) {
+    if (seller?.location) {
       setProduct((prevProduct) => ({
         ...prevProduct,
         sellerLocation: seller.location,
@@ -57,6 +57,7 @@ const ProductManager = () => {
     }
   }, [seller]);
 
+  // Update subcategories based on the selected category
   useEffect(() => {
     if (product.category) {
       const selectedCat = categories.find(
@@ -70,11 +71,13 @@ const ProductManager = () => {
     }
   }, [product.category, categories]);
 
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
   };
 
+  // Handle seller location input change
   const handleLocationChange = (e) => {
     const { name, value } = e.target;
     setProduct((prevProduct) => ({
@@ -83,6 +86,7 @@ const ProductManager = () => {
     }));
   };
 
+  // Handle category selection and reset subcategory if category changes
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
     setProduct((prevProduct) => ({
@@ -99,6 +103,7 @@ const ProductManager = () => {
     );
   };
 
+  // Handle adding a new sub-image
   const handleSubImageChange = (e) => {
     setNewSubImage(e.target.value);
   };
@@ -113,6 +118,7 @@ const ProductManager = () => {
     }
   };
 
+  // Handle adding a new city
   const handleCityChange = (e) => {
     setNewCity(e.target.value);
   };
@@ -127,10 +133,9 @@ const ProductManager = () => {
     }
   };
 
+  // Handle form submission for adding/updating product
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // console.log(product);   
 
     try {
       if (isEditing) {
@@ -138,6 +143,7 @@ const ProductManager = () => {
       } else {
         await dispatch(createProduct(product));
       }
+      // Reset the form after submission
       setProduct({
         name: "",
         imageURL: "",
@@ -167,17 +173,18 @@ const ProductManager = () => {
     }
   };
 
+  // Handle editing a product
   const handleEdit = (product) => {
-    // console.log("EDITING ID",product?._id);
     setProduct(product);
     setIsEditing(true);
     setEditingId(product?._id);
     setSelectedCategory(
       categories.find((cat) => cat?._id === product?.category)?.subCategories ||
-      []
+        []
     );
   };
 
+  // Handle deleting a product
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteProduct(id));
@@ -191,7 +198,7 @@ const ProductManager = () => {
       <h1 className="text-2xl font-bold mb-4">
         {isEditing ? "Edit Product" : "Add Product"}
       </h1>
-      <form onSubmit={handleSubmit} className="mb-4">
+      <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-2 gap-4">
         <input
           type="text"
           name="name"
@@ -215,7 +222,7 @@ const ProductManager = () => {
           value={product.description}
           onChange={handleChange}
           placeholder="Description"
-          className="w-full p-2 mb-2 border border-gray-300 rounded"
+          className="w-full p-2 mb-2 border border-gray-300 rounded col-span-2"
           required
         />
         <input
@@ -283,23 +290,23 @@ const ProductManager = () => {
             </option>
           ))}
         </select>
+
+        {/* Seller location fields */}
         <input
-          type="number"
-          name="area"
-          value={product.area}
-          onChange={handleChange}
-          placeholder="Area (sq. m)"
+          type="text"
+          name="lat"
+          value={product.sellerLocation.lat}
+          onChange={handleLocationChange}
+          placeholder="Latitude"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
-          required
         />
         <input
-          type="number"
-          name="quantity"
-          value={product.quantity}
-          onChange={handleChange}
-          placeholder="Quantity"
+          type="text"
+          name="lng"
+          value={product.sellerLocation.lng}
+          onChange={handleLocationChange}
+          placeholder="Longitude"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
-          required
         />
         <input
           type="text"
@@ -308,7 +315,6 @@ const ProductManager = () => {
           onChange={handleLocationChange}
           placeholder="City"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
-          required
         />
         <input
           type="text"
@@ -326,106 +332,128 @@ const ProductManager = () => {
           placeholder="Postal Code"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
         />
+
         <input
-          type="number"
-          name="lat"
-          value={product.sellerLocation.lat}
-          onChange={handleLocationChange}
-          placeholder="Latitude"
+          type="text"
+          name="area"
+          value={product.area}
+          onChange={handleChange}
+          placeholder="Area"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
-          required
         />
         <input
           type="number"
-          name="lng"
-          value={product.sellerLocation.lng}
-          onChange={handleLocationChange}
-          placeholder="Longitude"
+          name="quantity"
+          value={product.quantity}
+          onChange={handleChange}
+          placeholder="Quantity"
           className="w-full p-2 mb-2 border border-gray-300 rounded"
           required
         />
-        <div className="flex mb-2">
-          <input
-            type="text"
-            value={newCity}
-            onChange={handleCityChange}
-            placeholder="Add City"
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <button
-            type="button"
-            onClick={addCity}
-            className="ml-2 p-2 bg-blue-500 text-white rounded"
-          >
-            Add
-          </button>
+
+        {/* Sub Images */}
+        <input
+          type="text"
+          value={newSubImage}
+          onChange={handleSubImageChange}
+          placeholder="Add Sub Image URL"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+        />
+        <button
+          type="button"
+          onClick={addSubImage}
+          className="p-2 bg-blue-500 text-white rounded"
+        >
+          Add Sub Image
+        </button>
+        <div className="col-span-2">
+          {product.subImages.length > 0 && (
+            <ul>
+              {product.subImages.map((subImage, index) => (
+                <li key={index}>{subImage}</li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div>
-          <h3 className="font-semibold">Cities:</h3>
-          <ul>
-            {product.cities.map((city, index) => (
-              <li key={index}>{city}</li>
-            ))}
-          </ul>
+
+        {/* Cities */}
+        <input
+          type="text"
+          value={newCity}
+          onChange={handleCityChange}
+          placeholder="Add City"
+          className="w-full p-2 mb-2 border border-gray-300 rounded"
+        />
+        <button
+          type="button"
+          onClick={addCity}
+          className="p-2 bg-blue-500 text-white rounded"
+        >
+          Add City
+        </button>
+        <div className="col-span-2">
+          {product.cities.length > 0 && (
+            <ul>
+              {product.cities.map((city, index) => (
+                <li key={index}>{city}</li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="flex mb-2">
-          <input
-            type="text"
-            value={newSubImage}
-            onChange={handleSubImageChange}
-            placeholder="Add Sub Image URL"
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <button
-            type="button"
-            onClick={addSubImage}
-            className="ml-2 p-2 bg-blue-500 text-white rounded"
-          >
-            Add
-          </button>
-        </div>
-        <div>
-          <h3 className="font-semibold">Sub Images:</h3>
-          <ul>
-            {product.subImages.map((subImage, index) => (
-              <li key={index}>{subImage}</li>
-            ))}
-          </ul>
-        </div>
+
         <button
           type="submit"
-          className="mt-4 p-2 bg-green-500 text-white rounded"
+          className="col-span-2 p-2 bg-green-500 text-white rounded"
         >
           {isEditing ? "Update Product" : "Add Product"}
         </button>
       </form>
-      <h2 className="text-xl font-bold">Products</h2>
+
+      {/* Product List */}
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (
-        <ul>
-          {products.map((product) => (
-            <li key={product._id} className="flex justify-between items-center">
-              <span>{product.name}</span>
-              <div>
-                <button
-                  onClick={() => handleEdit(product)}
-                  className="mr-2 p-1 bg-yellow-500 text-white rounded"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product._id)}
-                  className="p-1 bg-red-500 text-white rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              <th className="border border-gray-500 p-2">Name</th>
+              <th className="border border-gray-500 p-2">Price</th>
+              <th className="border border-gray-500 p-2">Category</th>
+              <th className="border border-gray-500 p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                 <td className="border border-gray-500 p-2">
+                  {product.name.length > 20
+                    ? product.name.slice(0, 40) + "..."
+                    : product.name}
+                </td>
+                <td className="border border-gray-500 p-2">{product.unitPrice}</td>
+                <td className="border border-gray-500 p-2">
+                  {categories.find((cat) => cat._id === product.category)?.name}
+                </td>
+                <td className="border border-gray-500 p-2">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="mr-2 p-1 bg-blue-500 text-white rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="p-1 bg-red-500 text-white rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
-import { FaMinus, FaPlus, FaShoppingCart, FaMapMarkerAlt, FaTimes } from "react-icons/fa";
+import {
+  FaMinus,
+  FaPlus,
+  FaShoppingCart,
+  FaMapMarkerAlt,
+  FaTimes,
+} from "react-icons/fa";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLocation } from "../../actions/locationActions";
 import { clearCart } from "../../actions/cartActions";
+import { getCookie } from "../../actions/cookieUtils";
 
 // Haversine formula to calculate distance between two coordinates in km
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -38,8 +45,12 @@ const AddToCartSection = ({
   const dispatch = useDispatch();
 
   // Fetch userAuth from localStorage and userProfile location from the redux store
-  const userAuth = JSON.parse(localStorage.getItem("userAuth"));
+  const userAuthCookie = getCookie("userAuth");
+  const userAuth = userAuthCookie ? JSON.parse(userAuthCookie) : null;
+
   const { userProfile } = useSelector((state) => state.user);
+
+  const [locationPermission, setLocationPermission] = useState(null); // null, 'granted', or 'denied'
 
   useEffect(() => {
     if (userAuth) {
@@ -49,10 +60,24 @@ const AddToCartSection = ({
       const storedLocation = JSON.parse(localStorage.getItem("userLocation"));
       if (storedLocation) {
         setLocationAllowed(true);
-        checkLocationMatch(storedLocation, sellerLocation); // Check location match
+        checkLocationMatch(storedLocation, sellerLocation);
+      } else if (locationPermission === null) {
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          if (result.state === "granted") {
+            setLocationPermission("granted");
+            setLocationAllowed(true);
+            dispatch(fetchLocation());
+          } else if (result.state === "denied") {
+            setLocationPermission("denied");
+            setWarning("Location access is denied. Please enable location.");
+          } else {
+            setLocationPermission("prompt");
+            dispatch(fetchLocation());
+          }
+        });
       }
     }
-  }, [userAuth, userProfile, sellerLocation]);
+  }, [userAuth, userProfile, sellerLocation, locationPermission]);
 
   // Function to compare user's and seller's lat/lng using Haversine formula
   const checkLocationMatch = (userLocation, sellerLocation) => {
@@ -73,24 +98,13 @@ const AddToCartSection = ({
     }
   };
 
-  // Function to fetch location when user allows it (if userAuth not available)
-  const handleAllowLocation = () => {
-    dispatch(fetchLocation())
-      .then((location) => {
-        localStorage.setItem("userLocation", JSON.stringify(location));
-        setLocationAllowed(true);
-        checkLocationMatch(location, sellerLocation); // Check location match after fetching
-      })
-      .catch(() => {
-        setWarning("Failed to fetch location. Please try again.");
-      });
-  };
+
 
   // Increase quantity
   const increaseQuantity = () => {
     if (quantity < stock) {
       setQuantity((prevQuantity) => prevQuantity + 1);
-      setWarning(""); 
+      setWarning("");
     } else {
       setWarning(`Cannot add more than ${stock} items to the cart.`);
     }
@@ -100,7 +114,7 @@ const AddToCartSection = ({
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity((prevQuantity) => prevQuantity - 1);
-      setWarning(""); 
+      setWarning("");
     } else {
       setWarning("Quantity cannot be less than 1.");
     }
@@ -122,15 +136,13 @@ const AddToCartSection = ({
         Add to Cart
       </h3>
 
+     
       {/* If location is not allowed */}
       {!locationAllowed ? (
-        <button
-          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 mb-4 flex items-center justify-center"
-          onClick={handleAllowLocation}
-        >
-          <FaMapMarkerAlt className="mr-2" />
-          Allow Location to Add to Cart
-        </button>
+        <p className="w-full text-center text-red-500 mb-4">
+          <FaMapMarkerAlt className="mr-2 inline-block" />
+          You must allow location for adding items to the cart.
+        </p>
       ) : (
         <>
           {/* If location is allowed but doesn't match */}
@@ -143,7 +155,9 @@ const AddToCartSection = ({
             <>
               {/* Quantity input with increase/decrease buttons */}
               <div className="mb-4 flex justify-between items-center">
-                <label className="block text-gray-700 mb-2 w-1/2">Quantity:</label>
+                <label className="block text-gray-700 mb-2 w-1/2">
+                  Quantity:
+                </label>
                 <div className="flex items-center w-1/2">
                   <button
                     className="px-4 py-2 bg-gray-300 text-gray-700 rounded-l-lg hover:bg-gray-400 transition duration-200"
@@ -179,7 +193,9 @@ const AddToCartSection = ({
 
               {/* Warning message */}
               {warning && (
-                <p className="text-red-500 text-sm mb-4 text-center">{warning}</p>
+                <p className="text-red-500 text-sm mb-4 text-center">
+                  {warning}
+                </p>
               )}
 
               {/* Add to Cart button */}

@@ -12,16 +12,24 @@ import {
     GET_PRODUCTS_WITH_HIGH_OFFER_REQUEST,
     GET_PRODUCTS_WITH_HIGH_OFFER_SUCCESS,
     GET_PRODUCTS_WITH_HIGH_OFFER_FAILURE,
+    GET_SUGGESTED_PRODUCTS_REQUEST,
+    GET_SUGGESTED_PRODUCTS_SUCCESS,
+    GET_SUGGESTED_PRODUCTS_FAILURE,
+    PRODUCT_SEARCH_SUCCESS,
+    PRODUCT_SEARCH_FAILURE,
+    PRODUCT_SEARCH_REQUEST,
+    CLEAR_SEARCHED_PRODUCTS,
 } from '../actions/actionTypes';
 import axiosInstance from '../api/axiosInstance';
+import { getCookie } from './cookieUtils';
 
 
 
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('sellerAuthToken');
-    const sellerId = localStorage.getItem('sellerAuth');
+    const token = getCookie('sellerAuthToken');
+    const sellerId = getCookie('sellerAuth');
 
     return {
         headers: {
@@ -63,6 +71,44 @@ export const getProduct = (id) => async (dispatch) => {
         });
     }
 };
+
+// Action creator to clear the searched products
+export const clearSearchedProducts = () => {
+    return {
+        type: CLEAR_SEARCHED_PRODUCTS,
+    };
+};
+
+
+export const searchProducts = (query) => {
+    return async (dispatch) => {
+      dispatch({ type: PRODUCT_SEARCH_REQUEST });
+  
+      try {
+        // Use the axios instance to make the request
+        const response = await axiosInstance.get(`/api/products/search?q=${query}`);
+        console.log(response.data);
+  
+        // Handle the response
+        if (response.status === 200) {
+          dispatch({
+            type: PRODUCT_SEARCH_SUCCESS,
+            payload: response.data,
+          });
+        } else {
+          dispatch({
+            type: PRODUCT_SEARCH_FAILURE,
+            payload: response.data.message,
+          });
+        }
+      } catch (error) {
+        dispatch({
+          type: PRODUCT_SEARCH_FAILURE,
+          payload: error.message,
+        });
+      }
+    };
+  };
 
 
 // Action to fetch most-rated products
@@ -117,6 +163,24 @@ export const getSellerProducts = () => async (dispatch) => {
         dispatch({
             type: PRODUCT_ERROR,
             payload: err.response.data.message
+        });
+    }
+};
+
+// Action to fetch suggested products based on the subcategory of the current product
+export const getSuggestedProducts = (productId) => async (dispatch) => {
+    dispatch({ type: GET_SUGGESTED_PRODUCTS_REQUEST });
+
+    try {
+        const res = await axiosInstance.get(`/api/products/suggested/${productId}`);
+        dispatch({
+            type: GET_SUGGESTED_PRODUCTS_SUCCESS,
+            payload: res.data,
+        });
+    } catch (err) {
+        dispatch({
+            type: GET_SUGGESTED_PRODUCTS_FAILURE,
+            payload: err.response.data.message,
         });
     }
 };

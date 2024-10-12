@@ -42,6 +42,9 @@ const ViewProductsOnCart = () => {
     0
   );
 
+
+  console.log(cartItems)
+
   return (
     <div>
         <Navbar/>

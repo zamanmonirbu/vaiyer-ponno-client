@@ -28,12 +28,11 @@ const ViewSpecificProduct = ({ product }) => {
 
   const totalOrders=(product?.order)?.length;
 
-  console.log(product?.imageURL)
-
   // Adjust width based on whether there are items in the cart
   const isCartFull = cartItems.length > 0;
   const productDetailsWidth = isCartFull ? "w-1/2" : "w-2/3";
   const rightSectionWidth = isCartFull ? "w-1/2" : "w-1/3";
+
 
   return (
     <div className="p-6 flex flex-col lg:flex-row gap-6">
@@ -83,7 +82,10 @@ const ViewSpecificProduct = ({ product }) => {
             stocks={product?.quantity}
           />
         )}
+
+        
       </div>
+
     </div>
   );
 };

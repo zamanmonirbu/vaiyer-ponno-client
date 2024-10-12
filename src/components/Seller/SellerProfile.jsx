@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSellerById } from "../../actions/sellerActions";
 import AllNavSections from "../AllNavSections";
+import ClipLoader from "react-spinners/ClipLoader"; // Import the spinner
 
 const SellerProfile = () => {
   const { id } = useParams();
@@ -28,13 +28,16 @@ const SellerProfile = () => {
   }, [selectedCategory, seller]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ClipLoader color="#36d7b7" loading={loading} size={50} /> {/* Spinner */}
+      </div>
+    );
   }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
-
   return (
     <>
     <AllNavSections/>

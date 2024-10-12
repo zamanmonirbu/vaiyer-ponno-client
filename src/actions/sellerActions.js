@@ -26,7 +26,7 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
   CLEAR_SELLER_STATE,
 } from './actionTypes';
-
+import Cookies from 'js-cookie'; 
 
 
 // Action creators for seller registration
@@ -55,15 +55,20 @@ export const sellerLoginStart = () => ({ type: SELLER_LOGIN_START });
 export const sellerLoginSuccess = (data) => ({ type: SELLER_LOGIN_SUCCESS, payload: data });
 export const sellerLoginFailure = (error) => ({ type: SELLER_LOGIN_FAILURE, payload: error });
 
+
+
 export const loginSeller = (credentials) => async (dispatch) => {
   dispatch(sellerLoginStart());
   try {
     const response = await axiosInstance.post('/api/seller/login', credentials);
     const data = response.data;
-    // console.log("Getting seller data",data);
+
     dispatch(sellerLoginSuccess(data));
-    localStorage.setItem('sellerAuth', JSON.stringify(data.seller));
-    localStorage.setItem('sellerAuthToken', data.token);
+
+    // Set seller auth and token in cookies
+    Cookies.set('sellerAuth', JSON.stringify(data.seller), { expires: 7 }); // Expires in 7 days
+    Cookies.set('sellerAuthToken', data.token, { expires: 7 });
+
     localStorage.removeItem('userLocation');
   } catch (error) {
     dispatch(sellerLoginFailure(error.response?.data?.message));

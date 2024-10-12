@@ -1,18 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { makePayment } from "../../actions/paymentActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AllNavSections from "../AllNavSections";
+import { getCookie } from "../../actions/cookieUtils";
+import { getUserProfile } from "../../actions/userActions";
 
 const Checkout = () => {
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const dispatch = useDispatch();
-  const { userProfile } = useSelector((state) => state.user);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const paymentState = useSelector((state) => state.payment);
   const { loading } = paymentState;
+
+  const { userProfile } = useSelector((state) => state.user);
+  const userId = JSON.parse(getCookie("userAuth"))?.id;
+
+  useEffect(() => {  
+      dispatch(getUserProfile(userId));
+  }, [dispatch,userId]);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.unitPrice * item.qty,
@@ -39,6 +47,7 @@ const Checkout = () => {
     }));
 
     const paymentData = {
+      customerId:userId,
       customerName: userProfile.name,
       customerAddress: userProfile.address,
       customerEmail: userProfile.email,

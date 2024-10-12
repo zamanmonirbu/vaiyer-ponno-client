@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { registerSeller } from "../../actions/sellerActions";
+import { clearSellerState, registerSeller } from "../../actions/sellerActions";
 import AllNavSections from "../AllNavSections";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +29,7 @@ const SellerRegister = () => {
     }
 
     dispatch(registerSeller({ name, email, mobile, password, address }));
+    dispatch(clearSellerState());
   };
 
   // Use useEffect to show error notification and handle success

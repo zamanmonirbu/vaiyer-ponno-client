@@ -23,221 +23,130 @@ import {
   REQUEST_ADMINS_FAIL,
   ACCEPT_ADMIN_SUCCESS,
   REJECT_ADMIN_SUCCESS,
+  ADMIN_GET_BY_ID_START,
+  ADMIN_GET_BY_ID_SUCCESS,
+  ADMIN_GET_BY_ID_FAILURE,
+  CLEAR_ADMIN_STATE
 } from './actionTypes';
+import Cookies from 'js-cookie'; // Import js-cookie
 
-// Action creator for admin login start
-export const adminLoginStart = () => ({
-  type: ADMIN_LOGIN_START,
+export const clearAdminState = () => ({
+  type: CLEAR_ADMIN_STATE,
 });
 
-// Action creator for admin login success
-export const adminLoginSuccess = (admin) => ({
-  type: ADMIN_LOGIN_SUCCESS,
-  payload: admin,
-});
 
-// Action creator for admin login failure
-export const adminLoginFailure = (error) => ({
-  type: ADMIN_LOGIN_FAILURE,
-  payload: error,
-});
+// Fetch admin by ID
+export const getAdminById = (adminId) => async (dispatch) => {
+  dispatch({ type: ADMIN_GET_BY_ID_START });
+  try {
+    const { data } = await axiosInstance.get(`/api/admin/${adminId}`);
+    dispatch({ type: ADMIN_GET_BY_ID_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: ADMIN_GET_BY_ID_FAILURE, payload: error.response?.data?.message || error.message });
+  }
+};
 
-// Action creator for admin registration start
-export const adminRegisterStart = () => ({
-  type: ADMIN_REGISTER_START,
-});
 
-// Action creator for admin registration success
-export const adminRegisterSuccess = (admin) => ({
-  type: ADMIN_REGISTER_SUCCESS,
-  payload: admin,
-});
 
-// Action creator for admin registration failure
-export const adminRegisterFailure = (error) => ({
-  type: ADMIN_REGISTER_FAILURE,
-  payload: error,
-});
-
-// Thunk action for admin login
+// Login action
 export const loginAdmin = (credentials) => async (dispatch) => {
-  dispatch(adminLoginStart());
+  dispatch({ type: ADMIN_LOGIN_START });
   try {
-    const response = await axiosInstance.post('/api/admin/login', credentials);
-    const data = response.data;
-    dispatch(adminLoginSuccess(data));
-    // Save admin auth and token to localStorage if needed
-    localStorage.setItem('adminAuth', JSON.stringify(data.admin));
-    localStorage.setItem('adminAuthToken', data.token);
+    const { data } = await axiosInstance.post('/api/admin/login', credentials);
+
+    dispatch({ type: ADMIN_LOGIN_SUCCESS, payload: data });
+
+    // Store in cookies instead of localStorage
+    Cookies.set('adminAuth', JSON.stringify(data.admin), { expires: 7 }); // Expires in 7 days
+    Cookies.set('adminAuthToken', data.token, { expires: 7 });
   } catch (error) {
-    dispatch(adminLoginFailure(error?.response?.data?.error));
+    dispatch({ type: ADMIN_LOGIN_FAILURE, payload: error.response?.data?.message || error.message });
   }
 };
 
-// Thunk action for admin registration
+// Register action
 export const registerAdmin = (adminInfo) => async (dispatch) => {
-  dispatch(adminRegisterStart());
+  dispatch({ type: ADMIN_REGISTER_START });
   try {
-    const response = await axiosInstance.post('/api/admin/register', adminInfo);
-    const data = response.data;
-    dispatch(adminRegisterSuccess(data));
+    const { data } = await axiosInstance.post('/api/admin/register', adminInfo);
+    dispatch({ type: ADMIN_REGISTER_SUCCESS, payload: data });
   } catch (error) {
-    console.log(error.response?.data?.message)
-    dispatch(adminRegisterFailure(error.response?.data?.message));
+    dispatch({ type: ADMIN_REGISTER_FAILURE, payload: error.response?.data?.message || error.message });
   }
 };
 
-// Action creator for admin create
-export const adminCreateStart = () => ({
-  type: ADMIN_CREATE_START,
-});
-
-export const adminCreateSuccess = (admin) => ({
-  type: ADMIN_CREATE_SUCCESS,
-  payload: admin,
-});
-
-export const adminCreateFailure = (error) => ({
-  type: ADMIN_CREATE_FAILURE,
-  payload: error,
-});
-
-// Action creator for admin read
-export const adminReadStart = () => ({
-  type: ADMIN_READ_START,
-});
-
-export const adminReadSuccess = (admins) => ({
-  type: ADMIN_READ_SUCCESS,
-  payload: admins,
-});
-
-export const adminReadFailure = (error) => ({
-  type: ADMIN_READ_FAILURE,
-  payload: error,
-});
-
-// Action creator for admin update
-export const adminUpdateStart = () => ({
-  type: ADMIN_UPDATE_START,
-});
-
-export const adminUpdateSuccess = (admin) => ({
-  type: ADMIN_UPDATE_SUCCESS,
-  payload: admin,
-});
-
-export const adminUpdateFailure = (error) => ({
-  type: ADMIN_UPDATE_FAILURE,
-  payload: error,
-});
-
-// Action creator for admin delete
-export const adminDeleteStart = () => ({
-  type: ADMIN_DELETE_START,
-});
-
-export const adminDeleteSuccess = (adminId) => ({
-  type: ADMIN_DELETE_SUCCESS,
-  payload: adminId,
-});
-
-export const adminDeleteFailure = (error) => ({
-  type: ADMIN_DELETE_FAILURE,
-  payload: error,
-});
-
-// Thunk action for creating an admin
+// Create admin
 export const createAdmin = (adminData) => async (dispatch) => {
-  dispatch(adminCreateStart());
+  dispatch({ type: ADMIN_CREATE_START });
   try {
-    const response = await axiosInstance.post('/api/admin/', adminData);
-    const data = response.data;
-    dispatch(adminCreateSuccess(data));
+    const { data } = await axiosInstance.post('/api/admin/', adminData);
+    dispatch({ type: ADMIN_CREATE_SUCCESS, payload: data });
   } catch (error) {
-    dispatch(adminCreateFailure(error.response?.data?.message || error.message));
+    dispatch({ type: ADMIN_CREATE_FAILURE, payload: error.response?.data?.message || error.message });
   }
 };
 
-// Thunk action for reading admins
+// Read all admins
 export const readAdmins = () => async (dispatch) => {
-  dispatch(adminReadStart());
+  dispatch({ type: ADMIN_READ_START });
   try {
-    const response = await axiosInstance.get('/api/admin');
-    const data = response.data;
-    dispatch(adminReadSuccess(data));
+    const { data } = await axiosInstance.get('/api/admin/');
+    // console.log(data);
+    dispatch({ type: ADMIN_READ_SUCCESS, payload: data });
   } catch (error) {
-    dispatch(adminReadFailure(error.response?.data?.error || error.message));
+    dispatch({ type: ADMIN_READ_FAILURE, payload: error.response?.data?.message || error.message });
   }
 };
 
-// Thunk action for updating an admin
+// Update admin
 export const updateAdmin = (adminId, adminData) => async (dispatch) => {
-  dispatch(adminUpdateStart());
+  dispatch({ type: ADMIN_UPDATE_START });
   try {
-    const response = await axiosInstance.put(`/api/admin/${adminId}`, adminData);
-    const data = response.data;
-    dispatch(adminUpdateSuccess(data));
+    const { data } = await axiosInstance.put(`/api/admin/${adminId}`, adminData);
+    dispatch({ type: ADMIN_UPDATE_SUCCESS, payload: data });
   } catch (error) {
-    dispatch(adminUpdateFailure(error.response?.data?.error || error.message));
+    dispatch({ type: ADMIN_UPDATE_FAILURE, payload: error.response?.data?.message || error.message });
   }
 };
 
-// Thunk action for deleting an admin
+// Delete admin
 export const deleteAdmin = (adminId) => async (dispatch) => {
-  dispatch(adminDeleteStart());
+  dispatch({ type: ADMIN_DELETE_START });
   try {
     await axiosInstance.delete(`/api/admin/${adminId}`);
-    dispatch(adminDeleteSuccess(adminId));
+    dispatch({ type: ADMIN_DELETE_SUCCESS, payload: adminId });
   } catch (error) {
-    dispatch(adminDeleteFailure(error.response?.data?.error || error.message));
+    dispatch({ type: ADMIN_DELETE_FAILURE, payload: error.response?.data?.message || error.message });
   }
 };
 
-
-
-
-// Action to fetch pending admin requests
+// Fetch pending admin requests
 export const requestAdmins = () => async (dispatch) => {
+  dispatch({ type: REQUEST_ADMINS_REQUEST });
   try {
-    dispatch({ type: REQUEST_ADMINS_REQUEST });
-    
     const { data } = await axiosInstance.get('/api/admin/request');
-    dispatch({
-      type: REQUEST_ADMINS_SUCCESS,
-      payload: data,
-    });
+    // console.log(data);
+    dispatch({ type: REQUEST_ADMINS_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({
-      type: REQUEST_ADMINS_FAIL,
-      payload: error.response?.data?.message || error.message,
-    });
+    dispatch({ type: REQUEST_ADMINS_FAIL, payload: error.response?.data?.message || error.message });
   }
 };
 
-// Action to accept an admin request
+// Accept admin request
 export const acceptAdmin = (id) => async (dispatch) => {
   try {
     await axiosInstance.put(`/api/admin/${id}`, { isAdmin: true });
-    
-    dispatch({
-      type: ACCEPT_ADMIN_SUCCESS,
-      payload: id,
-    });
+    dispatch({ type: ACCEPT_ADMIN_SUCCESS, payload: id });
   } catch (error) {
     console.error('Failed to accept admin request', error);
   }
 };
 
-// Action to reject an admin request
+// Reject admin request
 export const rejectAdmin = (id) => async (dispatch) => {
   try {
     await axiosInstance.delete(`/api/admin/${id}`);
-    
-    dispatch({
-      type: REJECT_ADMIN_SUCCESS,
-      payload: id,
-    });
+    dispatch({ type: REJECT_ADMIN_SUCCESS, payload: id });
   } catch (error) {
     console.error('Failed to reject admin request', error);
   }

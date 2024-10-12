@@ -14,11 +14,12 @@ import {
 } from './actionTypes';
 
 import axiosInstance from '../api/axiosInstance';
+import { getCookie } from './cookieUtils';
 
 // Helper function to get auth headers for user
 const getAuthHeaders = () => {
-  const token = localStorage.getItem('authToken');
-  const userAuth = localStorage.getItem('userAuth');
+  const token = getCookie('authToken');
+  const userAuth = getCookie('userAuth');
 
   return {
     headers: {

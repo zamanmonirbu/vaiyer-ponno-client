@@ -13,8 +13,13 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   RESET_USER,
+  REFRESH_TOKEN_SUCCESS,
+  REFRESH_TOKEN_FAILURE,
 } from "./actionTypes";
 import { updateUserLocation } from "./locationActions";
+import { setCookie } from './cookieUtils'; 
+
+
 
 // Action creator for login start
 export const loginStart = () => ({
@@ -64,7 +69,8 @@ export const registerUser = (userInfo, navigate) => async (dispatch) => {
   }
 };
 
-// Thunk action for login
+
+
 // Thunk action for login
 export const loginUser = (credentials, navigate, from) => async (dispatch) => {
   dispatch(loginStart());
@@ -73,9 +79,9 @@ export const loginUser = (credentials, navigate, from) => async (dispatch) => {
     const data = response.data;
     dispatch(loginSuccess(data));
 
-    // Save user auth and token to localStorage
-    localStorage.setItem("userAuth", JSON.stringify(data.user));
-    localStorage.setItem("authToken", data.token);
+    // Save user auth and token to cookies using the utility function
+    setCookie("userAuth", JSON.stringify(data.user), 7); // Expires in 7 days
+    setCookie("authToken", data.token, 7);
 
     // Check if location exists in localStorage
     const storedLocation = JSON.parse(localStorage.getItem("userLocation"));
@@ -84,7 +90,7 @@ export const loginUser = (credentials, navigate, from) => async (dispatch) => {
     if (storedLocation) {
       try {
         dispatch(updateUserLocation(data.user.id, storedLocation));
-        localStorage.removeItem("userLocation");
+        localStorage.removeItem("userLocation"); // Remove location from localStorage after updating
       } catch (error) {
         console.error("Error saving location to backend:", error.message);
       }
@@ -96,6 +102,20 @@ export const loginUser = (credentials, navigate, from) => async (dispatch) => {
     dispatch(loginFailure(error?.response?.data?.message));
   }
 };
+
+
+export const refreshAccessToken = () => async (dispatch) => {
+  try {
+    const { data } = await axiosInstance.post('/api/auth/refresh-token', {}, { withCredentials: true });
+
+    // Update the access token in cookies using the utility function
+    setCookie('userAuthToken', data.token, 7); // Expires in 7 days
+
+    dispatch({ type: REFRESH_TOKEN_SUCCESS, payload: data.token });
+  } catch (error) {
+    dispatch({ type: REFRESH_TOKEN_FAILURE, payload: error.response?.data?.message || error.message });
+  }
+}
 
 
 // Get User Profile

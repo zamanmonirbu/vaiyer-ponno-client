@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { IoSearchOutline } from "react-icons/io5";
 import { FiShoppingCart, FiMapPin } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../actions/categoryActions";
 import { fetchLocation } from "../actions/locationActions";
-import Modal from "react-modal";
-import "./Nav.css";
 import { getUserProfile } from "../actions/userActions";
+import ProductSearch from "./ProductSearch";
+import "./Nav.css";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories.categories);
+  
   const { cartItems } = useSelector((state) => state.cart);
   const { userProfile } = useSelector((state) => state.user);
 
   const [active, setActive] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const totalItems = cartItems.length;
   const userAuth = JSON.parse(localStorage.getItem("userAuth"));
   const [storedLocation, setStoredLocation] = useState(null);
-  
+
   useEffect(() => {
     dispatch(fetchCategories());
 
@@ -36,29 +34,12 @@ const Navbar = () => {
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!storedLocation) {
-      const fetchedLocation = JSON.parse(localStorage.getItem("userLocation"));
-      if (fetchedLocation) {
-        setStoredLocation(fetchedLocation);
-      }
-    }
-  }, [storedLocation]);
+  const { city, road, postalCode, error } =
+    storedLocation || userProfile?.location || {};
 
   const handleClick = (section) => {
     setActive(section);
   };
-
-  const handleAllClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const { city, road, postalCode, error } =
-    storedLocation || userProfile?.location || {};
 
   return (
     <div className="bg-gray-900 p-2 flex justify-between items-center md:flex-row flex-col">
@@ -85,27 +66,9 @@ const Navbar = () => {
               </div>
             </div>
           </Link>
-          <div
-            className={`flex flex-1 ml-8 ${
-              active === "search" ? "border-2 border-white p-1 rounded-md" : ""
-            }`}
-            onClick={() => handleClick("search")}
-          >
-            <button
-              className="bg-gray-200 text-gray-700 px-4 sm:px-14 hover:bg-yellow-400 hover:text-black"
-              onClick={handleAllClick}
-            >
-              All
-            </button>
-            <input
-              type="text"
-              placeholder="Search vaiyer-ponno"
-              className="flex-1 p-2 w-3/5 border-none outline-none"
-            />
-            <button className="bg-yellow-400 p-2 flex items-center justify-center">
-              <IoSearchOutline className="text-xl sm:text-3xl" />
-            </button>
-          </div>
+
+          {/* ProductSearch component */}
+          <ProductSearch active={active} handleClick={handleClick} />
         </div>
       </div>
 
@@ -131,33 +94,6 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-
-      {/* Modal */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="All Categories"
-        className="modal-content"
-        overlayClassName="modal-overlay"
-      >
-        <h2 className="text-xl font-bold mb-4">All Categories</h2>
-        <ul>
-          {categories?.map((category) => (
-            <li
-              key={category?._id}
-              className="py-2 px-4 hover:bg-gray-200 cursor-pointer"
-            >
-              <Link to={`/category/${category?.name}`}>{category?.name}</Link>
-            </li>
-          ))}
-        </ul>
-        <button
-          onClick={closeModal}
-          className="mt-4 bg-gray-800 text-white p-2 rounded-md"
-        >
-          Close
-        </button>
-      </Modal>
     </div>
   );
 };

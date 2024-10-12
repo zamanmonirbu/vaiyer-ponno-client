@@ -3,6 +3,7 @@ import axiosInstance from "../api/axiosInstance";
 // Add to cart action
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axiosInstance.get(`/api/products/${id}`); // Fetch product details
+  // console.log(data);
 
   dispatch({
     type: "ADD_TO_CART",
@@ -13,7 +14,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       unitPrice: data.unitPrice,
       offer:data.offer,
       description: data.description,
-      stock: data.stock,   
+      stock: data.quantity,   
       seller:data.seller,
       qty,
     },

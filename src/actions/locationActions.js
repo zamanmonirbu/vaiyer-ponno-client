@@ -8,14 +8,24 @@ import {
   UPDATE_LOCATION_SUCCESS,
   UPDATE_LOCATION_FAILURE,
 } from "./actionTypes";
+import { getCookie } from "./cookieUtils";
 
-// Action to fetch user location and optionally update it
 export const fetchLocation = () => async (dispatch) => {
   dispatch({ type: FETCH_LOCATION_REQUEST });
 
   const API_KEY = '3232c1153ab849e5ab17fce13ce22a94';
-  const userAuth = JSON.parse(localStorage.getItem("userAuth")); // Check if the user is logged in 
-  const sellerAuth = JSON.parse(localStorage.getItem("sellerAuth")); // Check if the seller is logged in
+  const userAuthCookie = getCookie("userAuth");
+  const userAuth = userAuthCookie ? JSON.parse(userAuthCookie) : null;
+ 
+  const sellerAuthCookie = getCookie("sellerAuth");
+  const sellerAuth = sellerAuthCookie ? JSON.parse(sellerAuthCookie) : null;
+
+  // Check location permission before fetching location
+  const permission = await navigator.permissions.query({ name: 'geolocation' });
+  if (permission.state === 'denied') {
+    dispatch({ type: FETCH_LOCATION_ERROR, payload: "Location access denied" });
+    return;
+  }
 
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -35,13 +45,12 @@ export const fetchLocation = () => async (dispatch) => {
 
           // Prepare the location data
           const locationData = { city, road, postalCode, lat: latitude, lng: longitude };
-
-          // console.log("Fetch location",locationData)
+          
 
           // If user is logged in, send the location to the backend
           if (userAuth) {
             dispatch(updateUserLocation(userAuth.user.id, locationData));
-          } else if(!sellerAuth) {
+          } else {
             localStorage.setItem("userLocation", JSON.stringify(locationData));
           }
 
@@ -55,12 +64,22 @@ export const fetchLocation = () => async (dispatch) => {
             type: FETCH_LOCATION_SUCCESS,
             payload: locationData,
           });
+
+          // Reload the page after successful location fetch
+          window.location.reload();
+          
         } catch (error) {
-          dispatch({ type: FETCH_LOCATION_ERROR, payload: error.message || "Error fetching location data" });
+          dispatch({
+            type: FETCH_LOCATION_ERROR,
+            payload: error.message || "Error fetching location data",
+          });
         }
       },
       (error) => {
-        dispatch({ type: FETCH_LOCATION_ERROR, payload: error.message || "Location access denied" });
+        dispatch({
+          type: FETCH_LOCATION_ERROR,
+          payload: error.message || "Location access denied",
+        });
       }
     );
   } else {
@@ -75,8 +94,6 @@ export const getUserLocation = (userId) => async (dispatch) => {
 
   try {
     const response = await axiosInstance.get(`/api/location/${userId}`);
-    // console.log("From action in location", response.data);
-
     // Dispatch success action with the retrieved location data
     dispatch({
       type: FETCH_LOCATION_SUCCESS,
@@ -93,7 +110,7 @@ export const getSellerLocation = (sellerId) => async (dispatch) => {
 
   try {
     const response = await axiosInstance.get(`/api/location/${sellerId}`);
-    console.log("From action in seller location", response.data);
+    console.log("From seller location action:", response.data);
 
     // Dispatch success action with the retrieved location data
     dispatch({
@@ -101,7 +118,7 @@ export const getSellerLocation = (sellerId) => async (dispatch) => {
       payload: response.data, // Assumes backend returns { city, road, postalCode, lat, lng }
     });
   } catch (error) {
-    dispatch({ type: FETCH_LOCATION_ERROR, payload: error.message || "Error retrieving location data" });
+    dispatch({ type: FETCH_LOCATION_ERROR, payload: error.message || "Error retrieving seller location data" });
   }
 };
 
@@ -120,14 +137,14 @@ export const updateUserLocation = (userId, locationData) => async (dispatch) => 
   } catch (error) {
     dispatch({
       type: UPDATE_LOCATION_FAILURE,
-      payload: error.response?.data?.error || "Error updating location",
+      payload: error.response?.data?.error || "Error updating user location",
     });
   }
 };
 
 // Action to update seller location
 export const updateSellerLocation = (sellerId, locationData) => async (dispatch) => {
-  console.log("From seller location update",sellerId);
+  console.log("From seller location update", sellerId);
   dispatch({ type: UPDATE_LOCATION_REQUEST });
 
   try {
@@ -139,12 +156,10 @@ export const updateSellerLocation = (sellerId, locationData) => async (dispatch)
       payload: response.data, // Assuming the backend returns the updated seller location data
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     dispatch({
-    
       type: UPDATE_LOCATION_FAILURE,
       payload: error.response?.data?.error || "Error updating seller location",
     });
   }
 };
-

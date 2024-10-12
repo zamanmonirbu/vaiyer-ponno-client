@@ -11,7 +11,8 @@ const AdminLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, adminInfo } = useSelector((state) => state.adminLogin);
-console.log(loading, error, adminInfo,"hi")
+
+  
   const handleLogin = () => {
     dispatch(loginAdmin({ email, password, role: 'admin' }));
   };

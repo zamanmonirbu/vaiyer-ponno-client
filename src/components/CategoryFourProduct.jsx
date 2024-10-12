@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoriesWithLimitedProducts } from '../actions/categoryActions';
 import { Link, useNavigate } from "react-router-dom";
-import StrikeLine from './StrikeLine';
+// import StrikeLine from './StrikeLine';
 import { ClipLoader } from 'react-spinners'; // Importing ClipLoader from react-spinners
 
 const exampleCategories = [
@@ -60,7 +60,7 @@ const CategoryFourProduct = () => {
                     {/* Previous Button */}
                     <button
                         onClick={handlePrev}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full z-10"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full z-1"
                     >
                         &#8249;
                     </button>
@@ -108,7 +108,7 @@ const CategoryFourProduct = () => {
                     {/* Next Button */}
                     <button
                         onClick={handleNext}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full z-10"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full z-1"
                     >
                         &#8250;
                     </button>

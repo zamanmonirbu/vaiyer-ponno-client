@@ -23,7 +23,7 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
-  CLEAR_SELLER_STATE,  // Add this for clearing seller state
+  CLEAR_SELLER_STATE,  
 } from '../actions/actionTypes';
 
 const initialState = {

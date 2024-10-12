@@ -6,11 +6,13 @@ const CartProduct = ({
   name,
   description,
   price,
-  quantity,
-  stock,
+  quantity, // This is the current quantity in the cart
+  stock, // Available stock
   onRemove,
   onQuantityChange,
 }) => {
+  console.log(quantity,stock); // Just for debugging
+
   return (
     <div>
       <div className="flex justify-between items-start border-b p-4">
@@ -35,8 +37,8 @@ const CartProduct = ({
             </label>
             <select
               id="quantity"
-              value={quantity}
-              onChange={(e) => onQuantityChange(e.target.value)}
+              value={quantity} // Ensure that the current quantity is reflected
+              onChange={(e) => onQuantityChange(Number(e.target.value))}
               className="border p-1"
             >
               {[...Array(stock).keys()].map((x) => (

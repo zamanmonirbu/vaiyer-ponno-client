@@ -9,13 +9,14 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
-  const { loading, error, adminInfo } = useSelector((state) => state.adminLogin);
+  const {admin}  = useSelector((state) => state.adminReducer);
+  console.log(admin)
 
   const handleLogin = () => {
     dispatch(loginAdmin({ email, password }));
   };
 
-  if (adminInfo) {
+  if (admin) {
     navigate('/admin/dashboard'); 
   }
 
@@ -25,8 +26,8 @@ const AdminLogin = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
-        {loading && <p className="text-blue-500 text-center">Loading...</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {/* {loading && <p className="text-blue-500 text-center">Loading...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>} */}
       
         <input
           type="email"
