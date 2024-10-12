@@ -1,22 +1,22 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
-  AiOutlineDown,
-  AiOutlineUp,
-  AiOutlineShop,
   AiOutlineDollarCircle,
+  AiOutlineDown,
+  AiOutlineShop,
   AiOutlineTag,
+  AiOutlineUp,
 } from "react-icons/ai";
 import {
   FaBoxOpen,
   FaCity,
   FaClipboardList,
-  FaStar,
   FaLocationArrow,
+  FaStar,
 } from "react-icons/fa";
-import StrikeLine from "../StrikeLine";
-import CommentManager from "../CommentManager";
+import { Link } from "react-router-dom";
+import CommentManager from "../../pages/CommentManager";
+import StrikeLine from "../Utilities/StrikeLine";
 
 const ProductDetails = ({
   productId,
@@ -79,11 +79,12 @@ const ProductDetails = ({
             <div>
               <strong>Available Product On:</strong>
               {cities.map((city, index) => (
-                  <span key={index}>
-                    {/* <FaLocationArrow className="mr-2" /> Location icon */}
-                    {` `}{city}
-                  </span>
-                ))}
+                <span key={index}>
+                  {/* <FaLocationArrow className="mr-2" /> Location icon */}
+                  {` `}
+                  {city}
+                </span>
+              ))}
             </div>
           </div>
         )}

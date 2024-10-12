@@ -4,9 +4,9 @@ import { addToCart, getCartProducts, removeFromCart,clearCart } from "../../acti
 import CartSummary from "./CartSummary ";
 import CartProduct from "./CartProduct";
 import EmptyCart from "./EmptyCart";
-import StrikeLine from "../StrikeLine";
-import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
+import StrikeLine from "../Utilities/StrikeLine";
+import Navbar from "../Nav/Navbar";
 
 
 const ViewProductsOnCart = () => {

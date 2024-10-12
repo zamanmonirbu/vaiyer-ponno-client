@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerAdmin } from '../../actions/adminActions';
 import { Link, useNavigate } from 'react-router-dom';
-import AllNavSections from '../AllNavSections';
+import AllNavSections from '../../components/Nav/AllNavSections';
+
 
 const AdminRegister = () => {
   const [name, setName] = useState('');
@@ -12,7 +13,7 @@ const AdminRegister = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Added navigate hook
-  const { loading, error, success } = useSelector((state) => state.adminRegister);
+  const { loading, error, success } = useSelector((state) => state.adminReducer);
 
   const handleRegister = () => {
     dispatch(registerAdmin({ name, email, password }));

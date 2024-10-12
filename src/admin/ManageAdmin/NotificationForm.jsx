@@ -7,8 +7,6 @@ import {
   createNotification,
   fetchNotifications,
 } from "../../actions/notificationActions";
-// import { createNotification, clearNotificationState, fetchNotifications } from '../slices/notificationSlice';
-// fetchNotifications
 
 const NotificationForm = () => {
   const dispatch = useDispatch();

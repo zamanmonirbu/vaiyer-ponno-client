@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { makePayment } from "../../actions/paymentActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AllNavSections from "../AllNavSections";
 import { getCookie } from "../../actions/cookieUtils";
 import { getUserProfile } from "../../actions/userActions";
+import AllNavSections from "../Nav/AllNavSections";
+
 
 const Checkout = () => {
   const [coupon, setCoupon] = useState("");

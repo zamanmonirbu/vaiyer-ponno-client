@@ -5,13 +5,13 @@ import {
   rejectAdmin,
   requestAdmins,
 } from "../../actions/adminActions";
-import StrikeLine from "../../components/StrikeLine";
+import StrikeLine from "../../components/Utilities/StrikeLine";
+
 
 const AdminRequests = () => {
   const dispatch = useDispatch();
 
   const adminRequestsState = useSelector((state) => state.adminReducer);
-  // console.log(adminRequestsState);
   const { loading, requests, error } = adminRequestsState;
 
   useEffect(() => {

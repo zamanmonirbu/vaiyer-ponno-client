@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSeller } from "../../actions/sellerActions";
-import AllNavSections from "../AllNavSections";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS
+import AllNavSections from "../Nav/AllNavSections";
 
 const SellerLogin = () => {
   const [email, setEmail] = useState("");

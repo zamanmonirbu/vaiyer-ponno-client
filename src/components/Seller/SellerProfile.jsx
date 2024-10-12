@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSellerById } from "../../actions/sellerActions";
-import AllNavSections from "../AllNavSections";
 import ClipLoader from "react-spinners/ClipLoader"; // Import the spinner
+import AllNavSections from "../Nav/AllNavSections";
 
 const SellerProfile = () => {
   const { id } = useParams();

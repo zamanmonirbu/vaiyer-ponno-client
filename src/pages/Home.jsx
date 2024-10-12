@@ -1,5 +1,5 @@
-import AllNavSections from "../components/AllNavSections";
-import PageLayout from "../components/PageLayout";
+import AllNavSections from "../components/Nav/AllNavSections";
+import PageLayout from "./PageLayout";
 
 const Home = () => {
   return (

@@ -23,7 +23,6 @@ const SellerRequests = () => {
   };
 
   const handleActivate = (id, seller) => {
-    console.log(id);
     const updatedSeller = { ...seller, isSeller: true };
     dispatch(updateSeller(id, updatedSeller));
   };

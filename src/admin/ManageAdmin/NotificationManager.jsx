@@ -9,11 +9,8 @@ import {
 
 const NotificationManager = () => {
   const dispatch = useDispatch();
-  const notifications = useSelector(
-    (state) => state.notifications.notifications
-  );
-  const loading = useSelector((state) => state.notifications.loading);
-  const error = useSelector((state) => state.notifications.error);
+  const {notifications,loading,error} = useSelector((state) => state.notifications);
+
 
   const [newNotification, setNewNotification] = useState({
     message: "",

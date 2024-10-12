@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import AllNavSections from "../AllNavSections";
 import ViewSpecificProduct from "./ViewSpecificProduct";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../actions/productActions";
 import { ClipLoader } from "react-spinners"; // Importing ClipLoader spinner
 import SuggestProducts from "./SuggestProducts";
+import AllNavSections from "../Nav/AllNavSections";
 
 const ProductView = () => {
   const { id } = useParams(); // Fetching the product ID from the URL parameters

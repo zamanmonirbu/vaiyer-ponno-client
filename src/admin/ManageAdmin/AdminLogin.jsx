@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAdmin } from '../../actions/adminActions';
 import { Link, useNavigate } from 'react-router-dom';
-import AllNavSections from '../AllNavSections';
+import AllNavSections from '../../components/Nav/AllNavSections';
+
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
-  const { loading, error, adminInfo } = useSelector((state) => state.adminLogin);
+  const { loading, error, adminInfo } = useSelector((state) => state.adminReducer);
 
   const handleLogin = () => {
     dispatch(loginAdmin({ email, password }));
