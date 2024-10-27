@@ -1,0 +1,164 @@
+.LogoSearchChat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+
+
+.Search-chat {
+  display: flex;
+  align-items: center;
+  background-color: var(--inputColor);
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 5px 3px;
+}
+
+.Search-chat input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 5px;
+}
+
+.s-icon-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  color: white;
+  background-color: rgb(181, 181, 185);
+  cursor: pointer;
+  padding: 5px; 
+  margin-right: 5px;
+}
+
+.ErrorMessage {
+  color: red;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.s-icon-plus > img {
+  height: 1rem;
+  width: 1rem;
+}
+
+.SearchResults {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 10%;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 1rem 0 0 0;
+  z-index: 1;
+}
+
+.SearchResultItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.SearchResultItem:hover {
+  background: #cac4c4;
+}
+
+.SearchResultImg {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .SearchResults {
+    width: 15%;
+  }
+}
+
+@media (max-width: 992px) {
+  .SearchResults {
+    width: 20%;
+  }
+
+  .SearchResultItem {
+    padding: 8px;
+  }
+
+  .SearchResultImg {
+    height: 35px;
+    width: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .SearchResults {
+    width: 25%;
+  }
+
+  .SearchResultItem {
+    padding: 6px;
+  }
+
+  .SearchResultImg {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .SearchResults {
+    width: 30%;
+  }
+
+  .SearchResultItem {
+    padding: 5px;
+  }
+
+  .SearchResultImg {
+    height: 25px;
+    width: 25px;
+  }
+
+  .Search-chat {
+    padding: 4px 8px;
+  }
+
+  .Search-chat input {
+    width: 100%;
+  }
+  .Search-chat img{
+    height: .4rem;
+    width: .4rem;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .SearchResults {
+    width: 35%;
+  }
+
+  .SearchResultItem {
+    padding: 4px;
+  }
+
+  .SearchResultImg {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  .Search-chat {
+    padding: 3px 6px;
+  }
+
+  .Search-chat input {
+    padding: 3px;
+  }
+}

@@ -9,6 +9,7 @@ import { fetchSellerById } from "../actions/sellerActions";
 import ProductManager from "../components/Seller/ProductManager";
 import SellerAdmin from "./pages/SellerAdmin";
 import { getCookie } from "../actions/cookieUtils";
+import SellerChat from "../messenger/pages/Chat/SellerChat";
 
 function SellerApp() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function SellerApp() {
         <Route path="/dashboard/test" element={<Ecommerce/>} />
         <Route path="/input/product" element={<ProductManager seller={seller} />}  />
         <Route path="/profile/test" element={<SellerAdmin seller={seller} />}  />
+        <Route path="/s-c/chat/box" element={<SellerChat seller={seller} />}  />
       </Routes>
     </Dashboard>
   );

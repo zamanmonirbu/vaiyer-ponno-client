@@ -24,20 +24,25 @@ const UserDashboard = () => {
 
   const { userProfile, loading, error } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.orders);
-  console.log(orders);
-  const userId = JSON.parse(getCookie("userAuth"))?.id;
+
+  // console.log(orders)
+
+  const userAuthCookie = getCookie("userAuth");
+  const userId = userAuthCookie ? JSON.parse(userAuthCookie)?.id : null;
 
   useEffect(() => {
     dispatch(getUserProfile(userId));
     dispatch(fetchOrdersByUserId(userId));
   }, [dispatch, userId]);
 
+  // console.log(userProfile);
+
   useEffect(() => {
     if (userProfile) {
       setName(userProfile.name || "");
       setEmail(userProfile.email || "");
       setAddress(userProfile.address || "");
-      setImageUrl(userProfile.image || "");
+      setImageUrl(userProfile.img || "");
       setLat(userProfile.location?.lat || "");
       setLng(userProfile.location?.lng || "");
       setMobile(userProfile.mobile || ""); // Set mobile number
@@ -55,7 +60,7 @@ const UserDashboard = () => {
       name,
       email,
       address,
-      image: imageUrl,
+      img: imageUrl,
       location: { lat, lng },
       mobile, // Include mobile in the updated data
     };
@@ -80,7 +85,7 @@ const UserDashboard = () => {
       <div className="flex">
         {/* User Profile Section */}
         <div
-          className={`w-1/3 bg-white shadow-md rounded-lg overflow-hidden my-4 p-6 ${
+          className={`w-1/3 bg-gray-100 shadow-xl rounded-lg overflow-hidden my-4 p-6 ${
             !isOwner && !isEditMode ? "mx-auto" : ""
           }`}
         >
@@ -130,6 +135,25 @@ const UserDashboard = () => {
                           />
                         ) : (
                           name
+                        )}
+                      </td>
+                    </tr>
+
+                    {/* Image field */}
+                    <tr className="border-b">
+                    {isEditMode ?
+                     ( <td className="px-4 py-2 font-semibold">Image:</td>):" "
+                    }
+                      <td className="px-4 py-2">
+                        {isOwner && isEditMode ? (
+                          <input
+                            type="text"
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                            className="border rounded px-2 py-1 w-full"
+                          />
+                        ) : (
+                          ""
                         )}
                       </td>
                     </tr>
@@ -231,9 +255,9 @@ const UserDashboard = () => {
                   <th className="border border-gray-300 text-left px-4 py-2">
                     Order ID
                   </th>
-                  <th className="border border-gray-300 text-left px-4 py-2">
+                  {/* <th className="border border-gray-300 text-left px-4 py-2">
                     Transaction ID
-                  </th>
+                  </th> */}
                   <th className="border border-gray-300 text-left px-4 py-2">
                     Total Amount
                   </th>
@@ -261,9 +285,9 @@ const UserDashboard = () => {
                     <td className="border border-gray-300 px-4 py-2">
                       {order._id}
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    {/* <td className="border border-gray-300 px-4 py-2">
                       {order.transactionId}
-                    </td>
+                    </td> */}
                     <td className="border border-gray-300 px-4 py-2">
                       {order.totalAmount} {order.currency}
                     </td>
@@ -273,7 +297,7 @@ const UserDashboard = () => {
                     <td className="border border-gray-300 px-4 py-2">
                       {order.products.map((p) => (
                         <div key={p.productId}>
-                          {p.productName} (Qty: {p.qty}, Price: {p.price})
+                          {p.productName.slice(0,40)} 
                         </div>
                       ))}
                     </td>

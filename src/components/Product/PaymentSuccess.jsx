@@ -1,22 +1,51 @@
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { clearCart } from '../../actions/cartActions';
-import { useEffect } from 'react';
+import { fetchOrderById } from '../../actions/orderAction';
+import { useEffect, useState } from 'react';
+import socketIo from '../../api/SocketIo';
 
 const PaymentSuccess = () => {
-  const dispatch=useDispatch();
-  const navigate=useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { orderId } = useParams();
+  const { order } = useSelector((state) => state.orders);
+  const [newOrderNotification, setNewOrderNotification] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(clearCart());
-  },[dispatch])
+    if (orderId) {
+      dispatch(fetchOrderById(orderId));
+    }
 
-  const handleSuccess=()=>{
+    // console.log("Setting up socket listener");
+    
+    socketIo.on("new-order", (data) => {
+      console.log("New order received:", data);
+      setNewOrderNotification(true);
+    });
+
+    return () => {
+      console.log("Cleaning up socket listener");
+      socketIo.off("new-order");
+    };
+  }, [dispatch, orderId]);
+
+  const handleSuccess = () => {
     navigate('/');
-  }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center">
+      {newOrderNotification && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+          <span className="block sm:inline">A new order has been placed!</span>
+        </div>
+      )}
       <div className="mb-6">
         {/* SVG icon for success */}
         <svg
@@ -34,7 +63,63 @@ const PaymentSuccess = () => {
       <p className="text-lg text-gray-600 mb-8">Thank you for your purchase. Your payment has been processed successfully.</p>
 
       {/* Button to redirect to home */}
-      <button onClick={handleSuccess} className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300">Go to Home</button>
+      <button onClick={handleSuccess} className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300">
+        Go to Home
+      </button>
+
+      
+
+      {/* Order Details Table */}
+      {order && (
+        <div className="text-left bg-gray-100 p-6 rounded shadow-md w-3/4 max-w-3xl my-6">
+          <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
+          <table className="w-full text-left table-auto">
+            <tbody>
+              <tr>
+                <th className="border px-4 py-2">Order ID:</th>
+                <td className="border px-4 py-2">{order._id}</td>
+              </tr>
+              <tr>
+                <th className="border px-4 py-2">Total Amount:</th>
+                <td className="border px-4 py-2">${order.totalAmount}</td>
+              </tr>
+              <tr>
+                <th className="border px-4 py-2">Status:</th>
+                <td className="border px-4 py-2">{order.status ? "Completed" : "Pending"}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Order Items Table */}
+          <div className="mt-6">
+            <h4 className="text-lg font-semibold mb-2">Items Purchased:</h4>
+            <table className="w-full text-left table-auto border-collapse">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Product Name</th>
+                  <th className="border px-4 py-2">Quantity</th>
+                  <th className="border px-4 py-2">Price</th>
+                  <th className="border px-4 py-2">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order?.products?.map((item, index) => (
+                  <tr key={index}>
+                    <td className="border px-4 py-2">{item.productName}</td>
+                    <td className="border px-4 py-2">{item.qty}</td>
+                    <td className="border px-4 py-2">${item.price.toFixed(2)}</td>
+                    <td className="border px-4 py-2">${(item.price * item.qty).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {/* Print Button */}
+      <button onClick={handlePrint} className="bg-blue-600 text-white py-2 px-4 mt-4 rounded hover:bg-blue-700 transition duration-300">
+        Print Order
+      </button>
     </div>
   );
 };

@@ -17,10 +17,15 @@ const Checkout = () => {
   const { loading } = paymentState;
 
   const { userProfile } = useSelector((state) => state.user);
-  const userId = JSON.parse(getCookie("userAuth"))?.id;
+  const userAuth = getCookie("userAuth");
+  const userId = userAuth ? JSON.parse(userAuth).id : null;
+  
 
+  console.log(userId)
   useEffect(() => {  
+    if(userId){
       dispatch(getUserProfile(userId));
+    }
   }, [dispatch,userId]);
 
   const subtotal = cartItems.reduce(
@@ -55,7 +60,10 @@ const Checkout = () => {
       customerMobile: userProfile.mobile,
       products,
       totalAmount: total,
+
     };
+
+    // console.log(paymentData)
 
     const paymentUrl = await dispatch(makePayment(paymentData));
     if (paymentUrl) {

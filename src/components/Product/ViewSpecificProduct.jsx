@@ -51,7 +51,7 @@ const ViewSpecificProduct = ({ product }) => {
           key={product?._id}
           productId={product?._id}
           name={product?.name}
-          seller={product?.seller._id}
+          sellerId={product?.seller._id}
           description={product?.description}
           unitPrice={product?.unitPrice}
           offer={product?.offer}
@@ -70,7 +70,7 @@ const ViewSpecificProduct = ({ product }) => {
         <AddToCartSection
           unitPrice={product?.unitPrice}
           offer={product?.offer}
-          stock={product?.quantity} // Assuming 'quantity' is the stock count
+          stock={product?.quantity} 
           handleAddToCart={handleAddToCart}
           sellerLocation={product?.sellerLocation}
           maxDistance={product?.area}
@@ -81,11 +81,8 @@ const ViewSpecificProduct = ({ product }) => {
             onQuantityChange={handleQuantityChange}
             stocks={product?.quantity}
           />
-        )}
-
-        
+        )}   
       </div>
-
     </div>
   );
 };

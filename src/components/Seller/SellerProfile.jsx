@@ -187,10 +187,10 @@ const SellerProfile = () => {
                     />
                     <div className="p-4">
                       <h3 className="text-lg font-bold text-gray-900">
-                        {product.name.substring(0, 33)}
+                        {product.name.slice(0, 33)}
                       </h3>
                       <p className="text-sm text-gray-700 mt-2">
-                        {product.description.substring(0, 100)}...
+                        {product.description.slice(0, 100)}...
                       </p>
                       <div className="mt-4 flex items-center justify-between">
                         <span className="text-xl font-semibold text-[#033B4C]">

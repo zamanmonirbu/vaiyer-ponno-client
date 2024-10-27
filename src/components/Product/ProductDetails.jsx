@@ -6,6 +6,7 @@ import {
   AiOutlineShop,
   AiOutlineTag,
   AiOutlineUp,
+  AiOutlineMessage, // Import the message icon
 } from "react-icons/ai";
 import {
   FaBoxOpen,
@@ -14,14 +15,18 @@ import {
   FaLocationArrow,
   FaStar,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CommentManager from "../../pages/CommentManager";
 import StrikeLine from "../Utilities/StrikeLine";
+import { useDispatch } from 'react-redux';
+import { createChat } from "../../actions/chatAction";
+import { useSelector } from 'react-redux';
+
 
 const ProductDetails = ({
   productId,
   name,
-  seller,
+  sellerId,
   description,
   unitPrice,
   offer,
@@ -34,6 +39,10 @@ const ProductDetails = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const descriptionPreview = description?.slice(0, 500);
+  const { userProfile } = useSelector((state) => state.user);
+
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
@@ -42,13 +51,32 @@ const ProductDetails = ({
 
   let totalPrice = Math.round(unitPrice - (unitPrice * offer) / 100);
 
+
+  const handleMessageSeller = async () => {
+    try {
+      const senderId = userProfile?._id; // Replace with actual user ID
+      const data = { senderId, receiverId: sellerId };
+           
+      // Dispatch the action to create the chat
+      const res = await dispatch(createChat(data));
+      // console.log(res.data)
+      
+      if (res.status === 200) {
+        // Redirect to the newly created chat page
+        navigate(`/c-s/chat/box`);
+      }
+     
+    } catch (error) {
+      console.error('Error creating chat:', error.message);
+    }
+  };
   return (
     <div className="p-6 border rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-2 text-[#033B4C]">{name}</h1>
 
       <Link
         className="text-yellow-500 text-2xl mb-2 flex items-center"
-        to={`/seller/${seller}`}
+        to={`/seller/${sellerId}`}
       >
         <AiOutlineShop className="mr-2" /> Visit Store
       </Link>
@@ -80,9 +108,7 @@ const ProductDetails = ({
               <strong>Available Product On:</strong>
               {cities.map((city, index) => (
                 <span key={index}>
-                  {/* <FaLocationArrow className="mr-2" /> Location icon */}
-                  {` `}
-                  {city}
+                  {` `} {city}
                 </span>
               ))}
             </div>
@@ -128,6 +154,28 @@ const ProductDetails = ({
         )}
       </div>
 
+      <div className="flex items-center mb-4">
+      
+        {
+        userProfile?(<button
+          className="flex items-center text-blue-500"
+          onClick={handleMessageSeller}
+        >
+          <AiOutlineMessage className="mr-2" />
+          Message to Seller
+        </button>):
+        <div className="flex items-center">
+        <Link to={'/user/login'} className="flex items-center">
+          <AiOutlineMessage className="mr-2" />
+          <span>Login & message</span>
+        </Link>
+      </div>
+      
+        
+        }
+      
+      </div>
+
       <div className="mb-4">
         <CommentManager productId={productId} />
       </div>
@@ -138,7 +186,7 @@ const ProductDetails = ({
 ProductDetails.propTypes = {
   productId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  seller: PropTypes.string.isRequired,
+  sellerId: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   unitPrice: PropTypes.number.isRequired,
   offer: PropTypes.number,

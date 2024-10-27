@@ -17,9 +17,7 @@ import {
   REFRESH_TOKEN_FAILURE,
 } from "./actionTypes";
 import { updateUserLocation } from "./locationActions";
-import { setCookie } from './cookieUtils'; 
-
-
+import { setCookie } from "./cookieUtils";
 
 // Action creator for login start
 export const loginStart = () => ({
@@ -69,8 +67,6 @@ export const registerUser = (userInfo, navigate) => async (dispatch) => {
   }
 };
 
-
-
 // Thunk action for login
 export const loginUser = (credentials, navigate, from) => async (dispatch) => {
   dispatch(loginStart());
@@ -92,31 +88,36 @@ export const loginUser = (credentials, navigate, from) => async (dispatch) => {
         dispatch(updateUserLocation(data.user.id, storedLocation));
         localStorage.removeItem("userLocation"); // Remove location from localStorage after updating
       } catch (error) {
-        console.error("Error saving location to backend:", error.message);
+        console.error("Error saving location to backend:", error?.response?.data?.message||error?.response?.data?.error);
       }
     }
 
     // Navigate to the previous location after login
-    navigate(from); 
+    navigate(from);
   } catch (error) {
-    dispatch(loginFailure(error?.response?.data?.message));
+    dispatch(loginFailure(error?.response?.data?.message||error?.response?.data?.error));
   }
 };
 
-
 export const refreshAccessToken = () => async (dispatch) => {
   try {
-    const { data } = await axiosInstance.post('/api/auth/refresh-token', {}, { withCredentials: true });
+    const { data } = await axiosInstance.post(
+      "/api/auth/refresh-token",
+      {},
+      { withCredentials: true }
+    );
 
     // Update the access token in cookies using the utility function
-    setCookie('userAuthToken', data.token, 7); // Expires in 7 days
+    setCookie("userAuthToken", data.token, 7); // Expires in 7 days
 
     dispatch({ type: REFRESH_TOKEN_SUCCESS, payload: data.token });
   } catch (error) {
-    dispatch({ type: REFRESH_TOKEN_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({
+      type: REFRESH_TOKEN_FAILURE,
+      payload: error.response?.data?.message || error?.response?.data?.message||error?.response?.data?.error,
+    });
   }
-}
-
+};
 
 // Get User Profile
 export const getUserProfile = (userId) => async (dispatch) => {
@@ -128,10 +129,7 @@ export const getUserProfile = (userId) => async (dispatch) => {
     console.log(error);
     dispatch({
       type: USER_PROFILE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: error?.response?.data?.message||error?.response?.data?.error,
     });
   }
 };
@@ -150,9 +148,7 @@ export const updateUserProfile = (userId, updatedData) => async (dispatch) => {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      error?.response?.data?.message||error?.response?.data?.error,
     });
   }
 };

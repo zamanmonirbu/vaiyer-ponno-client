@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchLocation } from "../../actions/locationActions";
 import { clearCart } from "../../actions/cartActions";
 import { getCookie } from "../../actions/cookieUtils";
+import { getUserProfile } from "../../actions/userActions";
 
 // Haversine formula to calculate distance between two coordinates in km
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -44,18 +45,32 @@ const AddToCartSection = ({
 
   const dispatch = useDispatch();
 
+  // console.log(sellerLocation);
+
   // Fetch userAuth from localStorage and userProfile location from the redux store
   const userAuthCookie = getCookie("userAuth");
   const userAuth = userAuthCookie ? JSON.parse(userAuthCookie) : null;
 
   const { userProfile } = useSelector((state) => state.user);
 
-  const [locationPermission, setLocationPermission] = useState(null); // null, 'granted', or 'denied'
+  // console.log(userProfile)
+  
+  useEffect(()=>{
+    if(userAuth){
+        dispatch(getUserProfile(userAuth?.id))
+    }
+}, [])
+  
+
+
+  // console.log(userAuth);
+
+  const [locationPermission, setLocationPermission] = useState(null); 
 
   useEffect(() => {
     if (userAuth) {
       setLocationAllowed(true);
-      checkLocationMatch(userProfile.location, sellerLocation);
+      checkLocationMatch(userProfile?.location, sellerLocation);
     } else {
       const storedLocation = JSON.parse(localStorage.getItem("userLocation"));
       if (storedLocation) {
@@ -88,9 +103,12 @@ const AddToCartSection = ({
       sellerLocation?.lng
     );
 
+    // console.log("s",sellerLocation?.city,"u",userLocation?.city)
+
     if (
+      
       distance <= maxDistance ||
-      sellerLocation.city.includes(userLocation.city)
+      sellerLocation?.city.includes(userLocation?.city)
     ) {
       setLocationMatched(true);
     } else {

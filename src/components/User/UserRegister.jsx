@@ -27,10 +27,10 @@ const UserRegister = () => {
       });
       return;
     }
-    toast.info("Loading...", {
-      position: "top-center", // Position in the center
-      autoClose: false, // Keep it until you explicitly close it
-    });
+    // toast.info("Loading...", {
+    //   position: "top-center", // Position in the center
+    //   autoClose: false, // Keep it until you explicitly close it
+    // });
 
     dispatch(registerUser({ name, email, mobile, address, password }, navigate)); 
   };

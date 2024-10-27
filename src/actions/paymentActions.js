@@ -8,7 +8,6 @@ export const makePayment = (paymentData) => async (dispatch) => {
 
     // Make the API call to the payment endpoint
     const {data} = await axiosInstance.post("/api/payment", paymentData);
-
     // On successful payment
     dispatch({
       type: PAYMENT_SUCCESS,
@@ -18,6 +17,7 @@ export const makePayment = (paymentData) => async (dispatch) => {
     return data.GatewayPageURL;
 
   } catch (error) {
+    console.log(error)
     dispatch({
       type: PAYMENT_FAILURE,
       payload: error.response?.data?.message || error.message,

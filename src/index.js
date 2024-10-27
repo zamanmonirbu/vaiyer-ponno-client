@@ -13,6 +13,9 @@ import locationReducer from './reducers/locationReducer';
 import { paymentReducer } from './reducers/paymentReducer';
 import { adminReducer } from './reducers/adminReducer';
 import { orderReducer } from './reducers/orderReducer';
+import searchReducer from './reducers/searchReducer';
+import chatReducer from './reducers/chatReducer';
+// import chatReducer from './reducers/chatReducer';
 
 
 
@@ -34,8 +37,8 @@ const rootReducer = combineReducers({
   location: locationReducer,
   payment: paymentReducer,
   orders: orderReducer,
-
-
+  search:searchReducer,
+  chat:chatReducer
   
 });
 

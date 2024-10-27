@@ -455,7 +455,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default", seller }) {
               >
                 <NavLink
                   end
-                  to="/seller/messages"
+                  to="/seller/s-c/chat/box"
                   className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                     pathname.includes("messages")
                       ? ""

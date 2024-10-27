@@ -7,7 +7,7 @@ import PaymentCancel from "./components/Product/PaymentCancel";
 import PaymentFail from "./components/Product/PaymentFail";
 import PaymentSuccess from "./components/Product/PaymentSuccess";
 import ProductView from "./components/Product/ProductView";
-import SuggestProducts from "./components/Product/SuggestProducts";
+// import SuggestProducts from "./components/Product/SuggestProducts";
 import ViewProductsOnCart from "./components/Product/ViewProductsOnCart";
 import SellerLogin from "./components/Seller/SellerLogin";
 import SellerProfile from "./components/Seller/SellerProfile";
@@ -22,6 +22,9 @@ import CartPage from "./pages/CartPage";
 import CategoryFourProduct from "./pages/CategoryFourProduct";
 import NotFound from "./components/Utilities/NotFound";
 import AdminLogin from "./admin/ManageAdmin/AdminLogin";
+import Chat from "./messenger/pages/Chat/Chat";
+
+
 
 
 function App() {
@@ -45,10 +48,8 @@ function App() {
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/seller/login" element={<SellerLogin />} />
         <Route path="/seller/register" element={<SellerRegister />} />
-        <Route
-          path="/test/suggest"
-          element={<SuggestProducts id={"67098efbee7480d6ffd56f99"} />}
-        />
+       
+        
 
         {/* User Routes */}
         <Route
@@ -89,7 +90,7 @@ function App() {
           }
         />
         <Route
-          path="/payment/success/:id"
+          path="/payment/success/:orderId"
           element={
             currentUser ? (
               <PaymentSuccess />
@@ -115,6 +116,16 @@ function App() {
               <PaymentCancel />
             ) : (
               <Navigate to="/user/login" state={{ from: location }} />
+            )
+          }
+        />
+        <Route
+          path="/c-s/chat/box"
+          element={
+            currentUser ? (
+             <Chat/>
+            ) : (
+              <Navigate to="/user/login"  />
             )
           }
         />

@@ -1,0 +1,10 @@
+  .online-dot-display {
+    background-color: greenyellow;
+    border-radius: 50%;
+    position: absolute;
+    left: .9rem;
+    width: .5rem;
+    height: .5rem;
+  }
+  
+  
