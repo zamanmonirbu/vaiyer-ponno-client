@@ -76,57 +76,66 @@ const ManageAllCategory = () => {
     setFilteredProducts(filteredProductsMemo);
   }, [filteredProductsMemo]);
 
-
-    // Define breadcrumb items
-    const breadcrumbItems = [
-      { label: <><FaHome className="inline mr-1" /> Home</>, link: "/" },
-      { label: `${categoryName}`, link: `/category/${categoryName}` },
-    ];
+  // Define breadcrumb items
+  const breadcrumbItems = [
+    { label: <><FaHome className="inline mr-1" /> Home</>, link: "/" },
+    { label: `${categoryName}`, link: `/category/${categoryName}` },
+  ];
 
   return (
     <div>
       <BreadcrumbComponent items={breadcrumbItems} />
-    <div className="container mx-auto px-4">
-      <div className="text-2xl font-bold mt-6">{categoryName}</div>
-      <div className="my-4">
-        {productsByCategory?.subCategories?.map((subCategory, index) => (
+      <div className="container mx-auto px-4">
+        <div className="text-2xl font-bold mt-6">{categoryName}</div>
+
+        <div className="my-4">
+          {/* Button to show all products in the category */}
           <button
-            key={index}
             className="text-[#033B4C] px-4 py-2 m-1 rounded border-2 border-[#033B4C] text-lg font-semibold hover:text-white hover:bg-[#033B4C]"
-            onClick={() => setProductsByCategoryAll(subCategory.products)}
+            onClick={() => setProductsByCategoryAll(productsByCategory.products)}
           >
-            {subCategory.name}
+            All Products
           </button>
-        ))}
-      </div>
 
-      {/* Responsive Layout */}
-      <div className="flex flex-col md:flex-row">
-        <div className="md:w-1/5 p-4">
-          <FilterComponent
-            setSelectedRating={setSelectedRating}
-            setSelectedGenders={setSelectedGenders}
-            setSelectedPriceRange={setSelectedPriceRange}
-            setCustomPriceRange={setCustomPriceRange}
-            setSortBy={setSortBy}
-            selectedRating={selectedRating}
-            selectedGenders={selectedGenders}
-            selectedPriceRange={selectedPriceRange}
-            customPriceRange={customPriceRange}
-            sortBy={sortBy}
-          />
+          {/* Subcategory buttons */}
+          {productsByCategory?.subCategories?.map((subCategory, index) => (
+            <button
+              key={index}
+              className="text-[#033B4C] px-4 py-2 m-1 rounded border-2 border-[#033B4C] text-lg font-semibold hover:text-white hover:bg-[#033B4C]"
+              onClick={() => setProductsByCategoryAll(subCategory.products)}
+            >
+              {subCategory.name}
+            </button>
+          ))}
         </div>
 
-        <div className="md:flex-1 p-4">
-          <hr className="border-t-2 border-gray-300 mb-6" />
-          {filteredProducts.length > 0 ? (
-            <CategoryProducts productsByCategoryAll={filteredProducts} />
-          ) : (
-            <p className="text-center text-gray-500">No products match your criteria.</p>
-          )}
+        {/* Responsive Layout */}
+        <div className="flex flex-col md:flex-row">
+          <div className="md:w-1/5 p-4">
+            <FilterComponent
+              setSelectedRating={setSelectedRating}
+              setSelectedGenders={setSelectedGenders}
+              setSelectedPriceRange={setSelectedPriceRange}
+              setCustomPriceRange={setCustomPriceRange}
+              setSortBy={setSortBy}
+              selectedRating={selectedRating}
+              selectedGenders={selectedGenders}
+              selectedPriceRange={selectedPriceRange}
+              customPriceRange={customPriceRange}
+              sortBy={sortBy}
+            />
+          </div>
+
+          <div className="md:flex-1 p-4">
+            <hr className="border-t-2 border-gray-300 mb-6" />
+            {filteredProducts.length > 0 ? (
+              <CategoryProducts productsByCategoryAll={filteredProducts} />
+            ) : (
+              <p className="text-center text-gray-500">No products match your criteria.</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

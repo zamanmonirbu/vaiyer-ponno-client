@@ -69,13 +69,17 @@ const ProductSearch = ({ active, handleClick }) => {
       </button>
 
       {/* This input now triggers the search modal */}
-      <input
+     <div className="w-full sm:w-1/5 md:w-2/5 lg:w-3/5 xl:w-4/5">
+     
+     <input
         type="text"
         placeholder="Search vaiyer-ponno"
-        className="flex-1 p-2 w-3/5 border-none outline-none"
+        className="flex-1 p-3 w-full border-none outline-none"
         onClick={() => setIsSearchModalOpen(true)} // Opens modal when clicked
         readOnly // Makes input read-only so the modal handles input
       />
+
+     </div>
       <button
         className="bg-yellow-400 p-2 flex items-center justify-center"
         onClick={() => handleSearch(searchQuery)} // Allow manual search

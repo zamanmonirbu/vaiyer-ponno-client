@@ -148,7 +148,7 @@ const AddToCartSection = ({
   const subtotal = Math.ceil(discountedPrice * quantity);
 
   return (
-    <div className="w-5/6 bg-gray-100 p-6 rounded-lg shadow-lg">
+    <div className="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
       <h3 className="text-2xl font-semibold mb-6 flex items-center">
         <FaShoppingCart className="mr-2" />
         Add to Cart
@@ -189,7 +189,7 @@ const AddToCartSection = ({
                     min="1"
                     value={quantity}
                     onChange={(e) => setQuantity(Number(e.target.value))}
-                    className="w-full p-2 text-center border border-gray-300 focus:ring-2 focus:ring-green-400 focus:outline-none"
+                    className="min-w-10 p-2 text-center border border-gray-300 focus:ring-2 focus:ring-green-400 focus:outline-none"
                     readOnly
                     style={{ width: "50%", margin: "0 4px" }}
                   />

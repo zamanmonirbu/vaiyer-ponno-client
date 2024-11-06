@@ -31,6 +31,12 @@ import NotificationList from "./pages/NotificationList";
 // import HomeEssentialsCard from "./pages/HomeEssentialsCard";
 import ProductSuggestion from "./pages/ProductSuggestion";
 import VideoUploadComponent from "./pages/VideoUploadComponent";
+import AboutUs from "./pages/AboutUs";
+import TodayDeals from "./components/Nav/MenuBar/TodayDeals";
+import CustomerService from "./components/Nav/MenuBar/CustomerService";
+import Registry from "./components/Nav/MenuBar/Registry";
+import GiftCards from "./components/Nav/MenuBar/GiftCards";
+import Sell from "./components/Nav/MenuBar/Sell";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -59,6 +65,55 @@ function App() {
           </MainLayout>
         }
       />
+      <Route
+        path="/about/us"
+        element={
+          <MainLayout>
+            <AboutUs/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/today-deals"
+        element={
+          <MainLayout>
+            <TodayDeals/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/customer-service"
+        element={
+          <MainLayout>
+            <CustomerService/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/registry"
+        element={
+          <MainLayout>
+            <Registry/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/gift-cards"
+        element={
+          <MainLayout>
+            <GiftCards/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/sell"
+        element={
+          <MainLayout>
+            <Sell/>
+          </MainLayout>
+        }
+      />
+
       <Route
         path="/suggest/product/with/ai"
         element={

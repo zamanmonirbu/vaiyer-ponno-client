@@ -71,7 +71,7 @@ const Navbar = () => {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center space-x-4 md:space-x-8 text-white text-sm w-full md:w-1/5 justify-around md:justify-end">
+      <div className="flex items-center space-x-4 md:space-x-8 text-white text-sm w-full md:w-1/5 justify-around md:justify-end ml-8">
         <div className="hover:bg-yellow-400 rounded-md hover:text-black p-1 text-center flex items-center space-x-2">
           <Link to={'/suggest/product/with/ai'} className="flex items-center">
             <SiGooglegemini className="w-6 h-6" />

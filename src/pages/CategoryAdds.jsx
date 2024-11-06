@@ -38,7 +38,7 @@ const CategoryAdds = () => {
           {/* Overlay Div */}
           <div className="absolute inset-0  opacity-30 group-hover:opacity-10 transition-opacity duration-300" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Link to="/your-action" className="px-4 py-2 bg-teal-500 text-white rounded-md">
+            <Link to="/about/us" className="px-4 py-2 bg-teal-500 text-white rounded-md">
               About Us
             </Link>
           </div>

@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSellerById } from "../../actions/sellerActions";
-import ClipLoader from "react-spinners/ClipLoader"; // Import the spinner
-import AllNavSections from "../Nav/AllNavSections";
+import ClipLoader from "react-spinners/ClipLoader"; 
 
 const SellerProfile = () => {
   const { id } = useParams();
@@ -39,9 +38,8 @@ const SellerProfile = () => {
     return <div>Error: {error}</div>;
   }
   return (
-    <>
-    <AllNavSections/>
-    <div className="flex flex-col h-screen">
+    <div>
+    <div className="flex flex-col min-h-screen">
       {/* Top Section */}
       <div className="flex flex-row flex-grow">
         {/* Video View Section */}
@@ -222,7 +220,7 @@ const SellerProfile = () => {
         </div>
       </div>
     </div>
-    </>
+    </div>
   );
 };
 
