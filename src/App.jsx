@@ -1,13 +1,16 @@
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+
+// Import your components
 import AdminMain from "./admin/AdminMain";
+import AdminLogin from "./admin/ManageAdmin/AdminLogin";
 import FilterComponent from "./components/Filter/FilterComponent";
+import MainLayout from "./components/layouts/MainLayout";
 import Checkout from "./components/Product/Checkout";
 import PaymentCancel from "./components/Product/PaymentCancel";
 import PaymentFail from "./components/Product/PaymentFail";
 import PaymentSuccess from "./components/Product/PaymentSuccess";
 import ProductView from "./components/Product/ProductView";
-// import SuggestProducts from "./components/Product/SuggestProducts";
 import ViewProductsOnCart from "./components/Product/ViewProductsOnCart";
 import SellerLogin from "./components/Seller/SellerLogin";
 import SellerProfile from "./components/Seller/SellerProfile";
@@ -15,17 +18,19 @@ import SellerRegister from "./components/Seller/SellerRegister";
 import UserDashboard from "./components/User/UserDashboard";
 import UserLogin from "./components/User/UserLogin";
 import UserRegister from "./components/User/UserRegister";
-import Home from "./pages/Home";
-import ManageAllCategory from "./pages/ManageAllCategory";
-import SellerApp from "./seller/SellerApp";
+import NotFound from "./components/Utilities/NotFound";
+import Chat from "./messenger/pages/Chat/Chat";
 import CartPage from "./pages/CartPage";
 import CategoryFourProduct from "./pages/CategoryFourProduct";
-import NotFound from "./components/Utilities/NotFound";
-import AdminLogin from "./admin/ManageAdmin/AdminLogin";
-import Chat from "./messenger/pages/Chat/Chat";
-
-
-
+import HistoryProductView from "./pages/HistoryProductView";
+import ManageAllCategory from "./pages/ManageAllCategory";
+import SellerApp from "./seller/SellerApp";
+import AuthLayout from "./components/layouts/AuthLayout";
+import PageLayout from "./pages/PageLayout";
+import NotificationList from "./pages/NotificationList";
+// import HomeEssentialsCard from "./pages/HomeEssentialsCard";
+import ProductSuggestion from "./pages/ProductSuggestion";
+import VideoUploadComponent from "./pages/VideoUploadComponent";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -34,129 +39,265 @@ function App() {
   const location = useLocation();
 
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/category" element={<FilterComponent />} />
-        <Route path="/category/:categoryName" element={<ManageAllCategory />} />
-        <Route path="/seller/:id" element={<SellerProfile />} />
-        <Route path="/product/:id" element={<ProductView />} />
-        <Route path="/user/product/cart" element={<ViewProductsOnCart />} />
-        <Route path="/get/category" element={<CategoryFourProduct />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/user/login" element={<UserLogin />} />
-        <Route path="/seller/login" element={<SellerLogin />} />
-        <Route path="/seller/register" element={<SellerRegister />} />
-       
-        
+    <Routes>
+      {/* Public Routes */}
+      
+      <Route
+        path="/"
+        element={
+          <MainLayout>
+            <PageLayout />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/upload/Video"
+        element={
+          <MainLayout>
+            {/* <PageLayout /> */}
+            <VideoUploadComponent/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/suggest/product/with/ai"
+        element={
+          <MainLayout>
+            < ProductSuggestion/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/show/all/notification"
+        element={
+          <MainLayout>
+            {/* <PageLayout /> */}
+            <NotificationList/>
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/category"
+        element={
+          <MainLayout>
+            <FilterComponent />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/category/:categoryName"
+        element={
+          <MainLayout>
+            <ManageAllCategory />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/seller/:id"
+        element={
+          <MainLayout>
+            <SellerProfile />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/product/:id"
+        element={
+          <MainLayout>
+            <ProductView />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/user/product/cart"
+        element={
+          <MainLayout>
+            <ViewProductsOnCart />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/get/category"
+        element={
+          <MainLayout>
+            <CategoryFourProduct />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <MainLayout>
+            <CartPage />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/user/orders/return"
+        element={
+          <MainLayout>
+            <HistoryProductView />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/c-s/chat/box"
+        element={
+          currentUser ? (
+            <MainLayout>
+              <Chat />
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" />
+          )
+        }
+      />
 
-        {/* User Routes */}
-        <Route
-          path="/user/dashboard"
-          element={
-            currentUser ? (
+      {/* Auth Routes */}
+      <Route
+        path="/user/login"
+        element={
+          <AuthLayout>
+            <UserLogin />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/user/register"
+        element={
+          currentUser ? (
+            <Navigate to="/user/dashboard" />
+          ) : (
+            <AuthLayout>
+              <UserRegister />
+            </AuthLayout>
+          )
+        }
+      />
+      <Route
+        path="/seller/login"
+        element={
+          <AuthLayout>
+            <SellerLogin />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/seller/register"
+        element={
+          <AuthLayout>
+            <SellerRegister />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/admin/login"
+        element={
+          <AuthLayout>
+            <AdminLogin />
+          </AuthLayout>
+        }
+      />
+
+      {/* User Protected Routes */}
+      <Route
+        path="/user/dashboard"
+        element={
+          currentUser ? (
+            <MainLayout>
               <UserDashboard />
-            ) : (
-              <Navigate to="/user/login" state={{ from: location }} />
-            )
-          }
-        />
-
-        <Route
-          path="/user/register"
-          element={
-            currentUser ? <Navigate to="/user/dashboard" /> : <UserRegister />
-          }
-        />
-        <Route
-          path="/user/:id/cart"
-          element={
-            currentUser ? (
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" state={{ from: location }} />
+          )
+        }
+      />
+      <Route
+        path="/user/:id/cart"
+        element={
+          currentUser ? (
+            <MainLayout>
               <ViewProductsOnCart />
-            ) : (
-              <Navigate to="/user/login" state={{ from: location }} />
-            )
-          }
-        />
-        <Route
-          path="/checkout"
-          element={
-            currentUser ? (
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" state={{ from: location }} />
+          )
+        }
+      />
+      <Route
+        path="/checkout"
+        element={
+          currentUser ? (
+            <MainLayout>
               <Checkout />
-            ) : (
-              <Navigate to="/user/login" state={{ from: location }} />
-            )
-          }
-        />
-        <Route
-          path="/payment/success/:orderId"
-          element={
-            currentUser ? (
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" state={{ from: location }} />
+          )
+        }
+      />
+      <Route
+        path="/payment/success/:orderId"
+        element={
+          currentUser ? (
+            <MainLayout>
               <PaymentSuccess />
-            ) : (
-              <Navigate to="/user/login" state={{ from: location }} />
-            )
-          }
-        />
-        <Route
-          path="/payment/fail/:id"
-          element={
-            currentUser ? (
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" state={{ from: location }} />
+          )
+        }
+      />
+      <Route
+        path="/payment/fail/:id"
+        element={
+          currentUser ? (
+            <MainLayout>
               <PaymentFail />
-            ) : (
-              <Navigate to="/user/login" state={{ from: location }} />
-            )
-          }
-        />
-        <Route
-          path="/payment/cancel/:id"
-          element={
-            currentUser ? (
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" state={{ from: location }} />
+          )
+        }
+      />
+      <Route
+        path="/payment/cancel/:id"
+        element={
+          currentUser ? (
+            <MainLayout>
               <PaymentCancel />
-            ) : (
-              <Navigate to="/user/login" state={{ from: location }} />
-            )
-          }
-        />
-        <Route
-          path="/c-s/chat/box"
-          element={
-            currentUser ? (
-             <Chat/>
-            ) : (
-              <Navigate to="/user/login"  />
-            )
-          }
-        />
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" state={{ from: location }} />
+          )
+        }
+      />
 
-        {/* seller Routes  */}
-        <Route
-          path="/seller/*"
-          element={
-            seller ? (
-              <SellerApp />
-            ) : (
-              <Navigate to="/seller/login" state={{ from: location }} />
-            )
-          }
-        />
-        {/* Admin Routes  */}
-        <Route
-          path="/admin/*"
-          element={
-            admin ? (
-              <AdminMain />
-            ) : (
-              <Navigate to="/admin/login" state={{ from: location }} />
-            )
-          }
-        />
+      {/* Seller and Admin Protected Routes */}
+      <Route
+        path="/seller/*"
+        element={
+          seller ? (
+            <SellerApp />
+          ) : (
+            <Navigate to="/seller/login" state={{ from: location }} />
+          )
+        }
+      />
+      <Route
+        path="/admin/*"
+        element={
+          admin ? (
+            <AdminMain />
+          ) : (
+            <Navigate to="/admin/login" state={{ from: location }} />
+          )
+        }
+      />
 
-        {/* Fallback Route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+      {/* Fallback Route */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

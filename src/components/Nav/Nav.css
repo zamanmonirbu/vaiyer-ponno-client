@@ -18,3 +18,11 @@
   width: 100%;
   margin: auto;
 }
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100000; /* Ensures it stays above other elements */
+  background-color: #1f2937; /* Adjust color if needed */
+  width: 100%; /* Ensure it takes the full width */
+}

@@ -2,6 +2,8 @@ import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import CoverOne from '../images/cover/cover-01.png';
 // import userSix from '../images/user/user-06.png';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 
 const Profile = ({admin}) => {
   return (
@@ -279,5 +281,13 @@ const Profile = ({admin}) => {
     </>
   );
 };
+
+Profile.propTypes = {
+  admin: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    img: PropTypes.string.isRequired,  // Adjust as per the expected shape
+  }).isRequired,
+};
+
 
 export default Profile;

@@ -1,10 +1,9 @@
-import AllNavSections from "../components/Nav/AllNavSections";
 import PageLayout from "./PageLayout";
+// import ViewDown from './ViewDown';
 
 const Home = () => {
   return (
     <div>
-      <AllNavSections />
       <PageLayout />
     </div>
   );

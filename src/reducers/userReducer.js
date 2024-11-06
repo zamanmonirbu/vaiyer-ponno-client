@@ -12,6 +12,7 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   RESET_USER,
+ 
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -21,6 +22,7 @@ const initialState = {
   userProfile: null, // to store user profile
   profileLoading: false, // to manage profile loading state
   profileError: null, // to handle profile error
+  
 };
 
 const userReducer = (state = initialState, action) => {
@@ -58,6 +60,8 @@ const userReducer = (state = initialState, action) => {
 
     case RESET_USER:
       return { ...state, currentUser: null, userProfile: null };
+
+      
 
     default:
       return state;

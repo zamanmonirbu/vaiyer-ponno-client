@@ -11,8 +11,7 @@ const CartProduct = ({
   onRemove,
   onQuantityChange,
 }) => {
-  console.log(quantity,stock); // Just for debugging
-
+  // console.log(quantity,stock); 
   return (
     <div>
       <div className="flex justify-between items-start border-b p-4">

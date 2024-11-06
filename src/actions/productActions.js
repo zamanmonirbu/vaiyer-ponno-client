@@ -19,6 +19,9 @@ import {
     PRODUCT_SEARCH_FAILURE,
     PRODUCT_SEARCH_REQUEST,
     CLEAR_SEARCHED_PRODUCTS,
+    FETCH_SUGGESTIONS_REQUEST,
+    FETCH_SUGGESTIONS_SUCCESS,
+    FETCH_SUGGESTIONS_FAILURE,
 } from '../actions/actionTypes';
 import axiosInstance from '../api/axiosInstance';
 import { getCookie } from './cookieUtils';
@@ -234,4 +237,36 @@ export const deleteProduct = (id) => async (dispatch) => {
             payload: err.response.data.message
         });
     }
+};
+
+
+
+export const fetchSuggestionsRequest = () => ({
+    type: FETCH_SUGGESTIONS_REQUEST,
+});
+
+export const fetchSuggestionsSuccess = (suggestions) => ({
+    type: FETCH_SUGGESTIONS_SUCCESS,
+    payload: suggestions,
+});
+
+export const fetchSuggestionsFailure = (error) => ({
+    type: FETCH_SUGGESTIONS_FAILURE,
+    payload: error,
+});
+
+// Thunk for asynchronous operation
+export const fetchProductSuggestions = (userRequirements) => {
+    return async (dispatch) => {
+        dispatch(fetchSuggestionsRequest());
+        try {
+            const response = await axiosInstance.post('/api/products/suggest/best', {
+                userRequirements,
+            });
+            console.log("response.data",response.data)
+            dispatch(fetchSuggestionsSuccess(response.data));
+        } catch (error) {
+            dispatch(fetchSuggestionsFailure('Error fetching suggestions',error));
+        }
+    };
 };

@@ -6,10 +6,12 @@ import {
   fetchCategories,
   updateCategory,
 } from "../../actions/categoryActions";
+import { uploadImageToImgBB } from "../../actions/imageService"; // Import the image upload function
+import { FaImage } from "react-icons/fa";
 
 const CategoryInput = () => {
   const [category, setCategory] = useState("");
-  const [categoryImage, setImageURL] = useState("");
+  const [categoryImage, setImageURL] = useState(""); // Image URL from ImgBB
   const [subCategories, setSubCategories] = useState([{ name: "" }]);
   const [editMode, setEditMode] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState(null);
@@ -33,6 +35,21 @@ const CategoryInput = () => {
     setSubCategories(updatedSubCategories);
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const randomNineDigitNumber = Math.floor(
+        100000000 + Math.random() * 900000000
+      );
+      const newImageName = `${randomNineDigitNumber}-${file.name}`;
+        const uploadedUrl = await uploadImageToImgBB(file, newImageName);
+        setImageUrl(uploadedUrl);
+    }
+       else {
+        alert("Image upload failed. Please try again.");
+      }
+  };
+
   const handleSubmit = () => {
     if (!category || !categoryImage || subCategories.some((sub) => !sub.name)) {
       alert("Please fill all fields.");
@@ -40,7 +57,7 @@ const CategoryInput = () => {
     }
 
     const categoryData = {
-      name: category, // Ensure this matches the backend model
+      name: category,
       categoryImage,
       subCategories,
     };
@@ -53,6 +70,7 @@ const CategoryInput = () => {
       dispatch(createCategory(categoryData));
     }
 
+    // Reset the form fields
     setCategory("");
     setImageURL("");
     setSubCategories([{ name: "" }]);
@@ -96,16 +114,26 @@ const CategoryInput = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Image URL:
+          {/* <label className="block text-sm font-medium text-gray-700">
+            Upload Image:
           </label>
           <input
-            type="text"
-            value={categoryImage}
-            onChange={(e) => setImageURL(e.target.value)}
-            placeholder="Enter image URL"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
+            required
+          /> */}
+          <label className="flex items-center cursor-pointer px-4 py-2 border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100">
+            <FaImage className="mr-2" size={20} color="#3498db" />
+            Upload New Image
+            <input
+              type="file"
+              onChange={handleImageUpload}
+              className="hidden"
+              accept="image/*"
+            />
+          </label>
         </div>
 
         <div className="mb-4">

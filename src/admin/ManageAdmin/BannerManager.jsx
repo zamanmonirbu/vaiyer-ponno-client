@@ -5,6 +5,8 @@ import {
   deleteBanner,
   getBanners,
 } from "../../actions/bannerActions";
+import { uploadImageToImgBB } from "../../actions/imageService"; // Import your image upload function
+import { FaImage } from "react-icons/fa";
 
 const BannerManager = () => {
   const [bannerUrl, setBannerUrl] = useState("");
@@ -15,12 +17,28 @@ const BannerManager = () => {
     dispatch(getBanners());
   }, [dispatch]);
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const randomNineDigitNumber = Math.floor(
+          100000000 + Math.random() * 900000000
+        );
+        const newImageName = `${randomNineDigitNumber}-${file.name}`;
+        const uploadedUrl = await uploadImageToImgBB(file, newImageName);
+        setBannerUrl(uploadedUrl); // Set the uploaded image URL
+      } catch (error) {
+        alert("Image upload failed. Please try again.",error);
+      }
+    }
+  };
+
   const handleAddBanner = () => {
     if (bannerUrl) {
       dispatch(createBanner(bannerUrl));
       setBannerUrl("");
     } else {
-      alert("Please enter a banner URL.");
+      alert("Please upload a banner image.");
     }
   };
 
@@ -33,16 +51,20 @@ const BannerManager = () => {
       <h2 className="text-2xl mb-4">Banner Manager</h2>
 
       <div className="flex mb-4">
-        <input
-          type="text"
-          value={bannerUrl}
-          onChange={(e) => setBannerUrl(e.target.value)}
-          placeholder="Enter banner URL"
-          className="border p-2 rounded w-full"
-        />
+      <label className="flex items-center cursor-pointer px-4 py-2 border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100">
+              <FaImage className="mr-2" size={20} color="#3498db" />
+              Upload New Image
+              <input
+                type="file"
+                onChange={handleImageUpload}
+                className="hidden"
+                accept="image/*"
+              />
+            </label>
         <button
           onClick={handleAddBanner}
           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
+          disabled={!bannerUrl} // Disable button until image is uploaded
         >
           Add Banner
         </button>

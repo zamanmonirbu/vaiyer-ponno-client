@@ -15,9 +15,13 @@ import {
   RESET_USER,
   REFRESH_TOKEN_SUCCESS,
   REFRESH_TOKEN_FAILURE,
+  
 } from "./actionTypes";
 import { updateUserLocation } from "./locationActions";
 import { setCookie } from "./cookieUtils";
+
+
+
 
 // Action creator for login start
 export const loginStart = () => ({
@@ -137,6 +141,7 @@ export const getUserProfile = (userId) => async (dispatch) => {
 // Update User Profile
 export const updateUserProfile = (userId, updatedData) => async (dispatch) => {
   try {
+    // console.log(updatedData)
     dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
     const { data } = await axiosInstance.put(
       `/api/users/profile/${userId}`,

@@ -5,16 +5,34 @@ import { PulseLoader } from "react-spinners"; // Import react spinner
 import { getOfferBanners } from "../actions/offerBannerActions";
 import { getProductsWithHighOffer } from "../actions/productActions";
 import StrikeLine from "../components/Utilities/StrikeLine";
+import { getIpLocation } from "../actions/IpLocation"; // Import location action
+import { MdLocationOn } from "react-icons/md"; // Import location icon
 
 const HighOffersProduct = () => {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [currentProduct, setCurrentProduct] = useState(0);
+  const [userLat, setUserLat] = useState(null);
+  const [userLng, setUserLng] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getOfferBanners());
     dispatch(getProductsWithHighOffer());
   }, [dispatch]);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      const location = await getIpLocation();
+      if (location) {
+        const [lat, lng] = location.split(","); // Split the location string into latitude and longitude
+        setUserLat(parseFloat(lat));
+        setUserLng(parseFloat(lng));
+      } else {
+        console.log("Could not fetch user location.");
+      }
+    };
+    fetchLocation();
+  }, []);
 
   const {
     offerBanners,
@@ -30,9 +48,7 @@ const HighOffersProduct = () => {
   useEffect(() => {
     if (offerBanners.length > 0) {
       const interval = setInterval(() => {
-        setCurrentBanner(
-          (prevBanner) => (prevBanner + 1) % offerBanners.length
-        );
+        setCurrentBanner((prevBanner) => (prevBanner + 1) % offerBanners.length);
       }, 3000); // Change banner every 3 seconds
 
       return () => clearInterval(interval); // Clean up the interval on unmount
@@ -40,16 +56,28 @@ const HighOffersProduct = () => {
   }, [offerBanners]);
 
   const handleNextProduct = () => {
-    setCurrentProduct(
-      (prevProduct) => (prevProduct + 1) % highOfferProducts.length
-    );
+    setCurrentProduct((prevProduct) => (prevProduct + 1) % highOfferProducts.length);
   };
 
   const handlePrevProduct = () => {
-    setCurrentProduct(
-      (prevProduct) =>
-        (prevProduct - 1 + highOfferProducts.length) % highOfferProducts.length
-    );
+    setCurrentProduct((prevProduct) => (prevProduct - 1 + highOfferProducts.length) % highOfferProducts.length);
+  };
+
+  // Helper function to calculate distance
+  const calculateDistance = (lat1, lng1, lat2, lng2) => {
+    if (!lat1 || !lng1 || !lat2 || !lng2) return null; // Return null if any coordinates are missing
+
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (R * c).toFixed(1); // Return distance in km with 1 decimal
   };
 
   return (
@@ -98,41 +126,61 @@ const HighOffersProduct = () => {
                     transition: "transform 0.3s ease",
                   }}
                 >
-                  {highOfferProducts?.map((product) => (
-                    <Link to={`/product/${product._id}`} key={product._id}>
-                      <div className="bg-white border rounded-lg p-4 w-72 flex-shrink-0">
-                        <img
-                          src={product.imageURL}
-                          alt={product.name}
-                          className="w-32 h-32 rounded-full mx-auto object-cover mb-4"
-                        />
-                        <div className="text-lg font-semibold mb-2">
-                          {product.name.substring(0, 50)}
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <div className="w-1/2">
-                            <div className="text-lg font-bold line-through">
-                              ${product.unitPrice}
+                  {highOfferProducts?.map((product) => {
+                    const distance = calculateDistance(
+                      userLat,
+                      userLng,
+                      product.sellerLocation?.lat,
+                      product.sellerLocation?.lng
+                    );
+
+                    return (
+                      <Link to={`/product/${product._id}`} key={product._id}>
+                        <div className="bg-white border rounded-lg p-4 w-72 flex-shrink-0">
+                          <img
+                            src={product.imageURL}
+                            alt={product.name.slice(10)}
+                            className="w-32 h-32 rounded-full mx-auto object-cover mb-4"
+                          />
+                          <div className="text-lg font-semibold mb-2">
+                            {product.name.substring(0, 25)}
+                          </div>
+                          <div className="flex items-center mb-2">
+                            <div className="w-1/2">
+                              <div className="text-lg font-bold line-through">
+                                ${product.unitPrice}
+                              </div>
+                            </div>
+                            <div className="text-yellow-500 ">
+                              ★ {product.rating}
+                            </div>
+                            <div className="text-sm text-gray-500 ml-2">
+                              ({product.reviews || 0})
                             </div>
                           </div>
-                          <div className="text-yellow-500 ">
-                            ★ {product.rating}
-                          </div>
-                          <div className="text-sm text-gray-500 ml-2">
-                            ({product.reviews || 0})
-                          </div>
+                          <span className="text-sm text-green-600 mb-1">
+                            $
+                            {Math.round(
+                              product.unitPrice - product.unitPrice * (product.offer / 100)
+                            )}{" "}
+                            with {product.offer}% off
+                          </span>
+
+                          {/* Display distance if available */}
+                          {distance && (
+                            <div className="text-sm text-gray-500 flex items-center justify-center space-x-2 mt-2">
+                              <div className="flex items-center justify-center w-6 h-6 bg-teal-500 text-white rounded-full shadow-md">
+                                <MdLocationOn className="text-lg" />
+                              </div>
+                              <span className="text-teal-600 font-medium">
+                                {distance} km away
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        <span className="text-sm text-green-600 mb-1">
-                          $
-                          {Math.round(
-                            product.unitPrice -
-                              product.unitPrice * (product.offer / 100)
-                          )}{" "}
-                          with {product.offer}% off
-                        </span>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
                 {/* Previous Button */}
                 <button

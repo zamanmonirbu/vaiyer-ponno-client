@@ -10,6 +10,8 @@ import ProductManager from "../components/Seller/ProductManager";
 import SellerAdmin from "./pages/SellerAdmin";
 import { getCookie } from "../actions/cookieUtils";
 import SellerChat from "../messenger/pages/Chat/SellerChat";
+import TaskComponent from "../pages/ToDo";
+import SellerOrders from "../pages/SellerOrders";
 
 function SellerApp() {
   const location = useLocation();
@@ -17,7 +19,8 @@ function SellerApp() {
   const {seller} = useSelector((state) => state.seller);
 
   useEffect(() => {
-    const sellerAuth = JSON.parse(getCookie("sellerAuth"));
+    const sellerCookie=getCookie("sellerAuth")
+    const sellerAuth = sellerCookie? JSON.parse(sellerCookie):null;
 
     if (sellerAuth && sellerAuth.id) {
       dispatch(fetchSellerById(sellerAuth.id)); 
@@ -41,6 +44,8 @@ function SellerApp() {
         <Route path="/input/product" element={<ProductManager seller={seller} />}  />
         <Route path="/profile/test" element={<SellerAdmin seller={seller} />}  />
         <Route path="/s-c/chat/box" element={<SellerChat seller={seller} />}  />
+        <Route path="/dashboard/task" element={<TaskComponent seller={seller} />}  />
+        <Route path="/dashboard/orders" element={<SellerOrders seller={seller} />}  />
       </Routes>
     </Dashboard>
   );

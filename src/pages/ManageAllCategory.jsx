@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getProductsByCategory } from "../actions/categoryActions";
 import FilterComponent from "../components/Filter/FilterComponent";
 import CategoryProducts from "./CategoryProducts";
-import AllNavSections from "../components/Nav/AllNavSections";
+import BreadcrumbComponent from "../components/Utilities/BreadcrumbComponent";
+import { FaHome } from "react-icons/fa";
 
 const ManageAllCategory = () => {
   const { categoryName } = useParams();
@@ -13,95 +14,81 @@ const ManageAllCategory = () => {
 
   const [productsByCategoryAll, setProductsByCategoryAll] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-
-  // Filter states (now in ManageAllCategory)
   const [selectedRating, setSelectedRating] = useState("");
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState("");
-  const [customPriceRange, setCustomPriceRange] = useState({
-    min: "",
-    max: "",
-  });
+  const [customPriceRange, setCustomPriceRange] = useState({ min: "", max: "" });
   const [sortBy, setSortBy] = useState("");
 
+  // Fetch products based on category
   useEffect(() => {
     dispatch(getProductsByCategory(categoryName));
   }, [dispatch, categoryName]);
 
+  // Set products based on the fetched category data
   useEffect(() => {
     if (productsByCategory?.products) {
       setProductsByCategoryAll(productsByCategory.products);
-      setFilteredProducts(productsByCategory.products); // Default to all products
+      setFilteredProducts(productsByCategory.products);
     }
   }, [productsByCategory]);
 
-  // Filter products based on selected filters
-  useEffect(() => {
+  // Memoized filtered products to avoid unnecessary calculations
+  const filteredProductsMemo = useMemo(() => {
     let tempProducts = [...productsByCategoryAll];
 
-    // Apply rating filter
     if (selectedRating) {
       const rating = parseInt(selectedRating.split("-")[0], 10);
       tempProducts = tempProducts.filter((product) => product.rating >= rating);
     }
-
-    // Apply gender filter
     if (selectedGenders.length > 0) {
       tempProducts = tempProducts.filter((product) =>
         selectedGenders.includes(product.gender)
       );
     }
-
-    // Apply price range filter
     if (selectedPriceRange) {
-      let [min, max] = selectedPriceRange
-        .replace("$", "")
-        .split("-")
-        .map(Number);
+      let [min, max] = selectedPriceRange.replace("$", "").split("-").map(Number);
       tempProducts = tempProducts.filter(
-        (product) => product.price >= min && (max ? product.price <= max : true)
+        (product) => product.price >= min && (!max || product.price <= max)
       );
     }
-
-    // Apply custom price range filter
     if (customPriceRange.min || customPriceRange.max) {
       const min = customPriceRange.min ? parseFloat(customPriceRange.min) : 0;
-      const max = customPriceRange.max
-        ? parseFloat(customPriceRange.max)
-        : Infinity;
+      const max = customPriceRange.max ? parseFloat(customPriceRange.max) : Infinity;
       tempProducts = tempProducts.filter(
         (product) => product.price >= min && product.price <= max
       );
     }
-
-    // Apply sorting
-    if (sortBy === "priceLowHigh") {
-      tempProducts.sort((a, b) => a.price - b.price);
-    } else if (sortBy === "priceHighLow") {
-      tempProducts.sort((a, b) => b.price - a.price);
-    } else if (sortBy === "mostRated") {
-      tempProducts.sort((a, b) => b.rating - a.rating);
+    if (sortBy) {
+      tempProducts = tempProducts.sort((a, b) => {
+        if (sortBy === "priceLowHigh") return a.price - b.price;
+        if (sortBy === "priceHighLow") return b.price - a.price;
+        if (sortBy === "mostRated") return b.rating - a.rating;
+        return 0;
+      });
     }
 
-    setFilteredProducts(tempProducts);
-  }, [
-    selectedRating,
-    selectedGenders,
-    selectedPriceRange,
-    customPriceRange,
-    sortBy,
-    productsByCategoryAll,
-  ]);
+    return tempProducts;
+  }, [selectedRating, selectedGenders, selectedPriceRange, customPriceRange, sortBy, productsByCategoryAll]);
+
+  // Set filtered products whenever filters change
+  useEffect(() => {
+    setFilteredProducts(filteredProductsMemo);
+  }, [filteredProductsMemo]);
+
+
+    // Define breadcrumb items
+    const breadcrumbItems = [
+      { label: <><FaHome className="inline mr-1" /> Home</>, link: "/" },
+      { label: `${categoryName}`, link: `/category/${categoryName}` },
+    ];
 
   return (
     <div>
-      <AllNavSections />
-
-      <div className="w-full p-4 text-2xl font-bold pl-[12%]">
-        {categoryName}
-      </div>
-
-      <div className="w-full p-4 pl-[12%] mx-auto">
+      <BreadcrumbComponent items={breadcrumbItems} />
+    <div className="container mx-auto px-4">
+      <div className="text-2xl font-bold mt-6">{categoryName}</div>
+      <div className="my-4">
         {productsByCategory?.subCategories?.map((subCategory, index) => (
           <button
             key={index}
@@ -113,9 +100,9 @@ const ManageAllCategory = () => {
         ))}
       </div>
 
-      {/* Layout: Filter on the left, products on the right */}
-      <div className="flex mx-[10%]">
-        <div className="w-1/5 p-4">
+      {/* Responsive Layout */}
+      <div className="flex flex-col md:flex-row">
+        <div className="md:w-1/5 p-4">
           <FilterComponent
             setSelectedRating={setSelectedRating}
             setSelectedGenders={setSelectedGenders}
@@ -130,11 +117,16 @@ const ManageAllCategory = () => {
           />
         </div>
 
-        <div className="flex-1 p-4">
+        <div className="md:flex-1 p-4">
           <hr className="border-t-2 border-gray-300 mb-6" />
-          <CategoryProducts productsByCategoryAll={filteredProducts} />
+          {filteredProducts.length > 0 ? (
+            <CategoryProducts productsByCategoryAll={filteredProducts} />
+          ) : (
+            <p className="text-center text-gray-500">No products match your criteria.</p>
+          )}
         </div>
       </div>
+    </div>
     </div>
   );
 };

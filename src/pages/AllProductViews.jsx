@@ -1,3 +1,4 @@
+import ReturnsAndOrders from "../components/Product/ReturnsAndOrders";
 import MostRatedProducts from "../components/Seller/MostRatedProducts";
 import CategoriesHorizontal from "./CategoriesHorizontal ";
 import CategoryAdds from "./CategoryAdds";
@@ -14,6 +15,7 @@ const AllProductViews = () => {
       <MostRatedProducts />
       <HighOffersProduct />
       <LatestProduct />
+      <ReturnsAndOrders/>
     </div>
   );
 };

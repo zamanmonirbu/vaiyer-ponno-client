@@ -43,13 +43,10 @@ const ViewProductsOnCart = () => {
   );
 
 
-  console.log(cartItems)
+  // console.log(cartItems)
 
   return (
-    <div>
-        <Navbar/>
     <div className="flex justify-between mt-8">
-      
       {/* Products List */}
       <div className="w-2/3 bg-gray-100 p-4 rounded-lg ml-[15%] mr-4">
       <b className="text-center text-3xl text-gray-700">Shopping Cart</b>
@@ -88,7 +85,6 @@ const ViewProductsOnCart = () => {
           Clear Cart
         </button>
       </div>
-    </div>
     </div>
   );
 };

@@ -19,6 +19,9 @@ import {
   PRODUCT_SEARCH_SUCCESS,
   PRODUCT_SEARCH_FAILURE,
   CLEAR_SEARCHED_PRODUCTS,
+  FETCH_SUGGESTIONS_REQUEST,
+  FETCH_SUGGESTIONS_SUCCESS,
+  FETCH_SUGGESTIONS_FAILURE,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -26,6 +29,7 @@ const initialState = {
   highOfferProducts: [],
   suggestedProducts: [],
   searchedProducts: [],
+  suggestions: [],
   products: [],
   product: null,
   loading: true,
@@ -136,6 +140,24 @@ export default function productReducer(state = initialState, action) {
         error: action.payload,
         loading: false,
       };
+    case FETCH_SUGGESTIONS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case FETCH_SUGGESTIONS_SUCCESS:
+      return {
+        ...state,
+        suggestions: action.payload,
+        loading: false,
+      };
+    case FETCH_SUGGESTIONS_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
 
     case PRODUCT_SEARCH_REQUEST:
       return {
@@ -158,7 +180,7 @@ export default function productReducer(state = initialState, action) {
     case CLEAR_SEARCHED_PRODUCTS:
       return {
         ...state,
-        searchedProducts: [], // Reset searched products
+        searchedProducts: [], 
       };
 
     default:

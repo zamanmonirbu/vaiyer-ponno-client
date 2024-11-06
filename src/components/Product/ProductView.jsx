@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
-import ViewSpecificProduct from "./ViewSpecificProduct";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 import { getProduct } from "../../actions/productActions";
-import { ClipLoader } from "react-spinners"; // Importing ClipLoader spinner
 import SuggestProducts from "./SuggestProducts";
-import AllNavSections from "../Nav/AllNavSections";
+import ViewSpecificProduct from "./ViewSpecificProduct";
+import BreadcrumbComponent from "../Utilities/BreadcrumbComponent";
+import { FaHome } from "react-icons/fa"; // Import the home icon
 
 const ProductView = () => {
-  const { id } = useParams(); // Fetching the product ID from the URL parameters
+  const { id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,7 +20,14 @@ const ProductView = () => {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <p>Loading</p>
         <ClipLoader color={"#123abc"} loading={loading} size={50} />
       </div>
@@ -30,12 +38,20 @@ const ProductView = () => {
     return <div>{error.message}</div>;
   }
 
+  // Define breadcrumb items with home icon
+  const breadcrumbItems = [
+    { label: <><FaHome className="inline mr-1" /> Home</>, link: "/" },
+    { label: `${product?.category?.name}`, link: `/category/${product?.category?.name}` },
+    { label: "Product", link: `/product/${product?._id}` },
+  ];
+
   return (
     <div>
-      <AllNavSections />
-      {/* Ensure that the product exists before rendering */}
+      {/* Use the breadcrumb component */}
+      <BreadcrumbComponent items={breadcrumbItems} />
+      
       {product && <ViewSpecificProduct product={product} />}
-      <SuggestProducts id={id}/> 
+      <SuggestProducts id={id} />
     </div>
   );
 };

@@ -15,6 +15,8 @@ import { adminReducer } from './reducers/adminReducer';
 import { orderReducer } from './reducers/orderReducer';
 import searchReducer from './reducers/searchReducer';
 import chatReducer from './reducers/chatReducer';
+import taskReducer from './reducers/taskReducer';
+import { videoUploadReducer } from './reducers/videoUploadReducer';
 // import chatReducer from './reducers/chatReducer';
 
 
@@ -38,7 +40,9 @@ const rootReducer = combineReducers({
   payment: paymentReducer,
   orders: orderReducer,
   search:searchReducer,
-  chat:chatReducer
+  chat:chatReducer,
+  tasks:taskReducer,
+  videoUpload:videoUploadReducer
   
 });
 

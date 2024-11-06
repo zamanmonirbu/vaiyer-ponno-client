@@ -42,7 +42,7 @@ export const getAdminById = (adminId) => async (dispatch) => {
     const { data } = await axiosInstance.get(`/api/admin/${adminId}`);
     dispatch({ type: ADMIN_GET_BY_ID_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: ADMIN_GET_BY_ID_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_GET_BY_ID_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
@@ -60,7 +60,7 @@ export const loginAdmin = (credentials) => async (dispatch) => {
     Cookies.set('adminAuth', JSON.stringify(data.admin), { expires: 7 }); // Expires in 7 days
     Cookies.set('adminAuthToken', data.token, { expires: 7 });
   } catch (error) {
-    dispatch({ type: ADMIN_LOGIN_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_LOGIN_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
@@ -71,7 +71,7 @@ export const registerAdmin = (adminInfo) => async (dispatch) => {
     const { data } = await axiosInstance.post('/api/admin/register', adminInfo);
     dispatch({ type: ADMIN_REGISTER_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: ADMIN_REGISTER_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_REGISTER_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
@@ -82,7 +82,7 @@ export const createAdmin = (adminData) => async (dispatch) => {
     const { data } = await axiosInstance.post('/api/admin/', adminData);
     dispatch({ type: ADMIN_CREATE_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: ADMIN_CREATE_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_CREATE_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
@@ -94,18 +94,19 @@ export const readAdmins = () => async (dispatch) => {
     // console.log(data);
     dispatch({ type: ADMIN_READ_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: ADMIN_READ_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_READ_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
 // Update admin
 export const updateAdmin = (adminId, adminData) => async (dispatch) => {
+  console.log(adminData)
   dispatch({ type: ADMIN_UPDATE_START });
   try {
     const { data } = await axiosInstance.put(`/api/admin/${adminId}`, adminData);
     dispatch({ type: ADMIN_UPDATE_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: ADMIN_UPDATE_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_UPDATE_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
@@ -116,7 +117,7 @@ export const deleteAdmin = (adminId) => async (dispatch) => {
     await axiosInstance.delete(`/api/admin/${adminId}`);
     dispatch({ type: ADMIN_DELETE_SUCCESS, payload: adminId });
   } catch (error) {
-    dispatch({ type: ADMIN_DELETE_FAILURE, payload: error.response?.data?.message || error.message });
+    dispatch({ type: ADMIN_DELETE_FAILURE, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 
@@ -128,7 +129,7 @@ export const requestAdmins = () => async (dispatch) => {
     // console.log(data);
     dispatch({ type: REQUEST_ADMINS_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: REQUEST_ADMINS_FAIL, payload: error.response?.data?.message || error.message });
+    dispatch({ type: REQUEST_ADMINS_FAIL, payload: error.response?.data?.message ||  error.response?.data?.message });
   }
 };
 

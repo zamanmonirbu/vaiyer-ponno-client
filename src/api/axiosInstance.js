@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get the access token using the getCookie function
-    const token = getCookie('userAuthToken');
+    const token = getCookie('authToken');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`; // Attach the token to the headers
     }
@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
       await store.dispatch(refreshAccessToken());
 
       // Get the new token using the getCookie function
-      const newToken = getCookie('userAuthToken');
+      const newToken = getCookie('authToken');
       if (newToken) {
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`; // Attach the new token
         return axiosInstance(originalRequest); // Retry the original request with the new token

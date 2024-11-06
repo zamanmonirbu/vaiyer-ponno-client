@@ -12,23 +12,37 @@ import RatingComponent from "../components/Utilities/RatingComponent";
 const CommentManager = ({ productId }) => {
   const dispatch = useDispatch();
   const comments = useSelector((state) => state.commentList.comments);
-  const userId = JSON.parse(localStorage.getItem("userAuth"))?.id;
+  
+  const { userProfile } = useSelector((state) => state.user);
+  const { product } = useSelector((state) => state.product);
 
+  const userId = userProfile?._id;
+  
   const [newComment, setNewComment] = useState("");
   const [editCommentId, setEditCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState("");
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [rating, setRating] = useState(0);
-  const [showLoginWarning, setShowLoginWarning] = useState(false); // For modal warning
-
+  const [showLoginWarning, setShowLoginWarning] = useState(false);
+  const [showOrderWarning, setShowOrderWarning] = useState(false);
+  
   useEffect(() => {
     // Fetch comments when the component mounts
     dispatch(listComments(productId));
   }, [dispatch, productId]);
 
+  // Check if the user has ordered the product
+  const userHasOrdered = userProfile?.order?.some(order =>
+    product?.order?.some(productOrder => productOrder === order)
+  );
+
   const handleAddComment = () => {
     if (!userId) {
       setShowLoginWarning(true); // Show warning modal if the user is not logged in
+      return;
+    }
+    if (!userHasOrdered) {
+      setShowOrderWarning(true); // Show warning if the user hasn't ordered the product
       return;
     }
     if (newComment.trim()) {
@@ -67,6 +81,12 @@ const CommentManager = ({ productId }) => {
     setShowLoginWarning(false);
   };
 
+  const closeOrderWarning = () => {
+    setShowOrderWarning(false);
+  };
+
+  console.log()
+
   return (
     <div className="comment-manager p-4">
       <button className="text-blue-500 underline" onClick={toggleComments}>
@@ -85,7 +105,7 @@ const CommentManager = ({ productId }) => {
             />
             <button
               onClick={handleAddComment}
-              className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+              className="bg-[#0d9488] text-white px-4 py-2 rounded mb-4"
             >
               Add Review
             </button>
@@ -121,7 +141,6 @@ const CommentManager = ({ productId }) => {
                       rating={comment?.rating}
                       onRatingSubmit={() => {}}
                     />{" "}
-                    {/* Display rating */}
                     <p>{comment.text}</p>
                     <div className="text-sm text-gray-500">
                       Posted by: {comment?.author?.name}
@@ -150,6 +169,23 @@ const CommentManager = ({ productId }) => {
         </div>
       )}
 
+      {showOrderWarning && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <h3 className="text-xl mb-4">Must purchase product.</h3>
+            <p>Buy the product to add a review or rating.</p>
+            <div className="mt-4">
+              <button
+                onClick={closeOrderWarning}
+                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showLoginWarning && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg">
@@ -158,7 +194,7 @@ const CommentManager = ({ productId }) => {
             <div className="mt-4">
               <button
                 onClick={closeLoginWarning}
-                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
               >
                 Close
               </button>
@@ -167,7 +203,7 @@ const CommentManager = ({ productId }) => {
                   // Redirect to login or take any login action
                   window.location.href = "/user/login";
                 }}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-[#0d9488] text-white px-4 py-2 rounded"
               >
                 Go to Login
               </button>

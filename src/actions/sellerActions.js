@@ -25,8 +25,56 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
   CLEAR_SELLER_STATE,
+  REVIEW_SUBMIT_REQUEST,
+  REVIEW_SUBMIT_SUCCESS,
+  REVIEW_SUBMIT_FAIL,
+  FETCH_SELLER_REVIEWS_REQUEST,
+  FETCH_SELLER_REVIEWS_SUCCESS,
+  FETCH_SELLER_REVIEWS_FAILURE,
 } from './actionTypes';
 import Cookies from 'js-cookie';
+
+
+// Action creator to fetch reviews for a specific seller
+export const fetchSellerReviews = (sellerId) => async (dispatch) => {
+  dispatch({ type: FETCH_SELLER_REVIEWS_REQUEST });
+
+  try {
+    const response = await axiosInstance.get(`/api/seller/${sellerId}/reviews`);
+    dispatch({
+      type: FETCH_SELLER_REVIEWS_SUCCESS,
+      payload: response.data, // Array of reviews
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_SELLER_REVIEWS_FAILURE,
+      payload: error?.response?.data?.message || 'Failed to fetch reviews',
+    });
+  }
+};
+
+
+// Action creator for submitting a review
+export const submitReview = ({ sellerId, rating, review,user }) => async (dispatch) => {
+  try {
+    dispatch({ type: REVIEW_SUBMIT_REQUEST });
+
+    console.log(sellerId, rating, review,user);
+
+    // Use sellerId in the request URL to submit the review
+    const { data } = await axiosInstance.post(`/api/seller/${sellerId}/reviews`, { rating, review,user });
+
+    dispatch({
+      type: REVIEW_SUBMIT_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: REVIEW_SUBMIT_FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
 
 // Action creators for seller registration
 export const sellerRegisterStart = () => ({ type: SELLER_REGISTER_START });
@@ -156,6 +204,8 @@ export const fetchDeactivatedSellers = () => async (dispatch) => {
     dispatch(fetchDeactivatedSellersFailure(error?.response?.data?.error || error?.response?.data?.message));
   }
 };
+
+
 
 // Clear seller state action
 export const clearSellerState = () => ({

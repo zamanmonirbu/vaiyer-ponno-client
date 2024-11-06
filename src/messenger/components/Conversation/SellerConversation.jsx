@@ -1,26 +1,22 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-// import { fetchCustomerById } from "../../../actions/customerActions"; // Adjust to your actual action path
 import { getUserProfile } from "../../../actions/userActions";
-
 
 const SellerConversation = ({ data, sellerId, online }) => {
   const [customerData, setCustomerData] = useState(null);
   const [customerId, setCustomerId] = useState(null);
   const dispatch = useDispatch();
 
-  const {userProfile} = useSelector((state) => state.user);
-
-//   console.log(userProfile)
+  const { userProfile } = useSelector((state) => state.user);
 
   // Get the user ID of the chat partner (customer in this case)
-useEffect(() => {
+  useEffect(() => {
     const id = data.members.find((id) => id !== sellerId); // customer ID in chat
     setCustomerId(id);
-    console.log(id)
 
     if (id) {
-      dispatch(getUserProfile(id)); 
+      dispatch(getUserProfile(id));
     }
   }, [sellerId, data.members, dispatch]);
 
@@ -53,6 +49,15 @@ useEffect(() => {
       </div>
     </div>
   );
+};
+
+// Prop validation
+SellerConversation.propTypes = {
+  data: PropTypes.shape({
+    members: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
+  sellerId: PropTypes.string.isRequired,
+  online: PropTypes.bool.isRequired,
 };
 
 export default SellerConversation;

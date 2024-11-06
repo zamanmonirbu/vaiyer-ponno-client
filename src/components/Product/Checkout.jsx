@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getCookie } from "../../actions/cookieUtils";
 import { getUserProfile } from "../../actions/userActions";
-import AllNavSections from "../Nav/AllNavSections";
+// import AllNavSections from "../Nav/AllNavSections";
 
 
 const Checkout = () => {
@@ -54,7 +54,7 @@ const Checkout = () => {
 
     const paymentData = {
       customerId:userId,
-      customerName: userProfile.name,
+      customerName: userProfile.firstName,
       customerAddress: userProfile.address,
       customerEmail: userProfile.email,
       customerMobile: userProfile.mobile,
@@ -74,8 +74,6 @@ const Checkout = () => {
   };
 
   return (
-    <div>
-      <AllNavSections />
       <div className="container mx-auto p-6 bg-gray-200 rounded-lg shadow-md mt-4">
         <ToastContainer /> {/* This will display the toast notifications */}
         <h2 className="text-2xl font-bold mb-4">Checkout</h2>
@@ -142,7 +140,6 @@ const Checkout = () => {
           {loading ? "Processing..." : "Pay Now"}
         </button>
       </div>
-    </div>
   );
 };
 

@@ -6,6 +6,8 @@ import {
   fetchGalleryItems,
   updateGalleryItem,
 } from "../../actions/galleryActions";
+import { uploadImageToImgBB } from "../../actions/imageService"; // Import your image upload service
+import { FaImage } from "react-icons/fa";
 
 const Gallery = () => {
   const dispatch = useDispatch();
@@ -45,6 +47,24 @@ const Gallery = () => {
     });
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const randomNineDigitNumber = Math.floor(100000000 + Math.random() * 900000000);
+        const newImageName = `${randomNineDigitNumber}-${file.name}`;
+        const uploadedUrl = await uploadImageToImgBB(file, newImageName);
+        if (editItem) {
+          setEditItem({ ...editItem, image: uploadedUrl });
+        } else {
+          setNewItem({ ...newItem, image: uploadedUrl });
+        }
+      } catch (error) {
+        alert("Image upload failed. Please try again.",error);
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editItem) {
@@ -81,14 +101,18 @@ const Gallery = () => {
       {/* Create/Edit Form */}
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="mb-4">
-          <label className="block">Image URL:</label>
-          <input
-            type="text"
-            name="image"
-            value={editItem ? editItem.image : newItem.image}
-            onChange={editItem ? handleEditChange : handleChange}
-            className="border p-2 mb-2 w-full"
-          />
+         
+        <label className="flex items-center cursor-pointer px-4 py-2 border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100">
+              <FaImage className="mr-2" size={20} color="#3498db" />
+              Upload New Image
+              <input
+                type="file"
+                onChange={handleImageUpload}
+                className="hidden"
+                accept="image/*"
+              />
+            </label>
+         
         </div>
         <div className="mb-4">
           <label className="block">Text:</label>
@@ -167,81 +191,34 @@ const Gallery = () => {
         <table className="min-w-full divide-y divide-gray-200 border border-gray-300">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                #
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Image
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Text
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Sub Text
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Color
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Size
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Text</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Text</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {galleryItems.map((item, index) => (
               <tr key={item._id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {index + 1}
+                  <div className="w-16 h-16 bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }}></div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.text}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.subText}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.color}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.category}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {item.isMedium && <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Medium</span>}
+                  {item.isLarge && <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded ml-2">Large</span>}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div
-                    className="w-16 h-16 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${item.image})` }}
-                  ></div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.text}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.subText}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.color}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.category}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.isMedium && (
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                      Medium
-                    </span>
-                  )}
-                  {item.isLarge && (
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded ml-2">
-                      Large
-                    </span>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="bg-yellow-500 text-white p-2 rounded mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="bg-red-500 text-white p-2 rounded"
-                  >
-                    Delete
-                  </button>
+                  <button onClick={() => handleEdit(item)} className="bg-yellow-500 text-white p-2 rounded mr-2">Edit</button>
+                  <button onClick={() => handleDelete(item._id)} className="bg-red-500 text-white p-2 rounded">Delete</button>
                 </td>
               </tr>
             ))}

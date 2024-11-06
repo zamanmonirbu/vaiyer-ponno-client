@@ -21,22 +21,18 @@ import Chart from "./pages/Chart";
 import ECommerce from "./pages/Dashboard/ECommerce";
 import FormElements from "./pages/Form/FormElements";
 import FormLayout from "./pages/Form/FormLayout";
-import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Tables from "./pages/Tables";
 import Alerts from "./pages/UiElements/Alerts";
 import Buttons from "./pages/UiElements/Buttons";
 import { getCookie } from "../actions/cookieUtils";
+import AdminProfile from './pages/AdminProfile';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const { admin } = useSelector((state) => state.adminReducer);
-
-
-
-
 
   useEffect(() => {
     const adminAuth = JSON.parse(getCookie("adminAuth"));
@@ -156,7 +152,7 @@ function App() {
           element={
             <>
               <PageTitle title="Profile " />
-              <Profile admin={admin} />
+              <AdminProfile admin={admin} />
             </>
           }
         />

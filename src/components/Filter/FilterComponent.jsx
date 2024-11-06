@@ -1,7 +1,7 @@
 import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import './FilterCom.css';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 
 const FilterComponent = ({
@@ -231,21 +231,23 @@ const FilterComponent = ({
   );
 };
 
-// FilterComponent.propTypes = {
-//   setSelectedRating: PropTypes.func.isRequired,
-//   setSelectedGenders: PropTypes.func.isRequired,
-//   setSelectedPriceRange: PropTypes.func.isRequired,
-//   setCustomPriceRange: PropTypes.func.isRequired,
-//   setSortBy: PropTypes.func.isRequired,
-//   selectedRating: PropTypes.string.isRequired,
-//   selectedGenders: PropTypes.array.isRequired,
-//   selectedPriceRange: PropTypes.string.isRequired,
-//   customPriceRange: PropTypes.shape({
-//     min: PropTypes.string,
-//     max: PropTypes.string,
-//   }).isRequired,
-//   sortBy: PropTypes.string.isRequired,
-// };
+// Add PropTypes for each prop
+FilterComponent.propTypes = {
+  setSelectedRating: PropTypes.func.isRequired,
+  setSelectedGenders: PropTypes.func.isRequired,
+  setSelectedPriceRange: PropTypes.func.isRequired,
+  setCustomPriceRange: PropTypes.func.isRequired,
+  setSortBy: PropTypes.func.isRequired,
+  selectedRating: PropTypes.string,
+  selectedGenders: PropTypes.arrayOf(PropTypes.string),
+  selectedPriceRange: PropTypes.string,
+  customPriceRange: PropTypes.shape({
+    min: PropTypes.string,
+    max: PropTypes.string
+  }),
+  sortBy: PropTypes.string,
+};
+
 
 
 export default FilterComponent;

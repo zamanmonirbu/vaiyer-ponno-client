@@ -24,6 +24,12 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
   CLEAR_SELLER_STATE,  
+  FETCH_SELLER_REVIEWS_REQUEST,
+  FETCH_SELLER_REVIEWS_SUCCESS,
+  FETCH_SELLER_REVIEWS_FAILURE,
+  REVIEW_SUBMIT_REQUEST,
+  REVIEW_SUBMIT_SUCCESS,
+  REVIEW_SUBMIT_FAIL,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -34,6 +40,10 @@ const initialState = {
   loading: false,
   error: null,
   products: [],
+  reviews: [],
+  reviewLoading: false, // loading state for review submission
+  reviewSuccess: false, // success state for review submission
+  reviewError: null, // error state for review submission
 };
 
 const sellerReducer = (state = initialState, action) => {
@@ -135,6 +145,25 @@ const sellerReducer = (state = initialState, action) => {
         loading: false,
         error: null,
       };
+
+      case REVIEW_SUBMIT_REQUEST:
+        return { ...state, reviewLoading: true, reviewSuccess: false, reviewError: null };
+  
+      case REVIEW_SUBMIT_SUCCESS:
+        return { ...state, reviewLoading: false, reviewSuccess: true };
+  
+      case REVIEW_SUBMIT_FAIL:
+        return { ...state, reviewLoading: false, reviewSuccess: false, reviewError: action.payload };
+  
+
+      case FETCH_SELLER_REVIEWS_REQUEST:
+        return { ...state, loading: true, error: null };
+  
+      case FETCH_SELLER_REVIEWS_SUCCESS:
+        return { ...state, loading: false, reviews: action.payload };
+  
+      case FETCH_SELLER_REVIEWS_FAILURE:
+        return { ...state, loading: false, error: action.payload };
 
     default:
       return state;
