@@ -28,7 +28,7 @@ const LatestProduct = () => {
     };
 
 
-    console.log( userLat,userLng)
+    // console.log( userLat,userLng)
     fetchLocation();
     dispatch(getProducts());
   }, [dispatch]);

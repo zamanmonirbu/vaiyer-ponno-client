@@ -4,7 +4,7 @@ import Transition from '../utils/Transition';
 import { io } from 'socket.io-client';
 import { MdNotifications } from 'react-icons/md';
 
-const socket = io("http://localhost:8800");
+const socket = io("https://vaiyer-ponno-socket.onrender.com");
 
 function DropdownNotifications({ align }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);

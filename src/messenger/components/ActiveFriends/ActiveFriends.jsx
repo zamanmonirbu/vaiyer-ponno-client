@@ -33,7 +33,7 @@ const ActiveFriend = () => {
 
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io("https://cool-media-socket.onrender.com");
+    socket.current = io("https://vaiyer-ponno-socket.onrender.com");
     socket.current.emit("new-user-add", user._id);
     socket.current.on("get-users", (users) => {
       setOnlineUsers(users);
