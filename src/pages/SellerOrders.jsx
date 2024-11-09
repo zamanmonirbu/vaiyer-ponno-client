@@ -45,7 +45,7 @@ const SellerOrders = ({ seller }) => {
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       <div className="grid gap-4">
-        {orders.map((order) => {
+        {orders?.map((order) => {
           // Calculate the total price for the current order
           const totalPrice = order.products.reduce((acc, product) => {
             return acc + product.qty * product.price; // Calculate subtotal for each product

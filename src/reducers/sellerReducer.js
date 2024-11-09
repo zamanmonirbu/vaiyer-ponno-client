@@ -23,14 +23,30 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_SUCCESS,
   FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_FAILURE,
-  CLEAR_SELLER_STATE,  
+  CLEAR_SELLER_STATE,
   FETCH_SELLER_REVIEWS_REQUEST,
   FETCH_SELLER_REVIEWS_SUCCESS,
   FETCH_SELLER_REVIEWS_FAILURE,
   REVIEW_SUBMIT_REQUEST,
   REVIEW_SUBMIT_SUCCESS,
   REVIEW_SUBMIT_FAIL,
-} from '../actions/actionTypes';
+  CREATE_STORE_START,
+  CREATE_STORE_SUCCESS,
+  CREATE_STORE_FAILURE,
+  FETCH_STORE_START,
+  FETCH_STORE_SUCCESS,
+  FETCH_STORE_FAILURE,
+  UPDATE_STORE_START,
+  UPDATE_STORE_SUCCESS,
+  UPDATE_STORE_FAILURE,
+  DELETE_STORE_START,
+  DELETE_STORE_SUCCESS,
+  DELETE_STORE_FAILURE,
+  // FETCH_STORES_START,
+  FETCH_STORES_SUCCESS,
+  FETCH_STORES_FAILURE,
+  FETCH_STORES_START,
+} from "../actions/actionTypes";
 
 const initialState = {
   sellers: [],
@@ -44,6 +60,8 @@ const initialState = {
   reviewLoading: false, // loading state for review submission
   reviewSuccess: false, // success state for review submission
   reviewError: null, // error state for review submission
+  stores: [], // Array of all stores
+  store: null,
 };
 
 const sellerReducer = (state = initialState, action) => {
@@ -57,13 +75,19 @@ const sellerReducer = (state = initialState, action) => {
     case DELETE_SELLER_START:
     case FETCH_DEACTIVATED_SELLERS_START:
     case FETCH_PRODUCTS_BY_CATEGORY_OF_SELLER_START:
+    case CREATE_STORE_START:
+    case FETCH_STORE_START:
+    case FETCH_STORES_START:
+    case UPDATE_STORE_START:
+    case DELETE_STORE_START:
       return {
         ...state,
         loading: true,
+        success: null, // Reset success message on start
         error: null,
       };
 
-    // Success actions
+    // Seller Success actions
     case SELLER_LOGIN_SUCCESS:
       return {
         ...state,
@@ -120,7 +144,7 @@ const sellerReducer = (state = initialState, action) => {
         products: action.payload,
       };
 
-    // Failure actions
+    // Seller Failure actions
     case SELLER_LOGIN_FAILURE:
     case SELLER_REGISTER_FAILURE:
     case FETCH_SELLERS_FAILURE:
@@ -146,24 +170,94 @@ const sellerReducer = (state = initialState, action) => {
         error: null,
       };
 
-      case REVIEW_SUBMIT_REQUEST:
-        return { ...state, reviewLoading: true, reviewSuccess: false, reviewError: null };
-  
-      case REVIEW_SUBMIT_SUCCESS:
-        return { ...state, reviewLoading: false, reviewSuccess: true };
-  
-      case REVIEW_SUBMIT_FAIL:
-        return { ...state, reviewLoading: false, reviewSuccess: false, reviewError: action.payload };
+    // Review Actions
+    case REVIEW_SUBMIT_REQUEST:
+      return {
+        ...state,
+        reviewLoading: true,
+        reviewSuccess: false,
+        reviewError: null,
+      };
+
+    case REVIEW_SUBMIT_SUCCESS:
+      return { ...state, reviewLoading: false, reviewSuccess: true };
+
+    case REVIEW_SUBMIT_FAIL:
+      return {
+        ...state,
+        reviewLoading: false,
+        reviewSuccess: false,
+        reviewError: action.payload,
+      };
+
+    case FETCH_SELLER_REVIEWS_REQUEST:
+      return { ...state, loading: true, error: null };
+
+    case FETCH_SELLER_REVIEWS_SUCCESS:
+      return { ...state, loading: false, reviews: action.payload };
+
+    case FETCH_SELLER_REVIEWS_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    // Store Success actions
+    case CREATE_STORE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        store:action.payload,
+        success: "Store created successfully!",
+      };
+
   
 
-      case FETCH_SELLER_REVIEWS_REQUEST:
-        return { ...state, loading: true, error: null };
-  
-      case FETCH_SELLER_REVIEWS_SUCCESS:
-        return { ...state, loading: false, reviews: action.payload };
-  
-      case FETCH_SELLER_REVIEWS_FAILURE:
-        return { ...state, loading: false, error: action.payload };
+    case FETCH_STORES_SUCCESS:
+      // console.log(action.payload  )
+      return {
+        ...state,
+        loading: false,
+        stores: action.payload,
+      };
+
+
+        case FETCH_STORE_SUCCESS:
+      console.log("action.payload",action.payload  )
+
+      return {
+        ...state,
+        loading: false,
+        store: action.payload,
+      };
+
+    case UPDATE_STORE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        store: action.payload,
+        success: "Store updated successfully!",
+        stores: state.stores.map((s) =>
+          s.id === action.payload.id ? action.payload : s
+        ),
+      };
+
+    case DELETE_STORE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        stores: state.stores.filter((s) => s.id !== action.payload),
+        success: "Store deleted successfully!",
+      };
+
+    // Store Failure actions
+    case CREATE_STORE_FAILURE:
+    case FETCH_STORE_FAILURE:
+    case FETCH_STORES_FAILURE:
+    case UPDATE_STORE_FAILURE:
+    case DELETE_STORE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     default:
       return state;

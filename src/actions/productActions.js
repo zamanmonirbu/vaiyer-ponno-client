@@ -191,20 +191,22 @@ export const getSuggestedProducts = (productId) => async (dispatch) => {
 
 // Create a new product
 export const createProduct = (productData) => async (dispatch) => {
+
+    console.log(productData)
     
-    try {
-        const res = await axiosInstance.post('/api/products', productData, getAuthHeaders());
-        console.log(res.data);
-        dispatch({
-            type: CREATE_PRODUCT,
-            payload: res.data
-        });
-    } catch (err) {
-        dispatch({
-            type: PRODUCT_ERROR,
-            payload: err.response.data.message
-        });
-    }
+    // try {
+    //     const res = await axiosInstance.post('/api/products', productData, getAuthHeaders());
+    //     console.log(res.data);
+    //     dispatch({
+    //         type: CREATE_PRODUCT,
+    //         payload: res.data
+    //     });
+    // } catch (err) {
+    //     dispatch({
+    //         type: PRODUCT_ERROR,
+    //         payload: err.response.data.message
+    //     });
+    // }
 };
 
 // Update an existing product

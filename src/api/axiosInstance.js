@@ -5,7 +5,8 @@ import store from '../store';
 
 
 const axiosInstance = axios.create({
-  baseURL: 'https://vaiyer-ponno-backend.onrender.com',
+  // baseURL: 'https://vaiyer-ponno-backend.onrender.com',
+  baseURL: 'http://localhost:5000',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,6 +17,34 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // Get the access token using the getCookie function
     const token = getCookie('authToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`; // Attach the token to the headers
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+// Add a request interceptor to attach the token to outgoing requests
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Get the access token using the getCookie function
+    const token = getCookie('sellerAuthToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`; // Attach the token to the headers
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+// Add a request interceptor to attach the token to outgoing requests
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Get the access token using the getCookie function
+    const token = getCookie('adminAuthToken');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`; // Attach the token to the headers
     }

@@ -31,6 +31,21 @@ import {
   FETCH_SELLER_REVIEWS_REQUEST,
   FETCH_SELLER_REVIEWS_SUCCESS,
   FETCH_SELLER_REVIEWS_FAILURE,
+  CREATE_STORE_START,
+  CREATE_STORE_SUCCESS,
+  CREATE_STORE_FAILURE,
+  FETCH_STORE_START,
+  FETCH_STORE_SUCCESS,
+  FETCH_STORE_FAILURE,
+  UPDATE_STORE_START,
+  UPDATE_STORE_SUCCESS,
+  UPDATE_STORE_FAILURE,
+  DELETE_STORE_START,
+  DELETE_STORE_SUCCESS,
+  DELETE_STORE_FAILURE,
+  FETCH_STORES_START,
+  FETCH_STORES_SUCCESS,
+  FETCH_STORES_FAILURE,
 } from './actionTypes';
 import Cookies from 'js-cookie';
 
@@ -202,6 +217,95 @@ export const fetchDeactivatedSellers = () => async (dispatch) => {
     dispatch(fetchDeactivatedSellersSuccess(response.data));
   } catch (error) {
     dispatch(fetchDeactivatedSellersFailure(error?.response?.data?.error || error?.response?.data?.message));
+  }
+};
+
+
+// Create Store
+export const createStore = (storeData) => async (dispatch) => {
+  dispatch({ type: CREATE_STORE_START });
+  try {
+    const response = await axiosInstance.post('/api/store', storeData);
+    console.log(response.data)
+    dispatch({
+      type: CREATE_STORE_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CREATE_STORE_FAILURE,
+      payload: error?.response?.data?.message || 'Failed to create store',
+    });
+  }
+};
+
+// Fetch Stores by ID
+export const fetchStores = () => async (dispatch) => {
+  dispatch({ type: FETCH_STORES_START });
+  try {
+    const response = await axiosInstance.get(`/api/store/lists/`);
+    // console.log(response.data)
+    dispatch({
+      type: FETCH_STORES_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_STORES_FAILURE,
+      payload: error?.response?.data?.message || 'Failed to fetch store',
+    });
+  }
+};
+
+// Fetch Store by ID
+export const fetchStore = (storeId) => async (dispatch) => {
+  dispatch({ type: FETCH_STORE_START });
+  try {
+    const response = await axiosInstance.get(`/api/store/${storeId}`);
+    console.log("response.data",response.data)
+    dispatch({
+      type: FETCH_STORE_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_STORE_FAILURE,
+      payload: error?.response?.data?.message || 'Failed to fetch store',
+    });
+  }
+};
+
+// Update Store
+export const updateStore = (storeId, storeData) => async (dispatch) => {
+  dispatch({ type: UPDATE_STORE_START });
+  try {
+    const response = await axiosInstance.put(`/api/store/${storeId}`, storeData);
+    dispatch({
+      type: UPDATE_STORE_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_STORE_FAILURE,
+      payload: error?.response?.data?.message || 'Failed to update store',
+    });
+  }
+};
+
+// Delete Store
+export const deleteStore = (storeId) => async (dispatch) => {
+  dispatch({ type: DELETE_STORE_START });
+  try {
+    await axiosInstance.delete(`/api/store/${storeId}`);
+    dispatch({
+      type: DELETE_STORE_SUCCESS,
+      payload: storeId,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_STORE_FAILURE,
+      payload: error?.response?.data?.message || 'Failed to delete store',
+    });
   }
 };
 
