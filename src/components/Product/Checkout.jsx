@@ -86,7 +86,7 @@ const Checkout = () => {
                   <td className="py-2 text-left">
                     <strong>Customer Name:</strong>
                   </td>
-                  <td className="py-2 text-left">{userProfile.name}</td>
+                  <td className="py-2 text-left">{userProfile.firstName}</td>
                 </tr>
                 <tr>
                   <td className="py-2 text-left">
@@ -124,7 +124,7 @@ const Checkout = () => {
           />
           <button
             onClick={handleCouponApply}
-            className="bg-green-500 text-white rounded px-4 ml-2"
+            className="bg-[#0D9488] text-white rounded px-2 ml-2"
           >
             Apply
           </button>

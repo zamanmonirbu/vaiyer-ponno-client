@@ -19,15 +19,15 @@ const ViewStores = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (error) toast.error(`Error: ${error}`, { autoClose: 2000 });
-  }, [error]);
+    if (!error && stores.length > 0) {
+      toast.success("Stores loaded successfully!", { autoClose: 2000 });
+    }
+  }, [stores, error]); // Only show success toast when stores are fetched successfully
 
   // Handle click on a store card
-  const handleStoreClick = (storeId,name) => {
+  const handleStoreClick = (storeId, name) => {
     navigate(`/seller/store/${storeId}/${name}`); // Navigate to specific store route
   };
-
-//   console.log(stores);
 
   return (
     <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
@@ -41,7 +41,7 @@ const ViewStores = () => {
             stores.map((store) => (
               <button
                 key={store.id}
-                onClick={() => handleStoreClick(store._id,store.name)} // Call handleStoreClick on click
+                onClick={() => handleStoreClick(store._id, store.name)} // Call handleStoreClick on click
                 className="bg-white rounded-lg shadow-md p-6 flex flex-col items-start hover:bg-gray-50 transition hover:scale-105"
               >
                 <h3 className="text-xl font-semibold text-[#3b4d66] text-center">

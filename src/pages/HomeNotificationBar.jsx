@@ -42,7 +42,7 @@ const HomeNotificationBar = () => {
   const currentNotification = notifications[currentIndex];
 
   return (
-    <div className="relative h-12 w-full bg-teal-600 flex   px-4">
+    <div className=" h-12 w-full bg-teal-600 flex px-4 ">
       {/* Dynamic Notification Message and Show All Button */}
       <div className={`transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"} flex items-center w-full text-white`}>
         <span className="mx-auto">{currentNotification?.message}

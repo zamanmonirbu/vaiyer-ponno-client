@@ -30,6 +30,7 @@ const NotificationList = () => {
 
   return (
     <div className="p-4 bg-white rounded shadow-md max-w-md mx-auto">
+      
       <h3 className="text-lg font-semibold mb-4">Notifications</h3>
       <ul className="space-y-2">
         {notifications.map((notification) => (
