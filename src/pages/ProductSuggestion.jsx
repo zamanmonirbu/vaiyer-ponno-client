@@ -30,7 +30,7 @@ const ProductSuggestion = () => {
                         <h3 className="text-xl font-semibold text-gray-800 mb-4">Previous Suggestions:</h3>
                         <div className="whitespace-pre-line text-gray-700 p-4 bg-white rounded-md shadow-sm">
                             {/* Remove * characters from suggestions.suggestionsText */}
-                            {suggestions.suggestionsText.replace(/\*/g, '')}
+                            {suggestions?.suggestionsText?.replace(/\*/g, '')}
                         </div>
                     </>
                 )}
