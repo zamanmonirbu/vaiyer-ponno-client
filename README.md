@@ -2,7 +2,7 @@
 
 [Live Link](https://vaiyer-ponno-client.vercel.app/) |  [Back-end Code](https://github.com/zamanmonirbu/vaiyer-ponno-backend) |
  [Socket Code](https://github.com/zamanmonirbu/vaiyer-ponno-socket) |
-[Demo Video](https://demo-video-link.com)
+[Demo Video](https://youtu.be/xU94ACV-VyQ)
 
 
 ---
@@ -31,6 +31,24 @@ For small and medium-sized businesses, Vaiyer Ponno serves as an invaluable tool
 - **Backend**: Node, Express,Mongoose, Socket.IO, JWT (JSON Web Token), Bcrypt, Multer, Dotenv ,Dotenv, CORS, Cookie-parser.
 - **Socket Service**: Socket.io
 - **API Integration**: Gemini API to backend services for data on products, orders, recommendations, and user management.
+
+## Login Credentials
+
+To access different roles within the platform, use the following credentials:
+
+- **User Login**: 
+  - Email: `user@gmail.com` 
+  - Password: `user@gmail.com`
+
+- **Seller Login**: 
+  - Email: `seller@gmail.com`
+  - Password: `seller@gmail.com`
+
+- **Admin Login**: 
+  - Email: `admin@gmail.com` 
+  - Password: `admin@gmail.com`
+
+
 
 ## Getting Started
 
