@@ -10,14 +10,13 @@ import { offerBannerReducer } from './reducers/offerBannerReducer';
 import { commentCreateReducer, commentDeleteReducer, commentListReducer, commentUpdateReducer } from './reducers/commentReducers';
 import {cartReducer} from './reducers/cartReducer';
 import locationReducer from './reducers/locationReducer';
-import { paymentReducer } from './reducers/paymentReducer';
+import { codReducer, paymentReducer } from './reducers/paymentReducer';
 import { adminReducer } from './reducers/adminReducer';
 import { orderReducer } from './reducers/orderReducer';
 import searchReducer from './reducers/searchReducer';
 import chatReducer from './reducers/chatReducer';
 import taskReducer from './reducers/taskReducer';
 import { videoUploadReducer } from './reducers/videoUploadReducer';
-// import chatReducer from './reducers/chatReducer';
 
 
 
@@ -38,6 +37,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   location: locationReducer,
   payment: paymentReducer,
+  cod:codReducer,
   orders: orderReducer,
   search:searchReducer,
   chat:chatReducer,

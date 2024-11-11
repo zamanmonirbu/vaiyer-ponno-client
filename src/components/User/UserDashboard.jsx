@@ -274,6 +274,7 @@ useEffect(() => {
         <table className="table-auto w-full border border-gray-300">
           <thead>
             <tr>
+              <th className="border px-4 py-2">Order Number</th>
               <th className="border px-4 py-2">Order ID</th>
               <th className="border px-4 py-2">Order Date</th>{" "}
               {/* New column for Order Date */}
@@ -286,8 +287,9 @@ useEffect(() => {
           </thead>
           <tbody>
             {orders && orders.length > 0 ? (
-              orders.map((order) => (
+              orders.map((order,index) => (
                 <tr key={order._id}>
+                  <td className="border px-4 py-2">{index+1}</td>
                   <td className="border px-4 py-2">{order.tran_id}</td>
                   <td className="border px-4 py-2">
                     {new Date(order.createdAt).toLocaleDateString()}{" "}
