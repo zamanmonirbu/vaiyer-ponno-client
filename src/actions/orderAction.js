@@ -97,11 +97,11 @@ export const markOrderAsAccepted = (orderId) => async (dispatch) => {
 };
 
 // get Order as Sent to Courier
-export const markOrderAsSentToCourier = (orderId) => async (dispatch) => {
+export const markOrderAsSentToCourier = (orderId, courierId) => async (dispatch) => {
   try {
     dispatch({ type: ORDER_REQUEST });
     const { data } = await axiosInstance.put(
-      `/api/orders/${orderId}/sendToCourier`
+      `/api/orders/${orderId}/sendToCourier`,{ courierId }
     );
     dispatch({ type: GET_SPECIFIC_PRODUCTS_SUCCESS, payload: data });
   } catch (error) {

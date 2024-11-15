@@ -43,18 +43,54 @@ import CourierRegister from "./courier/AuthCourier/CourierRegister";
 import CourierProfile from "./courier/Utils/CourierProfile";
 import CourierTask from "./courier/Utils/CourierTask";
 import VehicleTypeList from "./courier/Utils/VehicleTypeList";
-
+import DeliveryManLogin from "./DeliveryMan/utilsDeliveryMan/DeliveryManLogin";
+import DeliveryManRegister from "./DeliveryMan/utilsDeliveryMan/DeliveryManRegister";
+import ViewHello from "./DeliveryMan/utilsDeliveryMan/ViewHello";
+import DashboardDeliveryMan from "./DeliveryMan/DashbordDeliveryMan";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
   const { admin } = useSelector((state) => state.adminReducer);
   const { seller } = useSelector((state) => state.seller);
   const { courierInfo } = useSelector((state) => state.courier);
+  const { deliveryManInfo } = useSelector((state) => state.deliveryMan);
   const location = useLocation();
 
   return (
     <Routes>
       {/* Public Routes */}
+      <Route
+        path="/deliveryman/login"
+        element={
+          <MainLayout>
+            {/* <CourierLogin /> */}
+            <DeliveryManLogin />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/deliveryman/register"
+        element={
+          <MainLayout>
+            {/* <CourierLogin /> */}
+            <DeliveryManRegister />
+          </MainLayout>
+        }
+      />
+
+      <Route
+        path="/deliveryMan/dashboard"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <ViewHello/>
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
       <Route
         path="/courier/login"
         element={
@@ -92,7 +128,7 @@ function App() {
         element={
           courierInfo ? (
             <CourierDashboard>
-              <CourierProfile admin={courierInfo}/>
+              <CourierProfile admin={courierInfo} />
             </CourierDashboard>
           ) : (
             <Navigate to="/courier/login" />
@@ -104,7 +140,7 @@ function App() {
         element={
           courierInfo ? (
             <CourierDashboard>
-              <VehicleTypeList admin={courierInfo}/>
+              <VehicleTypeList admin={courierInfo} />
             </CourierDashboard>
           ) : (
             <Navigate to="/courier/login" />
@@ -112,13 +148,12 @@ function App() {
         }
       />
 
-      
-<Route
+      <Route
         path="/courier/dashboard/courier/task"
         element={
           courierInfo ? (
             <CourierDashboard>
-              <CourierTask seller={courierInfo}/>
+              <CourierTask seller={courierInfo} />
             </CourierDashboard>
           ) : (
             <Navigate to="/courier/login" />
@@ -126,7 +161,7 @@ function App() {
         }
       />
 
-        {/* <Route
+      {/* <Route
         path="/courier/orders/sent-to-courier"
         element={
           courierInfo ? (
@@ -139,7 +174,7 @@ function App() {
         }
       /> */}
 
-   {/*    <Route
+      {/*    <Route
         path="/courier/orders/handed-to-delivery"
         element={
           courierInfo ? (

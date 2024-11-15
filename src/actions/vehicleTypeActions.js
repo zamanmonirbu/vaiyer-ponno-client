@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   VEHICLETYPE_CREATE_REQUEST,
   VEHICLETYPE_CREATE_SUCCESS,
@@ -16,14 +15,14 @@ import {
   VEHICLETYPE_DELETE_SUCCESS,
   VEHICLETYPE_DELETE_FAIL,
 } from './actionTypes';
+import axiosInstance from '../api/axiosInstance';
 
 // Create VehicleType Action
 export const createVehicleType = (vehicleTypeData) => async (dispatch) => {
   try {
     dispatch({ type: VEHICLETYPE_CREATE_REQUEST });
-
-    const { data } = await axios.post('/api/vehicleTypes/', vehicleTypeData);
-
+    const { data } = await axiosInstance.post('/api/vehicleTypes/', vehicleTypeData);
+// console.log(data,vehicleTypeData)
     dispatch({
       type: VEHICLETYPE_CREATE_SUCCESS,
       payload: data,
@@ -42,7 +41,7 @@ export const getAllVehicleTypes = () => async (dispatch) => {
   try {
     dispatch({ type: VEHICLETYPE_GET_ALL_REQUEST });
 
-    const { data } = await axios.get('/api/vehicleTypes/');
+    const { data } = await axiosInstance.get('/api/vehicleTypes/');
 
     dispatch({
       type: VEHICLETYPE_GET_ALL_SUCCESS,
@@ -61,7 +60,7 @@ export const getVehicleTypeById = (id) => async (dispatch) => {
   try {
     dispatch({ type: VEHICLETYPE_GET_BY_ID_REQUEST });
 
-    const { data } = await axios.get(`/api/vehicleTypes/${id}`);
+    const { data } = await axiosInstance.get(`/api/vehicleTypes/${id}`);
 
     dispatch({
       type: VEHICLETYPE_GET_BY_ID_SUCCESS,
@@ -80,7 +79,7 @@ export const updateVehicleType = (id, vehicleTypeData) => async (dispatch) => {
   try {
     dispatch({ type: VEHICLETYPE_UPDATE_REQUEST });
 
-    const { data } = await axios.put(`/api/vehicleTypes/${id}`, vehicleTypeData);
+    const { data } = await axiosInstance.put(`/api/vehicleTypes/${id}`, vehicleTypeData);
 
     dispatch({
       type: VEHICLETYPE_UPDATE_SUCCESS,
@@ -99,7 +98,7 @@ export const deleteVehicleType = (id) => async (dispatch) => {
   try {
     dispatch({ type: VEHICLETYPE_DELETE_REQUEST });
 
-    await axios.delete(`/api/vehicleTypes/${id}`);
+    await axiosInstance.delete(`/api/vehicleTypes/${id}`);
 
     dispatch({
       type: VEHICLETYPE_DELETE_SUCCESS,

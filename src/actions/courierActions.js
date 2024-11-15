@@ -12,6 +12,9 @@ import {
   COURIER_UPDATE_PROFILE_REQUEST,
   COURIER_UPDATE_PROFILE_SUCCESS,
   COURIER_UPDATE_PROFILE_FAIL,
+  GET_ALL_COURIERS_REQUEST,
+  GET_ALL_COURIERS_SUCCESS,
+  GET_ALL_COURIERS_FAIL,
 
 } from "./actionTypes";
 import axiosInstance from "../api/axiosInstance";
@@ -82,6 +85,21 @@ export const updateCourierProfile = (courierId, updateData) => async (dispatch) 
     });
   }
 };
+
+// Fetch All Couriers Action
+export const getAllCouriers = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_ALL_COURIERS_REQUEST });
+    const { data } = await axiosInstance.get("/api/couriers"); // Adjust the API endpoint as needed
+    dispatch({ type: GET_ALL_COURIERS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_COURIERS_FAIL,
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
+
 
 // Courier Clear Action
 export const courierClear = () => (dispatch) => {

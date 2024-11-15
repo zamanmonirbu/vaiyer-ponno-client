@@ -6,32 +6,41 @@ import {
   updateVehicleType,
   deleteVehicleType,
 } from "../../actions/vehicleTypeActions";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const VehicleTypeList = () => {
+const VehicleTypeList = ({admin}) => {
+  const adminId=admin._id;
   const dispatch = useDispatch();
-  const { vehicleTypes, loading, error } = useSelector(
+  const { vehicleTypes,vehicleType, loading, error } = useSelector(
     (state) => state.vehicleType
   );
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [editId, setEditId] = useState(null); // Store the ID of the vehicle type being edited
+  const [editId, setEditId] = useState(null); 
 
   useEffect(() => {
     dispatch(getAllVehicleTypes());
-  }, [dispatch]);
+  }, [dispatch,vehicleType]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error); // Show error notification
+    }
+  }, [error]);
 
   // Handle form submission (Create or Update)
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newVehicleType = { name, description };
+    const newVehicleType = { name, description,adminId };
 
     if (editId) {
-      // If there's an editId, we are updating an existing vehicle type
       dispatch(updateVehicleType(editId, newVehicleType));
+      toast.success("Vehicle type updated successfully!");
     } else {
-      // Otherwise, we are creating a new vehicle type
       dispatch(createVehicleType(newVehicleType));
+      toast.success("Vehicle type created successfully!");
     }
 
     // Clear the input fields
@@ -51,6 +60,7 @@ const VehicleTypeList = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this vehicle type?")) {
       dispatch(deleteVehicleType(id));
+      toast.info("Vehicle type deleted successfully!");
     }
   };
 
@@ -100,7 +110,7 @@ const VehicleTypeList = () => {
                 ? "bg-blue-300 cursor-not-allowed"
                 : editId
                 ? "bg-yellow-500 hover:bg-yellow-600"
-                : "bg-blue-500 hover:bg-blue-600"
+                : "bg-[#303f52] hover:bg-[#1F2937]"
             }`}
           >
             {loading
@@ -111,9 +121,7 @@ const VehicleTypeList = () => {
           </button>
         </form>
 
-        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-
-        {/* <ul className="mt-6 space-y-4">
+        <ul className="mt-6 space-y-4">
           {vehicleTypes?.map((vehicle) => (
             <li
               key={vehicle._id}
@@ -139,8 +147,9 @@ const VehicleTypeList = () => {
               </div>
             </li>
           ))}
-        </ul> */}
+        </ul>
       </div>
+      <ToastContainer />
     </div>
   );
 };

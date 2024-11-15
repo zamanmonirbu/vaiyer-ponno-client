@@ -12,6 +12,9 @@ import {
   COURIER_UPDATE_PROFILE_REQUEST,
   COURIER_UPDATE_PROFILE_SUCCESS,
   COURIER_UPDATE_PROFILE_FAIL,
+  GET_ALL_COURIERS_REQUEST,
+  GET_ALL_COURIERS_SUCCESS,
+  GET_ALL_COURIERS_FAIL,
 } from "../actions/actionTypes";
 
 const courierInitialState = {
@@ -20,6 +23,7 @@ const courierInitialState = {
   profile: null,
   success: false,
   error: null,
+  couriers: [],
 };
 
 const courierReducer = (state = courierInitialState, action) => {
@@ -27,16 +31,31 @@ const courierReducer = (state = courierInitialState, action) => {
     case COURIER_LOGIN_REQUEST:
       return { ...state, loading: true, error: null }; // reset error on request
     case COURIER_LOGIN_SUCCESS:
-      return { ...state, loading: false, courierInfo: action.payload, error: null };
+      return {
+        ...state,
+        loading: false,
+        courierInfo: action.payload,
+        error: null,
+      };
     case COURIER_LOGIN_FAIL:
-      return { ...state, loading: false, error: action.payload, courierInfo: null };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        courierInfo: null,
+      };
 
     case COURIER_REGISTER_REQUEST:
       return { ...state, loading: true, error: null }; // reset error on request
     case COURIER_REGISTER_SUCCESS:
       return { ...state, loading: false, success: true, error: null };
     case COURIER_REGISTER_FAIL:
-      return { ...state, loading: false, error: action.payload, success: false };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        success: false,
+      };
 
     case COURIER_PROFILE_REQUEST:
       return { ...state, loading: true, error: null }; // reset error on request
@@ -46,12 +65,30 @@ const courierReducer = (state = courierInitialState, action) => {
     case COURIER_PROFILE_FAIL:
       return { ...state, loading: false, error: action.payload, profile: null };
 
-      case COURIER_UPDATE_PROFILE_REQUEST:
-        return { ...state, loading: true, error: null };
-      case COURIER_UPDATE_PROFILE_SUCCESS:
-        return { ...state, loading: false, profile: action.payload, success: true, error: null };
-      case COURIER_UPDATE_PROFILE_FAIL:
-        return { ...state, loading: false, error: action.payload, success: false };
+    case COURIER_UPDATE_PROFILE_REQUEST:
+      return { ...state, loading: true, error: null };
+    case COURIER_UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        profile: action.payload,
+        success: true,
+        error: null,
+      };
+    case COURIER_UPDATE_PROFILE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        success: false,
+      };
+
+    case GET_ALL_COURIERS_REQUEST:
+      return { ...state, loading: true, error: null };
+    case GET_ALL_COURIERS_SUCCESS:
+      return { ...state, loading: false, couriers: action.payload };
+    case GET_ALL_COURIERS_FAIL:
+      return { ...state, loading: false, error: action.payload };
 
     case COURIER_CLEAR:
       return { ...courierInitialState }; // reset all state to initial

@@ -5,104 +5,107 @@ import { AiOutlineDashboard, AiOutlineUnorderedList } from "react-icons/ai";
 import { MdMessage } from "react-icons/md";
 import { RiUser3Line } from "react-icons/ri";
 import { BsArrowRightCircle } from "react-icons/bs";
-import { CiDeliveryTruck } from "react-icons/ci";
 import { BiLogOut } from "react-icons/bi"; // Importing Logout icon
 import { useDispatch } from "react-redux";
-import { courierClear } from "../actions/courierActions";
 import { useNavigate } from "react-router-dom";
+import { clearDeliveryManData } from "../actions/DeliveryManActions";
 
-const CourierDashboard = ({ children }) => {
-  const [showStoreManagement, setShowStoreManagement] = useState(false);
+const DashboardDeliveryMan = ({ children }) => {
+  const [showDashboard, setShowDashboard] = useState(false);
   const [showOrders, setShowOrders] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(courierClear());
-    navigate("/courier/login");
+    dispatch(clearDeliveryManData());
+    navigate("/deliveryman/login");
   };
 
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-800 text-gray-200">
-        <div className="p-4 text-center text-xl font-bold">Dashboard</div>
+      <aside className="w-64 bg-gray-800 text-gray-200 fixed inset-0 top-0 z-10">
+        <div className="p-4 text-center text-lg font-bold">Delivery Man Dashboard</div>
         <nav className="mt-4 space-y-2">
+          {/* Dashboard Link */}
+          <a
+            href="/deliveryman/dashboard"
+            className="flex items-center px-4 py-2 hover:bg-gray-700"
+          >
+            <AiOutlineDashboard className="mr-3" />
+            Dashboard  
+            <BsArrowRightCircle
+              className={`ml-auto transition-transform ${showDashboard ? "rotate-90" : ""}`}
+            />
+          </a>
+          {/* Orders Section */}
           <button
             className="flex items-center px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => setShowStoreManagement(!showStoreManagement)}
+            onClick={() => setShowOrders(!showOrders)}
           >
-            <CiDeliveryTruck className="mr-3 h-6 w-6" />
-            Courier Management
+            <AiOutlineUnorderedList className="mr-3" />
+            Orders
             <BsArrowRightCircle
-              className={`ml-auto transition-transform ${showStoreManagement ? "rotate-90" : ""}`}
+              className={`ml-auto transition-transform ${showOrders ? "rotate-90" : ""}`}
             />
           </button>
-          {showStoreManagement && (
+          {showOrders && (
             <div className="ml-8 space-y-1">
-              <button
-                className="flex items-center px-4 py-2 w-full text-left hover:bg-gray-700"
-                onClick={() => setShowOrders(!showOrders)}
-              >
-                <AiOutlineUnorderedList className="mr-3" />
-                Orders
-              </button>
-              {showOrders && (
-                <div className="ml-6 space-y-1 text-gray-400">
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                    Request Orders
-                  </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                    Accept Orders
-                  </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                    Cancel Orders
-                  </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                    Sent to Courier
-                  </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                    Complete Orders
-                  </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                    Statistics
-                  </a>
-                </div>
-              )}
+              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                Pending Orders
+              </a>
+              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                Assigned Orders
+              </a>
+              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                Completed Orders
+              </a>
+              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                Cancelled Orders
+              </a>
             </div>
           )}
-          <a href="/courier/dashboard/courier/task" className="flex items-center px-4 py-2 hover:bg-gray-700">
-            <AiOutlineDashboard className="mr-3" />
-            Tasks
-          </a>
+
+          {/* Messages Link */}
           <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-700">
             <MdMessage className="mr-3" />
             Messages
+            <BsArrowRightCircle
+              className={`ml-auto transition-transform ${showMessage ? "rotate-90" : ""}`}
+            />
           </a>
+          {/* Profile Link */}
           <a
-            href="/courier/profile"
+            href="/deliveryman/profile"
             className="flex items-center px-4 py-2 hover:bg-gray-700"
           >
             <RiUser3Line className="mr-3" />
-            Profile
+            Profile 
+            <BsArrowRightCircle
+              className={`ml-auto transition-transform ${showProfile ? "rotate-90" : ""}`}
+            />
           </a>
         </nav>
         <div className="mt-auto p-4">
+          {/* Logout Button */}
           <button
             onClick={handleLogout}
             className="flex items-center px-4 py-2 text-left w-full hover:bg-gray-700"
           >
-            <BiLogOut className="mr-3" /> {/* Added logout icon */}
+            <BiLogOut className="mr-3" />
             Logout
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-gray-100">
+      <main className="flex-1 bg-gray-100 ml-64">
         <header className="flex items-center justify-between bg-white p-4 shadow">
           <h1 className="text-2xl font-semibold text-gray-800">
-            Courier Dashboard
+            Delivery Man Dashboard
           </h1>
           <div className="flex items-center justify-center space-x-4">
             {/* Centered Notification Icon */}
@@ -128,8 +131,8 @@ const CourierDashboard = ({ children }) => {
 };
 
 // Define prop types
-CourierDashboard.propTypes = {
+DashboardDeliveryMan.propTypes = {
   children: PropTypes.node, // Validation for children
 };
 
-export default CourierDashboard;
+export default DashboardDeliveryMan;
