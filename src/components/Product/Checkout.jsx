@@ -15,6 +15,16 @@ const Checkout = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const paymentState = useSelector((state) => state.payment);
   const { loading } = paymentState;
+  const {codData} = useSelector((state) => state.cod);
+
+  useEffect(()=>{
+    if (codData.redirectUrl) {
+      // window.location.reload;
+      window.location.href = codData.redirectUrl;
+    }
+
+  },[codData.redirectUrl])
+
 
   const { userProfile } = useSelector((state) => state.user);
   const userAuth = getCookie("userAuth");

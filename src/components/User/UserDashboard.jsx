@@ -25,7 +25,7 @@ const UserDashboard = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const { userProfile, loading, error } = useSelector((state) => state.user);
-  const { orders } = useSelector((state) => state.orders);
+  const { userOrders } = useSelector((state) => state.orders);
 
   const userAuthCookie = getCookie("userAuth");
   const userId = userAuthCookie ? JSON.parse(userAuthCookie)?.id : null;
@@ -35,7 +35,7 @@ const UserDashboard = () => {
     dispatch(fetchOrdersByUserId(userId));
   }, [dispatch, userId]);
 
-useEffect(() => {
+  useEffect(() => {
     if (userProfile) {
       setFirstName(userProfile.firstName || "");
       setLastName(userProfile.lastName || "");
@@ -56,18 +56,19 @@ useEffect(() => {
     const file = e.target.files[0];
     if (file) {
       // Generate a 9-digit random number
-      const randomNineDigitNumber = Math.floor(100000000 + Math.random() * 900000000);
-  
+      const randomNineDigitNumber = Math.floor(
+        100000000 + Math.random() * 900000000
+      );
+
       // Construct a new image name with the random number and original file name
       const newImageName = `${randomNineDigitNumber}-${file.name}`;
-  
+
       // Upload image with new image name
       const uploadedUrl = await uploadImageToImgBB(file, newImageName);
       if (uploadedUrl) setImageUrl(uploadedUrl);
       else alert("Image upload failed. Please try again.");
     }
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -282,14 +283,15 @@ useEffect(() => {
               <th className="border px-4 py-2">Quantity</th>
               <th className="border px-4 py-2">Unit Price</th>
               <th className="border px-4 py-2">Total Price</th>
-              <th className="border px-4 py-2">Status</th>
+              <th className="border px-4 py-2">Payment Status</th>
+              <th className="border px-4 py-2">Delivery Status</th>
             </tr>
           </thead>
           <tbody>
-            {orders && orders.length > 0 ? (
-              orders.map((order,index) => (
+            {userOrders && userOrders.length > 0 ? (
+              userOrders.map((order, index) => (
                 <tr key={order._id}>
-                  <td className="border px-4 py-2">{index+1}</td>
+                  <td className="border px-4 py-2">{index + 1}</td>
                   <td className="border px-4 py-2">{order.tran_id}</td>
                   <td className="border px-4 py-2">
                     {new Date(order.createdAt).toLocaleDateString()}{" "}
@@ -319,7 +321,18 @@ useEffect(() => {
                       </span>
                     ) : (
                       <span className="text-red-500 flex items-center">
-                        <FaTimesCircle className="mr-1" /> Pending
+                        <FaTimesCircle className="mr-1" /> Cash on Delivery
+                      </span>
+                    )}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {order.status ? (
+                      <span className="text-green-500 flex items-center">
+                        <FaCheckCircle className="mr-1" /> Completed
+                      </span>
+                    ) : (
+                      <span className="text-red-500 flex items-center">
+                        <FaTimesCircle className="mr-1" /> Cash on Delivery
                       </span>
                     )}
                   </td>

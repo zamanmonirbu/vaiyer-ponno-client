@@ -1,5 +1,5 @@
 import axiosInstance from "../api/axiosInstance";
-import { PAYMENT_REQUEST, PAYMENT_SUCCESS, PAYMENT_FAILURE ,COD_REQUEST, COD_SUCCESS, COD_FAILURE} from "./actionTypes";
+import { PAYMENT_REQUEST, PAYMENT_SUCCESS, PAYMENT_FAILURE ,COD_REQUEST, COD_SUCCESS, COD_FAILURE,COD_CLEAR} from "./actionTypes";
 
 export const makePayment = (paymentData) => async (dispatch) => {
   try {
@@ -33,6 +33,8 @@ export const makeCodOrder = (codData) => async (dispatch) => {
     // Send the COD data to the backend endpoint created for COD
     const response = await axiosInstance.post("/api/payment/cod", codData);
 
+    console.log(response.data)
+
     dispatch({
       type: COD_SUCCESS,
       payload: response.data,
@@ -51,3 +53,9 @@ export const makeCodOrder = (codData) => async (dispatch) => {
     // toast.error("Failed to place COD order.");
   }
 };
+
+// Clear payment and cart action
+export const clearPayment = () => (dispatch) => {
+  dispatch({ type: COD_CLEAR });
+};
+

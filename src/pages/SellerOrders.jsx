@@ -1,14 +1,15 @@
-// components/SellerOrders.js
-
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchOrdersBySellerId } from "../actions/orderAction.js";
+import { fetchOrdersBySellerId, updateOrder } from "../actions/orderAction.js";
+import { format, formatDistanceToNow } from 'date-fns';
+
+
 
 const SellerOrders = ({ seller }) => {
   const sellerId = seller._id;
   const dispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state) => state.orders);
+  const { sellerOrders, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
     if (sellerId) {
@@ -16,40 +17,42 @@ const SellerOrders = ({ seller }) => {
     }
   }, [dispatch, sellerId]);
 
-  const printOrder = (orderId) => {
-    const printContents = document.getElementById(orderId).innerHTML; // Get the order content
-    const newWindow = window.open("", "_blank"); // Open a new window
-    newWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Order</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            .order-details { margin-bottom: 20px; }
-          </style>
-        </head>
-        <body onload="window.print();">
-          <h2>Order ID: ${orderId}</h2>
-          ${printContents}
-        </body>
-      </html>
-    `);
-    newWindow.document.close();
+  const handleOrderAction = (orderId, action) => {
+    let updateData = {};
+  
+    if (action === "Accept") {
+      updateData = { sellerAccepted: true, sellerAcceptedAt: new Date() };
+    } else if (action === "Decline") {
+      updateData = { sellerRejected: true, sellerRejectedAt: new Date() };
+    } else if (action === "Sent to Courier") {
+      updateData = { sentToCourier: true, sentToCourierAt: new Date() };
+    }
+  
+    dispatch(updateOrder(orderId, updateData));
   };
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl font-bold text-center mb-6">Your Orders</h2>
+      <h2 className="text-3xl font-bold text-center mb-6">Your requested {sellerOrders?.length} Orders</h2>
 
       {loading && <p className="text-center">Loading orders...</p>}
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       <div className="grid gap-4">
-        {orders?.map((order) => {
+        {sellerOrders?.map((order) => {
           // Calculate the total price for the current order
           const totalPrice = order.products.reduce((acc, product) => {
             return acc + product.qty * product.price; // Calculate subtotal for each product
           }, 0);
+
+          // Check if the createdAt exists and is a valid date
+          const createdAt = order.createdAt ? new Date(order.createdAt) : null;
+
+          // Format the createdAt date to a more readable format, if available
+          const formattedDate = createdAt ? format(createdAt, 'PPpp') : 'No date available';
+
+          // Calculate how much time ago the order was placed, if createdAt is valid
+          const timeAgo = createdAt ? formatDistanceToNow(createdAt, { addSuffix: true }) : 'N/A';
 
           return (
             <div
@@ -66,9 +69,7 @@ const SellerOrders = ({ seller }) => {
                 <p className="font-bold text-md">Customer Details</p>
                 <p className="text-gray-700">Customer: {order.customerName}</p>
                 <p className="text-gray-700">Mobile: {order.customerMobile}</p>
-                <p className="text-gray-700">
-                  Address: {order.customerAddress}
-                </p>
+                <p className="text-gray-700">Address: {order.customerAddress}</p>
               </div>
 
               {/* Order Details */}
@@ -87,9 +88,7 @@ const SellerOrders = ({ seller }) => {
                       <div className="text-gray-700">
                         Unit Price: ${product.price.toFixed(2)}
                       </div>
-                      <div className="text-gray-700">
-                        Quantity: {product.qty}
-                      </div>
+                      <div className="text-gray-700">Quantity: {product.qty}</div>
                       <div className="text-gray-700">
                         Subtotal Price: ${" "}
                         {(product.qty * product.price).toFixed(2)}
@@ -110,13 +109,34 @@ const SellerOrders = ({ seller }) => {
                     {order.status ? "Completed" : "Pending"}
                   </span>
                 </p>
-                {/* Print Button */}
-                <div className="flex justify-center mt-4">
+
+                {/* Ordered Time and Time Ago */}
+                <p className="mt-2">
+                  Ordered Time: {formattedDate} <br />
+                  <span className="text-gray-500 text-sm">
+                    ({timeAgo})
+                  </span>
+                </p>
+
+                {/* Order Action Buttons */}
+                <div className="flex align-center justify-center mt-4">
                   <button
-                    onClick={() => printOrder(order._id)}
+                    onClick={() => handleOrderAction(order._id, "Accept")}
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mx-2"
+                  >
+                    Accept Order
+                  </button>
+                  <button
+                    onClick={() => handleOrderAction(order._id, "Decline")}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2"
+                  >
+                    Decline Order
+                  </button>
+                  <button
+                    onClick={() => handleOrderAction(order._id, "Sent to Courier")}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
-                    Print Order
+                    Sent to Courier
                   </button>
                 </div>
               </div>

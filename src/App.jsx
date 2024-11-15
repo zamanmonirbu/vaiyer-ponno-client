@@ -28,7 +28,6 @@ import SellerApp from "./seller/SellerApp";
 import AuthLayout from "./components/layouts/AuthLayout";
 import PageLayout from "./pages/PageLayout";
 import NotificationList from "./pages/NotificationList";
-// import HomeEssentialsCard from "./pages/HomeEssentialsCard";
 import ProductSuggestion from "./pages/ProductSuggestion";
 import VideoUploadComponent from "./pages/VideoUploadComponent";
 import AboutUs from "./pages/AboutUs";
@@ -37,17 +36,135 @@ import CustomerService from "./components/Nav/MenuBar/CustomerService";
 import Registry from "./components/Nav/MenuBar/Registry";
 import GiftCards from "./components/Nav/MenuBar/GiftCards";
 import Sell from "./components/Nav/MenuBar/Sell";
+import CourierDashboard from "./courier/CourierDashboard";
+import HomeViewDefault from "./courier/Utils/HomeViewDefault";
+import CourierLogin from "./courier/AuthCourier/CourierLogin";
+import CourierRegister from "./courier/AuthCourier/CourierRegister";
+import CourierProfile from "./courier/Utils/CourierProfile";
+import CourierTask from "./courier/Utils/CourierTask";
+import VehicleTypeList from "./courier/Utils/VehicleTypeList";
+
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
   const { admin } = useSelector((state) => state.adminReducer);
   const { seller } = useSelector((state) => state.seller);
+  const { courierInfo } = useSelector((state) => state.courier);
   const location = useLocation();
 
   return (
     <Routes>
       {/* Public Routes */}
+      <Route
+        path="/courier/login"
+        element={
+          <MainLayout>
+            <CourierLogin />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/courier/register"
+        element={
+          <MainLayout>
+            <CourierRegister />
+          </MainLayout>
+        }
+      />
+
+      {/* Courier Dashboard */}
+      <Route
+        path="/courier/dashboard"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <HomeViewDefault />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      {/* Courier Profile */}
+      <Route
+        path="/courier/profile"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <CourierProfile admin={courierInfo}/>
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/courier/dashboard/vehicle-types"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <VehicleTypeList admin={courierInfo}/>
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
       
+<Route
+        path="/courier/dashboard/courier/task"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <CourierTask seller={courierInfo}/>
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+        {/* <Route
+        path="/courier/orders/sent-to-courier"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <OrdersSentToCourier />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      /> */}
+
+   {/*    <Route
+        path="/courier/orders/handed-to-delivery"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <OrdersHandedToDeliveryMan />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/orders/completed"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <OrdersCompleted />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />  */}
+
       <Route
         path="/"
         element={
@@ -56,12 +173,26 @@ function App() {
           </MainLayout>
         }
       />
+
+      <Route
+        path="/c-s/chat/box"
+        element={
+          currentUser ? (
+            <MainLayout>
+              <Chat />
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" />
+          )
+        }
+      />
+
       <Route
         path="/upload/Video"
         element={
           <MainLayout>
             {/* <PageLayout /> */}
-            <VideoUploadComponent/>
+            <VideoUploadComponent />
           </MainLayout>
         }
       />
@@ -69,7 +200,7 @@ function App() {
         path="/about/us"
         element={
           <MainLayout>
-            <AboutUs/>
+            <AboutUs />
           </MainLayout>
         }
       />
@@ -77,7 +208,7 @@ function App() {
         path="/today-deals"
         element={
           <MainLayout>
-            <TodayDeals/>
+            <TodayDeals />
           </MainLayout>
         }
       />
@@ -85,7 +216,7 @@ function App() {
         path="/customer-service"
         element={
           <MainLayout>
-            <CustomerService/>
+            <CustomerService />
           </MainLayout>
         }
       />
@@ -93,7 +224,7 @@ function App() {
         path="/registry"
         element={
           <MainLayout>
-            <Registry/>
+            <Registry />
           </MainLayout>
         }
       />
@@ -101,7 +232,7 @@ function App() {
         path="/gift-cards"
         element={
           <MainLayout>
-            <GiftCards/>
+            <GiftCards />
           </MainLayout>
         }
       />
@@ -109,7 +240,7 @@ function App() {
         path="/sell"
         element={
           <MainLayout>
-            <Sell/>
+            <Sell />
           </MainLayout>
         }
       />
@@ -118,7 +249,7 @@ function App() {
         path="/suggest/product/with/ai"
         element={
           <MainLayout>
-            < ProductSuggestion/>
+            <ProductSuggestion />
           </MainLayout>
         }
       />
@@ -127,7 +258,7 @@ function App() {
         element={
           <MainLayout>
             {/* <PageLayout /> */}
-            <NotificationList/>
+            <NotificationList />
           </MainLayout>
         }
       />

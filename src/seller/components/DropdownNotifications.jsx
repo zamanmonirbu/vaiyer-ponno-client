@@ -1,16 +1,17 @@
-import { useState, useRef, useEffect } from 'react';
+// import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Transition from '../utils/Transition';
 import { io } from 'socket.io-client';
 import { MdNotifications } from 'react-icons/md';
+import { useEffect, useRef, useState } from 'react';
 
-const socket = io("https://vaiyer-ponno-socket.onrender.com");
-
-function DropdownNotifications({ align }) {
+function DropdownNotifications({ align, sellerId }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const trigger = useRef(null);
   const dropdown = useRef(null);
+  const socket = useRef(null);
+  const notificationsRef = useRef([]);
 
   // Close on click outside
   useEffect(() => {
@@ -21,7 +22,7 @@ function DropdownNotifications({ align }) {
     };
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
-  });
+  }, [dropdownOpen]);
 
   // Close if the esc key is pressed
   useEffect(() => {
@@ -31,18 +32,38 @@ function DropdownNotifications({ align }) {
     };
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
-  });
+  }, [dropdownOpen]);
 
-  // Listen for notifications from the server
   useEffect(() => {
-    socket.on('receive-order-notification', (notification) => {
-      setNotifications((prevNotifications) => [...prevNotifications, notification]);
-    });
+    if (!socket.current) {
+      socket.current = io('http://localhost:8800'); 
+      socket.current.emit("new-user-add", sellerId);
+    }
+
+    const handleNewOrderNotification = ({ sellerId: receivedSellerId, orderDetails }) => {
+      if (receivedSellerId === sellerId) {
+        // Only add notification if it doesn't already exist
+        const isNewNotification = !notificationsRef.current.some(
+          notification => notification.id === orderDetails.id
+        );
+
+        if (isNewNotification) {
+          notificationsRef.current = [...notificationsRef.current, orderDetails];
+          setNotifications([...notificationsRef.current]); // Update notifications state to trigger re-render
+        }
+      }
+    };
+
+    socket.current.on("receive-order-notification", handleNewOrderNotification);
 
     return () => {
-      socket.off('receive-order-notification');
+      socket.current.off("receive-order-notification", handleNewOrderNotification);
+      socket.current.disconnect();
+      socket.current = null; 
     };
-  }, []);
+  }, [sellerId]);
+
+  console.log(notifications);
 
   return (
     <div className="relative inline-flex">
@@ -55,7 +76,6 @@ function DropdownNotifications({ align }) {
       >
         <span className="sr-only">Notifications</span>
         <MdNotifications className="w-5 h-5 text-gray-800 dark:text-gray-100" />
-        {/* Conditionally render the red dot if there are notifications */}
         {notifications.length > 0 && (
           <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-gray-100 dark:border-gray-900 rounded-full"></div>
         )}

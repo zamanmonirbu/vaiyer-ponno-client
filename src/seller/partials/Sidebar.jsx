@@ -7,6 +7,9 @@ import { useDispatch } from "react-redux";
 import { clearSellerState } from "../../actions/sellerActions";
 import { removeCookie } from "../../actions/cookieUtils";
 import { FaStore, FaStoreAlt } from "react-icons/fa";
+// import { CiDeliveryTruck } from "react-icons/ci";
+import { CiDeliveryTruck } from "react-icons/ci";
+
 
 function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   const location = useLocation();
@@ -235,9 +238,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
               </SidebarLinkGroup>
 
               {/* Store  */}
-              <SidebarLinkGroup
-                activecondition={pathname.includes("store")}
-              >
+              <SidebarLinkGroup activecondition={pathname.includes("store")}>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -270,11 +271,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                             >
                               <path d="M6.5 1a2.5 2.5 0 0 0-2.5 2.5V6h-1V4a3.5 3.5 0 0 1 7 0v2h-1V3.5A2.5 2.5 0 0 0 6.5 1zM5 2.5A1.5 1.5 0 1 1 6.5 4 1.5 1.5 0 0 1 5 2.5zM9 6h3v2H9V6z" />
                             </svg> */}
-                            <FaStore className={`shrink-0 fill-current ${
+                            <FaStore
+                              className={`shrink-0 fill-current ${
                                 pathname.includes("store")
                                   ? "text-violet-500"
                                   : "text-gray-400 dark:text-gray-500"
-                              }`}/>
+                              }`}
+                            />
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                               Store Management
                             </span>
@@ -356,7 +359,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <svg
+                            {/* <svg
                               className={`shrink-0 fill-current ${pathname.includes("ecommerce") ? "text-violet-500" : "text-gray-400 dark:text-gray-500"}`}
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
@@ -364,9 +367,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                               viewBox="0 0 16 16"
                             >
                               <path d="M9 6.855A3.502 3.502 0 0 0 8 0a3.5 3.5 0 0 0-1 6.855v1.656L5.534 9.65a3.5 3.5 0 1 0 1.229 1.578L8 10.267l1.238.962a3.5 3.5 0 1 0 1.229-1.578L9 8.511V6.855ZM6.5 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm4.803 8.095c.005-.005.01-.01.013-.016l.012-.016a1.5 1.5 0 1 1-.025.032ZM3.5 11c.474 0 .897.22 1.171.563l.013.016.013.017A1.5 1.5 0 1 1 3.5 11Z" />
-                            </svg>
+                            </svg> */}
+                            <CiDeliveryTruck className={`shrink-0 w-6 h-6 fill-current ${pathname.includes("ecommerce") ? "text-violet-500" : "text-gray-400 dark:text-gray-500"}`}/>
+
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              E-Commerce
+                              Orders
                             </span>
                           </div>
 
@@ -385,7 +390,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/seller/dashboard/orders"
+                              to="/seller/request/orders"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " +
                                 (isActive
@@ -394,10 +399,76 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Orders
+                                Request Orders
                               </span>
                             </NavLink>
                           </li>
+                          <li className="mb-1 last:mb-0">
+                            <NavLink
+                              end
+                              to="/seller/accept/orders"
+                              className={({ isActive }) =>
+                                "block transition duration-150 truncate " +
+                                (isActive
+                                  ? "text-violet-500"
+                                  : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                              }
+                            >
+                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                Accept Orders
+                              </span>
+                            </NavLink>
+                          </li>
+                          <li className="mb-1 last:mb-0">
+                            <NavLink
+                              end
+                              to="/seller/cancel/orders"
+                              className={({ isActive }) =>
+                                "block transition duration-150 truncate " +
+                                (isActive
+                                  ? "text-violet-500"
+                                  : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                              }
+                            >
+                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                Cancel Orders
+                              </span>
+                            </NavLink>
+                          </li>
+
+                          <li className="mb-1 last:mb-0">
+                            <NavLink
+                              end
+                              to="/seller/sent/curriar/orders"
+                              className={({ isActive }) =>
+                                "block transition duration-150 truncate " +
+                                (isActive
+                                  ? "text-violet-500"
+                                  : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                              }
+                            >
+                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                Sent to Curriar
+                              </span>
+                            </NavLink>
+                          </li>
+                          <li className="mb-1 last:mb-0">
+                            <NavLink
+                              end
+                              to="/seller/complete/orders"
+                              className={({ isActive }) =>
+                                "block transition duration-150 truncate " +
+                                (isActive
+                                  ? "text-violet-500"
+                                  : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                              }
+                            >
+                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                Complete Orders
+                              </span>
+                            </NavLink>
+                          </li>
+
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
@@ -414,7 +485,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                               </span>
                             </NavLink>
                           </li>
-                         
                         </ul>
                       </div>
                     </React.Fragment>

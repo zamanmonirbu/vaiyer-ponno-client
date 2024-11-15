@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS
 import AllNavSections from "../Nav/AllNavSections";
 
+
 const SellerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +19,8 @@ const SellerLogin = () => {
     dispatch(loginSeller({ email, password }));
   };
 
+  console.log(seller?.seller?.id)
+
   // Use useEffect to show success and error notifications
   useEffect(() => {
     if (seller?.token) {
@@ -25,8 +28,13 @@ const SellerLogin = () => {
         position: "bottom-right",
         autoClose: 5000,
       });
+
+      
+
       navigate("/seller/dashboard/test"); // Navigate to dashboard on success
     }
+
+
 
     if (error) {
       toast.error(error, {

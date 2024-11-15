@@ -55,6 +55,21 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+// Add a request interceptor to attach the token to outgoing requests
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Get the access token using the getCookie function
+    const token = getCookie('courierToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`; // Attach the token to the headers
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Add a response interceptor to handle 401 Unauthorized errors
 axiosInstance.interceptors.response.use(
   (response) => {

@@ -1,4 +1,4 @@
-import { PAYMENT_REQUEST, PAYMENT_SUCCESS, PAYMENT_FAILURE,COD_REQUEST, COD_SUCCESS, COD_FAILURE } from "../actions/actionTypes";
+import { PAYMENT_REQUEST, PAYMENT_SUCCESS, PAYMENT_FAILURE,COD_REQUEST, COD_SUCCESS, COD_FAILURE,COD_CLEAR } from "../actions/actionTypes";
 
 const initialState = {
   loading: false,
@@ -34,6 +34,9 @@ export const codReducer = (state = initialState, action) => {
 
     case COD_FAILURE:
       return { ...state, loading: false, success: false, error: action.payload };
+
+    case COD_CLEAR:
+      return { ...initialState };
 
     default:
       return state;
