@@ -54,17 +54,17 @@ const DashboardDeliveryMan = ({ children }) => {
           </button>
           {showOrders && (
             <div className="ml-8 space-y-1">
-              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+              <a href="/deliveryMan/dashboard/product/request" className="block px-4 py-2 hover:bg-gray-700">
                 Pending Orders
               </a>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+              <a href="/deliveryMan/dashboard/accept/deliveries" className="block px-4 py-2 hover:bg-gray-700">
                 Assigned Orders
               </a>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                Completed Orders
-              </a>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+              <a href="/deliveryMan/dashboard/unable/deliveries" className="block px-4 py-2 hover:bg-gray-700">
                 Cancelled Orders
+              </a>
+              <a href="/deliveryMan/dashboard/completed/deliveries" className="block px-4 py-2 hover:bg-gray-700">
+                Completed Orders
               </a>
             </div>
           )}

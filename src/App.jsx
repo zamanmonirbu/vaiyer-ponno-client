@@ -51,6 +51,10 @@ import SellerOrdersToCourier from "./courier/Utils/SellerOrdersToCourier";
 import AcceptOrders from "./courier/Utils/AcceptOrders";
 import RejectOrders from "./courier/Utils/RejectOrders";
 import DeliveryManList from "./courier/Utils/DeliveryManList";
+import DeliveryAssignments from "./DeliveryMan/utilsDeliveryMan/DeliveryAssignments";
+import CompletedDeliveries from "./DeliveryMan/utilsDeliveryMan/CompletedDeliveries";
+import AcceptedDeliveries from "./DeliveryMan/utilsDeliveryMan/AcceptedDeliveries";
+import UnableToDeliver from "./DeliveryMan/utilsDeliveryMan/UnableToDeliver";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -88,6 +92,54 @@ function App() {
           deliveryManInfo ? (
             <DashboardDeliveryMan>
               <ViewHello />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/product/request"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <DeliveryAssignments deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/accept/deliveries"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <AcceptedDeliveries deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/completed/deliveries"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <CompletedDeliveries deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/unable/deliveries"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <UnableToDeliver deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
             </DashboardDeliveryMan>
           ) : (
             <Navigate to="/courier/login" />

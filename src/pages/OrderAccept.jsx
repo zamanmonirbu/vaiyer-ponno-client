@@ -11,10 +11,8 @@ const AcceptedOrders = ({ seller }) => {
   const sellerId = seller?._id;
   const dispatch = useDispatch();
 
-  // Redux States
   const { specificOrder, loading, error } = useSelector((state) => state.orders);
-  const { couriers = [] } = useSelector((state) => state.courier); // Default to empty array
-
+  const { couriers = [] } = useSelector((state) => state.courier); 
   const [selectedCourier, setSelectedCourier] = useState({});
 
   // Fetch couriers on mount

@@ -26,35 +26,36 @@ import courierReducer from "./reducers/courierReducers";
 import vehicleTypeReducer from "./reducers/vehicleTypeReducer";
 import deliveryManReducer from "./reducers/deliveryManReducers";
 import { sellerOrderToCourierReducer } from "./reducers/sellerOrderToCourierReducer";
+import { courierToDeliveryManReducer } from "./reducers/courierToDeliveryManReducer";
 
 const rootReducer = combineReducers({
-  commentCreate: commentCreateReducer,
-  commentList: commentListReducer,
+  sellerOrderToCourier: sellerOrderToCourierReducer,
+  courierToDeliveryMan: courierToDeliveryManReducer,
   commentUpdate: commentUpdateReducer,
   commentDelete: commentDeleteReducer,
+  commentCreate: commentCreateReducer,
   notifications: notificationReducer,
-  sellerOrderToCourier: sellerOrderToCourierReducer,
-  deliveryMan:deliveryManReducer,
+  commentList: commentListReducer,
+  deliveryMan: deliveryManReducer,
   offerBanner: offerBannerReducer,
   videoUpload: videoUploadReducer,
   vehicleType: vehicleTypeReducer,
-  courier: courierReducer,
   categories: categoryReducer,
   galleryItems: galleryReducer,
   location: locationReducer,
+  courier: courierReducer,
   payment: paymentReducer,
   product: productReducer,
   seller: sellerReducer,
   banner: bannerReducer,
-  orders: orderReducer,
   search: searchReducer,
+  orders: orderReducer,
   tasks: taskReducer,
   chat: chatReducer,
   user: userReducer,
   cart: cartReducer,
   cod: codReducer,
   adminReducer,
-
 });
 
 export default rootReducer;

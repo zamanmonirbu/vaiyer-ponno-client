@@ -15,6 +15,15 @@ import {
   DELIVERYMAN_LIST_REQUEST,
   DELIVERYMAN_LIST_SUCCESS,
   DELIVERYMAN_LIST_FAIL,
+  FETCH_ASSIGNED_ORDERS_REQUEST,
+  FETCH_ASSIGNED_ORDERS_SUCCESS,
+  FETCH_ASSIGNED_ORDERS_FAILURE,
+  FETCH_REJECTED_ORDERS_REQUEST,
+  FETCH_REJECTED_ORDERS_SUCCESS,
+  FETCH_REJECTED_ORDERS_FAILURE,
+  FETCH_DELIVERED_ORDERS_REQUEST,
+  FETCH_DELIVERED_ORDERS_SUCCESS,
+  FETCH_DELIVERED_ORDERS_FAILURE,
 } from "./actionTypes";
 import axiosInstance from "../api/axiosInstance";
 import { setCookie } from "./cookieUtils";
@@ -136,6 +145,57 @@ export const fetchDeliveryMenByCourier = (courierId) => async (dispatch) => {
     dispatch({
       type: DELIVERYMAN_LIST_FAIL,
       payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+
+
+
+// Fetch assigned orders
+export const fetchAssignedOrders = (deliveryManId) => async (dispatch) => {
+  try {
+    dispatch({ type: FETCH_ASSIGNED_ORDERS_REQUEST });
+
+    const { data } = await axiosInstance.get(`/api/courierToDeliveryMan/assignments/${deliveryManId}`);
+    console.log("accepted",data);
+    dispatch({ type: FETCH_ASSIGNED_ORDERS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: FETCH_ASSIGNED_ORDERS_FAILURE,
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
+
+// Fetch rejected orders
+export const fetchRejectedOrders = (deliveryManId) => async (dispatch) => {
+  try {
+    dispatch({ type: FETCH_REJECTED_ORDERS_REQUEST });
+
+    const { data } = await axiosInstance.get(`/api/courierToDeliveryMan/rejections/${deliveryManId}`);
+    console.log("Rejected",data);
+    dispatch({ type: FETCH_REJECTED_ORDERS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: FETCH_REJECTED_ORDERS_FAILURE,
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
+
+// Fetch delivered orders
+export const fetchDeliveredOrders = (deliveryManId) => async (dispatch) => {
+  try {
+    dispatch({ type: FETCH_DELIVERED_ORDERS_REQUEST });
+
+    const { data } = await axiosInstance.get(`/api/courierToDeliveryMan/deliveries/${deliveryManId}`);
+    console.log("Completed",data);
+
+    dispatch({ type: FETCH_DELIVERED_ORDERS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: FETCH_DELIVERED_ORDERS_FAILURE,
+      payload: error.response?.data.message || error.message,
     });
   }
 };

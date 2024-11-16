@@ -2,40 +2,31 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptOrder } from "../../actions/sellerOrderToCourierActions";
 import { fetchDeliveryMenByCourier } from "../../actions/DeliveryManActions";
-import axiosInstance from "../../api/axiosInstance";
+import { assignOrder } from "../../actions/courierToDeliveryManActions"; // Import the assignOrder action
 
-const AcceptOrders = ({courierId}) => {
+const AcceptOrders = ({ courierId }) => {
   const dispatch = useDispatch();
 
   const { orders = [], loading, error } = useSelector(
     (state) => state.sellerOrderToCourier
   );
 
-  const { deliveryMen = [] } = useSelector(
-    (state) => state.deliveryMan
-  ); // Global delivery men list from Redux
+  const { deliveryMen = [] } = useSelector((state) => state.deliveryMan); // Global delivery men list from Redux
 
   const [selectedDeliveryMen, setSelectedDeliveryMen] = useState({}); // Store selected delivery man for each order
+  const [notes, setNotes] = useState({}); // Store notes for each order
 
-  console.log(deliveryMen)
+  console.log(deliveryMen);
 
   useEffect(() => {
     dispatch(acceptOrder()); // Fetch accepted orders
     dispatch(fetchDeliveryMenByCourier(courierId)); // Fetch all delivery men once
-  }, [dispatch,courierId]);
+  }, [dispatch, courierId]);
 
   // Handle assigning an order to a delivery man
-  const assignToDeliveryMan = async (orderId, deliveryManId) => {
-    try {
-      await axiosInstance.post(`/api/courierToDeliveryMan`, {
-        orderId,
-        deliveryManId,
-      });
-      alert("Order successfully assigned to delivery man!");
-    } catch (error) {
-      console.error("Failed to assign order:", error);
-      alert("Failed to assign order to delivery man.");
-    }
+  const handleAssignOrder = (orderId, deliveryManId) => {
+    const note = notes[orderId] || ""; // Get the note for the specific order
+    dispatch(assignOrder({ orderId, deliveryManId, courierId, note })); // Dispatch the action with the note
   };
 
   return (
@@ -73,7 +64,7 @@ const AcceptOrders = ({courierId}) => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-col space-y-2">
                   {/* Dropdown for all delivery men */}
                   <select
                     onChange={(e) =>
@@ -88,24 +79,36 @@ const AcceptOrders = ({courierId}) => {
                     <option value="">Select Delivery Man</option>
                     {deliveryMen.map((man) => (
                       <option key={man._id} value={man._id}>
-                        {man.firstName} {man?.vehicleType?.name} (Phone: {man.phone})
+                        {man.firstName}{" "}
+                        <span className="font-bold">{man?.vehicleType?.name}</span> (Phone:{" "}
+                        {man.phone})
                       </option>
                     ))}
                   </select>
-                  {/* Button to assign order */}
-                  <button
-                    onClick={() =>
-                      assignToDeliveryMan(
-                        order._id,
-                        selectedDeliveryMen[order._id]
-                      )
+
+                  {/* Input field for notes */}
+                  <input
+                    type="text"
+                    placeholder="Add notes for delivery (optional)"
+                    value={notes[order._id] || ""}
+                    onChange={(e) =>
+                      setNotes((prev) => ({
+                        ...prev,
+                        [order._id]: e.target.value,
+                      }))
                     }
-                    disabled={!selectedDeliveryMen[order._id]}
-                    className="px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 disabled:bg-gray-400"
-                  >
-                    Assign
-                  </button>
+                    className="w-full border rounded-md p-2"
+                  />
                 </div>
+                <button
+                  onClick={() =>
+                    handleAssignOrder(order._id, selectedDeliveryMen[order._id])
+                  }
+                  disabled={!selectedDeliveryMen[order._id]}
+                  className="mt-4 px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 disabled:bg-gray-400"
+                >
+                  Assign
+                </button>
               </li>
             ))}
           </ul>
