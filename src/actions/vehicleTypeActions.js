@@ -42,7 +42,7 @@ export const getAllVehicleTypes = () => async (dispatch) => {
     dispatch({ type: VEHICLETYPE_GET_ALL_REQUEST });
 
     const { data } = await axiosInstance.get('/api/vehicleTypes/');
-
+// console.log(data)
     dispatch({
       type: VEHICLETYPE_GET_ALL_SUCCESS,
       payload: data,

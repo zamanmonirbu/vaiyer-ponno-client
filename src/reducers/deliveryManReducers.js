@@ -12,6 +12,9 @@ import {
     DELIVERYMAN_UPDATE_PROFILE_REQUEST,
     DELIVERYMAN_UPDATE_PROFILE_SUCCESS,
     DELIVERYMAN_UPDATE_PROFILE_FAIL,
+    DELIVERYMAN_LIST_REQUEST,
+  DELIVERYMAN_LIST_SUCCESS,
+  DELIVERYMAN_LIST_FAIL,
   } from "../actions/actionTypes";
   
   const deliveryManInitialState = {
@@ -20,6 +23,8 @@ import {
     profile: null,
     success: false,
     error: null,
+    deliveryMen: [],
+
   };
   
   const deliveryManReducer = (state = deliveryManInitialState, action) => {
@@ -51,6 +56,14 @@ import {
         return { ...state, loading: false, profile: action.payload, success: true, error: null };
       case DELIVERYMAN_UPDATE_PROFILE_FAIL:
         return { ...state, loading: false, error: action.payload, success: false };
+
+        case DELIVERYMAN_LIST_REQUEST:
+          return { ...state, loading: true, error: null }; // reset error on request
+        case DELIVERYMAN_LIST_SUCCESS:
+          return { ...state, loading: false, deliveryMen: action.payload, error: null };
+        case DELIVERYMAN_LIST_FAIL:
+          return { ...state, loading: false, error: action.payload, deliveryMen: [] };
+        
   
       case DELIVERYMAN_CLEAR:
         return { ...deliveryManInitialState }; // reset all state to initial

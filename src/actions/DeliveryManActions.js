@@ -12,6 +12,9 @@ import {
   DELIVERYMAN_UPDATE_PROFILE_SUCCESS,
   DELIVERYMAN_UPDATE_PROFILE_FAIL,
   DELIVERYMAN_CLEAR,
+  DELIVERYMAN_LIST_REQUEST,
+  DELIVERYMAN_LIST_SUCCESS,
+  DELIVERYMAN_LIST_FAIL,
 } from "./actionTypes";
 import axiosInstance from "../api/axiosInstance";
 import { setCookie } from "./cookieUtils";
@@ -114,4 +117,25 @@ export const clearDeliveryManData = () => (dispatch) => {
   setCookie("deliveryManAuth", "", -1);
   setCookie("deliveryManToken", "", -1);
   dispatch({ type: DELIVERYMAN_CLEAR });
+};
+
+
+// Fetch all Delivery Men by Courier ID Action
+export const fetchDeliveryMenByCourier = (courierId) => async (dispatch) => {
+  try {
+    dispatch({ type: DELIVERYMAN_LIST_REQUEST });
+
+    // API call to get delivery men by courier ID
+    const { data } = await axiosInstance.get(`/api/deliveryman/all/${courierId}`);
+
+    dispatch({
+      type: DELIVERYMAN_LIST_SUCCESS,
+      payload: data, // array of delivery men
+    });
+  } catch (error) {
+    dispatch({
+      type: DELIVERYMAN_LIST_FAIL,
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
 };

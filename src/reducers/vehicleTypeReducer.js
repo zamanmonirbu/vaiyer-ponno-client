@@ -38,6 +38,7 @@ import {
         return { ...state, loading: false, success: true, vehicleType: action.payload };
   
       case VEHICLETYPE_GET_ALL_SUCCESS:
+        console.log(action.payload)
         return { ...state, loading: false, vehicleTypes: action.payload };
   
       case VEHICLETYPE_GET_BY_ID_SUCCESS:

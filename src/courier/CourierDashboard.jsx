@@ -51,13 +51,13 @@ const CourierDashboard = ({ children }) => {
               </button>
               {showOrders && (
                 <div className="ml-6 space-y-1 text-gray-400">
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                  <a href="/courier/dashboard/seller/request" className="block px-4 py-2 hover:bg-gray-700">
                     Request Orders
                   </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                  <a href="/courier/dashboard/seller/accept" className="block px-4 py-2 hover:bg-gray-700">
                     Accept Orders
                   </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-700">
+                  <a href="/courier/dashboard/seller/reject" className="block px-4 py-2 hover:bg-gray-700">
                     Cancel Orders
                   </a>
                   <a href="#" className="block px-4 py-2 hover:bg-gray-700">
@@ -90,7 +90,7 @@ const CourierDashboard = ({ children }) => {
               <a href="/courier/dashboard/vehicle-types" className="block px-4 py-2 hover:bg-gray-700">
                 Vehicle Types
               </a>
-              <a href="/courier/dashboard/delivery-men" className="block px-4 py-2 hover:bg-gray-700">
+              <a href="/courier/dashboard/delivery/man/list" className="block px-4 py-2 hover:bg-gray-700">
                 Delivery Men
               </a>
             </div>

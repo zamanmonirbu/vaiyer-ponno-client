@@ -47,6 +47,10 @@ import DeliveryManLogin from "./DeliveryMan/utilsDeliveryMan/DeliveryManLogin";
 import DeliveryManRegister from "./DeliveryMan/utilsDeliveryMan/DeliveryManRegister";
 import ViewHello from "./DeliveryMan/utilsDeliveryMan/ViewHello";
 import DashboardDeliveryMan from "./DeliveryMan/DashbordDeliveryMan";
+import SellerOrdersToCourier from "./courier/Utils/SellerOrdersToCourier";
+import AcceptOrders from "./courier/Utils/AcceptOrders";
+import RejectOrders from "./courier/Utils/RejectOrders";
+import DeliveryManList from "./courier/Utils/DeliveryManList";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -83,7 +87,7 @@ function App() {
         element={
           deliveryManInfo ? (
             <DashboardDeliveryMan>
-              <ViewHello/>
+              <ViewHello />
             </DashboardDeliveryMan>
           ) : (
             <Navigate to="/courier/login" />
@@ -115,6 +119,59 @@ function App() {
           courierInfo ? (
             <CourierDashboard>
               <HomeViewDefault />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/seller/request"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              {/* <HomeViewDefault /> */}
+              <SellerOrdersToCourier />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/seller/accept"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <AcceptOrders courierId={courierInfo._id}/>
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/seller/reject"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <RejectOrders />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/delivery/man/list"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <DeliveryManList courierId={courierInfo._id} />
             </CourierDashboard>
           ) : (
             <Navigate to="/courier/login" />

@@ -25,6 +25,7 @@ import { videoUploadReducer } from "./reducers/videoUploadReducer";
 import courierReducer from "./reducers/courierReducers";
 import vehicleTypeReducer from "./reducers/vehicleTypeReducer";
 import deliveryManReducer from "./reducers/deliveryManReducers";
+import { sellerOrderToCourierReducer } from "./reducers/sellerOrderToCourierReducer";
 
 const rootReducer = combineReducers({
   commentCreate: commentCreateReducer,
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   commentUpdate: commentUpdateReducer,
   commentDelete: commentDeleteReducer,
   notifications: notificationReducer,
+  sellerOrderToCourier: sellerOrderToCourierReducer,
   deliveryMan:deliveryManReducer,
   offerBanner: offerBannerReducer,
   videoUpload: videoUploadReducer,

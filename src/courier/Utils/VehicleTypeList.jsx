@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
 import {
   createVehicleType,
   getAllVehicleTypes,
@@ -9,20 +10,22 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const VehicleTypeList = ({admin}) => {
-  const adminId=admin._id;
+const VehicleTypeList = ({ admin }) => {
+  const adminId = admin._id;
+
+  // console.log(adminId)
   const dispatch = useDispatch();
-  const { vehicleTypes,vehicleType, loading, error } = useSelector(
+  const { vehicleTypes, vehicleType, loading, error } = useSelector(
     (state) => state.vehicleType
   );
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [editId, setEditId] = useState(null); 
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     dispatch(getAllVehicleTypes());
-  }, [dispatch,vehicleType]);
+  }, [dispatch, vehicleType]);
 
   useEffect(() => {
     if (error) {
@@ -33,7 +36,7 @@ const VehicleTypeList = ({admin}) => {
   // Handle form submission (Create or Update)
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newVehicleType = { name, description,adminId };
+    const newVehicleType = { name, description, adminId };
 
     if (editId) {
       dispatch(updateVehicleType(editId, newVehicleType));
@@ -109,15 +112,15 @@ const VehicleTypeList = ({admin}) => {
               loading
                 ? "bg-blue-300 cursor-not-allowed"
                 : editId
-                ? "bg-yellow-500 hover:bg-yellow-600"
-                : "bg-[#303f52] hover:bg-[#1F2937]"
+                  ? "bg-yellow-500 hover:bg-yellow-600"
+                  : "bg-[#303f52] hover:bg-[#1F2937]"
             }`}
           >
             {loading
               ? "Processing..."
               : editId
-              ? "Update Vehicle Type"
-              : "Create Vehicle Type"}
+                ? "Update Vehicle Type"
+                : "Create Vehicle Type"}
           </button>
         </form>
 
@@ -153,5 +156,13 @@ const VehicleTypeList = ({admin}) => {
     </div>
   );
 };
+
+
+VehicleTypeList.propTypes = {
+  admin: PropTypes.shape({
+    _id: PropTypes.string.isRequired, // Ensure `admin._id` is a required string
+  }).isRequired,
+};
+
 
 export default VehicleTypeList;
