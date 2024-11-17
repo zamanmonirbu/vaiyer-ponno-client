@@ -61,7 +61,7 @@ const SellerOrders = ({ seller }) => {
               className="border border-gray-300 p-4 rounded-lg shadow-md bg-white transition-transform transform hover:scale-105"
             >
               <p className="text-lg font-semibold mb-2">
-                Order ID: <span className="text-blue-500">{order.tran_id}</span>
+                Order ID: <span className="text-blue-500">{order._id}</span>
               </p>
 
               {/* Customer Details */}

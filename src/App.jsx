@@ -66,247 +66,30 @@ function App() {
 
   return (
     <Routes>
-      {/* Public Routes */}
       <Route
-        path="/deliveryman/login"
+        path="/seller/login"
         element={
-          <MainLayout>
-            {/* <CourierLogin /> */}
-            <DeliveryManLogin />
-          </MainLayout>
+          <AuthLayout>
+            <SellerLogin />
+          </AuthLayout>
         }
       />
       <Route
-        path="/deliveryman/register"
+        path="/seller/register"
         element={
-          <MainLayout>
-            {/* <CourierLogin /> */}
-            <DeliveryManRegister />
-          </MainLayout>
-        }
-      />
-
-      <Route
-        path="/deliveryMan/dashboard"
-        element={
-          deliveryManInfo ? (
-            <DashboardDeliveryMan>
-              <ViewHello />
-            </DashboardDeliveryMan>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
+          <AuthLayout>
+            <SellerRegister />
+          </AuthLayout>
         }
       />
       <Route
-        path="/deliveryMan/dashboard/product/request"
+        path="/admin/login"
         element={
-          deliveryManInfo ? (
-            <DashboardDeliveryMan>
-              <DeliveryAssignments deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
-            </DashboardDeliveryMan>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
+          <AuthLayout>
+            <AdminLogin />
+          </AuthLayout>
         }
       />
-      <Route
-        path="/deliveryMan/dashboard/accept/deliveries"
-        element={
-          deliveryManInfo ? (
-            <DashboardDeliveryMan>
-              <AcceptedDeliveries deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
-            </DashboardDeliveryMan>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-      <Route
-        path="/deliveryMan/dashboard/completed/deliveries"
-        element={
-          deliveryManInfo ? (
-            <DashboardDeliveryMan>
-              <CompletedDeliveries deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
-            </DashboardDeliveryMan>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-      <Route
-        path="/deliveryMan/dashboard/unable/deliveries"
-        element={
-          deliveryManInfo ? (
-            <DashboardDeliveryMan>
-              <UnableToDeliver deliveryManId={deliveryManInfo?.deliveryMan?._id}/>
-            </DashboardDeliveryMan>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/login"
-        element={
-          <MainLayout>
-            <CourierLogin />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/courier/register"
-        element={
-          <MainLayout>
-            <CourierRegister />
-          </MainLayout>
-        }
-      />
-
-      {/* Courier Dashboard */}
-      <Route
-        path="/courier/dashboard"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <HomeViewDefault />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/dashboard/seller/request"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <SellerOrdersToCourier courierId={courierInfo._id}/>
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/dashboard/seller/accept"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <AcceptOrders courierId={courierInfo._id}/>
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/dashboard/seller/reject"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <RejectOrders />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/dashboard/delivery/man/list"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <DeliveryManList courierId={courierInfo._id} />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      {/* Courier Profile */}
-      <Route
-        path="/courier/profile"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <CourierProfile admin={courierInfo} />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-      <Route
-        path="/courier/dashboard/vehicle-types"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <VehicleTypeList admin={courierInfo} />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/dashboard/courier/task"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <CourierTask seller={courierInfo} />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      {/* <Route
-        path="/courier/orders/sent-to-courier"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <OrdersSentToCourier />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      /> */}
-
-      {/*    <Route
-        path="/courier/orders/handed-to-delivery"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <OrdersHandedToDeliveryMan />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />
-
-      <Route
-        path="/courier/orders/completed"
-        element={
-          courierInfo ? (
-            <CourierDashboard>
-              <OrdersCompleted />
-            </CourierDashboard>
-          ) : (
-            <Navigate to="/courier/login" />
-          )
-        }
-      />  */}
 
       <Route
         path="/"
@@ -314,19 +97,6 @@ function App() {
           <MainLayout>
             <PageLayout />
           </MainLayout>
-        }
-      />
-
-      <Route
-        path="/c-s/chat/box"
-        element={
-          currentUser ? (
-            <MainLayout>
-              <Chat />
-            </MainLayout>
-          ) : (
-            <Navigate to="/user/login" />
-          )
         }
       />
 
@@ -469,18 +239,6 @@ function App() {
           </MainLayout>
         }
       />
-      <Route
-        path="/c-s/chat/box"
-        element={
-          currentUser ? (
-            <MainLayout>
-              <Chat />
-            </MainLayout>
-          ) : (
-            <Navigate to="/user/login" />
-          )
-        }
-      />
 
       {/* Auth Routes */}
       <Route
@@ -501,30 +259,6 @@ function App() {
               <UserRegister />
             </AuthLayout>
           )
-        }
-      />
-      <Route
-        path="/seller/login"
-        element={
-          <AuthLayout>
-            <SellerLogin />
-          </AuthLayout>
-        }
-      />
-      <Route
-        path="/seller/register"
-        element={
-          <AuthLayout>
-            <SellerRegister />
-          </AuthLayout>
-        }
-      />
-      <Route
-        path="/admin/login"
-        element={
-          <AuthLayout>
-            <AdminLogin />
-          </AuthLayout>
         }
       />
 
@@ -565,6 +299,20 @@ function App() {
           )
         }
       />
+
+      <Route
+        path="/c-s/chat/box"
+        element={
+          currentUser ? (
+            <MainLayout>
+              <Chat />
+            </MainLayout>
+          ) : (
+            <Navigate to="/user/login" />
+          )
+        }
+      />
+
       <Route
         path="/payment/success/:orderId"
         element={
@@ -620,6 +368,217 @@ function App() {
             <AdminMain />
           ) : (
             <Navigate to="/admin/login" state={{ from: location }} />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/login"
+        element={
+          <MainLayout>
+            <CourierLogin />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/courier/register"
+        element={
+          <MainLayout>
+            <CourierRegister />
+          </MainLayout>
+        }
+      />
+
+      {/* Courier Dashboard */}
+      <Route
+        path="/courier/dashboard"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <HomeViewDefault />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/seller/request"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <SellerOrdersToCourier courierId={courierInfo._id} />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/seller/accept"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <AcceptOrders courierId={courierInfo._id} />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/seller/reject"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <RejectOrders />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/delivery/man/list"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <DeliveryManList courierId={courierInfo._id} />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      {/* Courier Profile */}
+      <Route
+        path="/courier/profile"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <CourierProfile admin={courierInfo} />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/courier/dashboard/vehicle-types"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <VehicleTypeList admin={courierInfo} />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/courier/dashboard/courier/task"
+        element={
+          courierInfo ? (
+            <CourierDashboard>
+              <CourierTask seller={courierInfo} />
+            </CourierDashboard>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+
+      {/* Public Routes */}
+      <Route
+        path="/deliveryman/login"
+        element={
+          <MainLayout>
+            {/* <CourierLogin /> */}
+            <DeliveryManLogin />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/deliveryman/register"
+        element={
+          <MainLayout>
+            {/* <CourierLogin /> */}
+            <DeliveryManRegister />
+          </MainLayout>
+        }
+      />
+
+      <Route
+        path="/deliveryMan/dashboard"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <ViewHello />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/product/request"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <DeliveryAssignments
+                deliveryManId={deliveryManInfo?.deliveryMan?._id}
+              />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/accept/deliveries"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <AcceptedDeliveries
+                deliveryManId={deliveryManInfo?.deliveryMan?._id}
+              />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/completed/deliveries"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <CompletedDeliveries
+                deliveryManId={deliveryManInfo?.deliveryMan?._id}
+              />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
+      <Route
+        path="/deliveryMan/dashboard/unable/deliveries"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <UnableToDeliver
+                deliveryManId={deliveryManInfo?.deliveryMan?._id}
+              />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
           )
         }
       />

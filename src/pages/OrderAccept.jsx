@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getOrderAsAccepted,
@@ -114,4 +115,9 @@ const AcceptedOrders = ({ seller }) => {
   );
 };
 
+
+// Add PropTypes for validation
+AcceptedOrders.propTypes = {
+  seller: PropTypes.string.isRequired, // Validate courierId is a required string
+};
 export default AcceptedOrders;

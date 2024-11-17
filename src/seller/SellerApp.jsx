@@ -16,7 +16,6 @@ import CreateStore from "../components/Seller/CreateStore";
 import ViewStores from "../components/Seller/ViewStores";
 import StoreDetails from "../components/Seller/StoreDetails";
 import AddProduct from "../components/Seller/AddProduct";
-import { io } from "socket.io-client";
 import OrderNotification from "./components/OrderNotification";
 import OrderAccept from "../pages/OrderAccept";
 import OrderSentToCourier from "../pages/OrderSentToCourier";

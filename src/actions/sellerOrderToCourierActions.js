@@ -11,19 +11,18 @@ import {
   DELETE_ORDER_REQUEST,
   GET_REJECT_ORDER_SUCCESS,
   DELETE_ORDER_FAIL,
-  
 } from "./actionTypes";
 import axiosInstance from "../api/axiosInstance";
-
-const BASE_URL = "/api/sellerOrderToCourier";
 
 // Fetch all seller orders to couriers
 export const getSellerOrdersToCourier = (courierId) => async (dispatch) => {
   try {
     dispatch({ type: SELLER_ORDER_TO_COURIER_REQUEST });
 
-    const { data } = await axiosInstance.get(`${BASE_URL}/request/${courierId}`);
-    console.log(data)
+    const { data } = await axiosInstance.get(
+      `/api/sellerOrderToCourier/request/${courierId}`
+    );
+    console.log(data);
     dispatch({
       type: SELLER_ORDER_TO_COURIER_SUCCESS,
       payload: data,
@@ -41,7 +40,10 @@ export const createSellerOrderToCourier = (entry) => async (dispatch) => {
   try {
     dispatch({ type: SELLER_ORDER_TO_COURIER_REQUEST });
 
-    const { data } = await axiosInstance.post(`${BASE_URL}`, entry);
+    const { data } = await axiosInstance.post(
+      `/api/sellerOrderToCourier`,
+      entry
+    );
     dispatch({
       type: SELLER_ORDER_TO_COURIER_CREATE,
       payload: data,
@@ -57,12 +59,16 @@ export const createSellerOrderToCourier = (entry) => async (dispatch) => {
 // Update an existing seller order to courier entry
 export const updateSellerOrderToCourier =
   (dId, actionType) => async (dispatch) => {
+    console.log(dId, actionType)
     try {
       dispatch({ type: SELLER_ORDER_TO_COURIER_REQUEST });
 
-      const { data } = await axiosInstance.put(`${BASE_URL}/${dId}`, {
-        actionType,
-      });
+      const { data } = await axiosInstance.put(
+        `/api/sellerOrderToCourier/upadate/accept/order/${dId}`,
+        {
+          actionType,
+        }
+      );
       dispatch({
         type: SELLER_ORDER_TO_COURIER_UPDATE,
         payload: data,
@@ -80,7 +86,7 @@ export const deleteSellerOrderToCourier = (id) => async (dispatch) => {
   try {
     dispatch({ type: SELLER_ORDER_TO_COURIER_REQUEST });
 
-    await axiosInstance.delete(`${BASE_URL}/${id}`);
+    await axiosInstance.delete(`/api/sellerOrderToCourier/${id}`);
     dispatch({
       type: SELLER_ORDER_TO_COURIER_DELETE,
       payload: id,
@@ -98,7 +104,9 @@ export const acceptOrder = (courierId) => async (dispatch) => {
   try {
     dispatch({ type: ACCEPT_ORDER_REQUEST });
 
-    const { data } = await axiosInstance.get(`${BASE_URL}/accept/by/courier/${courierId}`);
+    const { data } = await axiosInstance.get(
+      `/api/sellerOrderToCourier/accept/by/courier/${courierId}`
+    );
     // console.log(data)
     dispatch({
       type: GET_ACCEPT_ORDER_SUCCESS,
@@ -117,7 +125,9 @@ export const deleteOrder = () => async (dispatch) => {
   try {
     dispatch({ type: DELETE_ORDER_REQUEST });
 
-   const {data}= await axiosInstance.get(`${BASE_URL}/reject/by/courier`);
+    const { data } = await axiosInstance.get(
+      `/api/sellerOrderToCourier/reject/by/courier`
+    );
     dispatch({
       type: GET_REJECT_ORDER_SUCCESS,
       payload: data,

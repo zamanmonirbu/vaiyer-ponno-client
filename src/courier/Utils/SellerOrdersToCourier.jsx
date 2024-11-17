@@ -1,16 +1,20 @@
+import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSellerOrdersToCourier, updateSellerOrderToCourier } from "../../actions/sellerOrderToCourierActions";
+import {
+  getSellerOrdersToCourier,
+  updateSellerOrderToCourier,
+} from "../../actions/sellerOrderToCourierActions";
 
-const SellerOrdersToCourier = ({courierId}) => {
+const SellerOrdersToCourier = ({ courierId }) => {
   const dispatch = useDispatch();
-  const { sellerOrdersToCourier=[], loading, error } = useSelector(
+  const { sellerOrdersToCourier = [], loading, error } = useSelector(
     (state) => state.sellerOrderToCourier
   );
 
   useEffect(() => {
     dispatch(getSellerOrdersToCourier(courierId));
-  }, [dispatch,courierId]);
+  }, [dispatch, courierId]);
 
   // Handle Accept or Reject of an order
   const handleStatusChange = (dId, actionType) => {
@@ -21,18 +25,21 @@ const SellerOrdersToCourier = ({courierId}) => {
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
       <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-          Seller Orders to Courier
+          Seller Orders to Courier requests
         </h1>
 
         {loading ? (
           <div className="flex justify-center items-center">
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-blue-600 rounded-full" role="status">
+            <div
+              className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-blue-600 rounded-full"
+              role="status"
+            >
               <span className="sr-only">Loading...</span>
             </div>
           </div>
         ) : error ? (
           <div className="text-red-500 text-center">{error}</div>
-        ) : sellerOrdersToCourier.length > 0 ? ( // Check if orders exist
+        ) : sellerOrdersToCourier.length > 0 ? (
           <div>
             <ul className="space-y-4">
               {sellerOrdersToCourier.map((entry) => (
@@ -41,10 +48,17 @@ const SellerOrdersToCourier = ({courierId}) => {
                   className="flex items-center justify-between p-4 border rounded-md shadow-sm bg-gray-50"
                 >
                   <div className="text-gray-700">
-                    <p className="font-semibold">Order ID: {entry.orderId.tran_id}</p>
-                    <p className="text-sm text-gray-600">Courier: {entry.courierId.name}</p>
-                    <p className="text-sm text-gray-600">Status: 
-                      {entry.isAccept ? "Accepted" : entry.isReject ? "Rejected" : "Pending"}
+                    <p className="font-semibold">Order ID: {entry.orderId._id}</p>
+                    <p className="text-sm text-gray-600">
+                      Courier: {entry.courierId.name}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Status:{" "}
+                      {entry.isAccept
+                        ? "Accepted"
+                        : entry.isReject
+                        ? "Rejected"
+                        : "Pending"}
                     </p>
                   </div>
                   <div className="flex space-x-2">
@@ -70,7 +84,6 @@ const SellerOrdersToCourier = ({courierId}) => {
             </ul>
           </div>
         ) : (
-          // If no orders are found
           <div className="text-gray-600 text-center text-lg font-medium">
             No orders found.
           </div>
@@ -78,6 +91,11 @@ const SellerOrdersToCourier = ({courierId}) => {
       </div>
     </div>
   );
+};
+
+// Add PropTypes for validation
+SellerOrdersToCourier.propTypes = {
+  courierId: PropTypes.string.isRequired, // Validate courierId is a required string
 };
 
 export default SellerOrdersToCourier;

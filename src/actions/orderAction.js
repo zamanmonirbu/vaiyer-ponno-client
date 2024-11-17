@@ -98,6 +98,7 @@ export const markOrderAsAccepted = (orderId) => async (dispatch) => {
 
 // get Order as Sent to Courier
 export const markOrderAsSentToCourier = (orderId, courierId) => async (dispatch) => {
+  console.log("Sent to cuorier",orderId, courierId)
   try {
     dispatch({ type: ORDER_REQUEST });
     const { data } = await axiosInstance.put(
@@ -124,6 +125,7 @@ export const markOrderAsHandedToDeliveryMan = (orderId) => async (dispatch) => {
 
 // get Order as Completed
 export const markOrderAsCompleted = (orderId) => async (dispatch) => {
+  // console.log(orderId)
   try {
     dispatch({ type: ORDER_REQUEST });
     const { data } = await axiosInstance.put(`/api/orders/${orderId}/complete`);

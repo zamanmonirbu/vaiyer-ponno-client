@@ -9,6 +9,7 @@ import { removeCookie, getCookie } from "../../actions/cookieUtils";
 import { fetchOrdersByUserId } from "../../actions/orderAction";
 import { uploadImageToImgBB } from "../../actions/imageService";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa"; // Import the icons
+import OrderProgress from "./OrderProgress";
 
 const UserDashboard = () => {
   const dispatch = useDispatch();
@@ -93,8 +94,8 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="max-w-md bg-gray-100 shadow-xl rounded-lg overflow-hidden my-4 p-6">
+    <div>
+      <div className="mx-auto bg-gray-100 shadow-xl rounded-lg overflow-hidden my-4 p-6">
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
@@ -270,8 +271,8 @@ const UserDashboard = () => {
       </div>
 
       {/* Orders List */}
-      <div className="w-full mx-4 my-4">
-        <h2 className="text-2xl font-bold mb-4">Your Orders</h2>
+      <div className="mx-4 my-4">
+        <h2 className="text-2xl font-bold my-6 text-center">My Orders</h2>
         <table className="table-auto w-full border border-gray-300">
           <thead>
             <tr>
@@ -284,7 +285,7 @@ const UserDashboard = () => {
               <th className="border px-4 py-2">Unit Price</th>
               <th className="border px-4 py-2">Total Price</th>
               <th className="border px-4 py-2">Payment Status</th>
-              <th className="border px-4 py-2">Delivery Status</th>
+              <th className="border px-4 py-2 min-w-64">Order Progress</th>
             </tr>
           </thead>
           <tbody>
@@ -292,7 +293,7 @@ const UserDashboard = () => {
               userOrders.map((order, index) => (
                 <tr key={order._id}>
                   <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4 py-2">{order.tran_id}</td>
+                  <td className="border px-4 py-2">{order._id}</td>
                   <td className="border px-4 py-2">
                     {new Date(order.createdAt).toLocaleDateString()}{" "}
                     {/* Display formatted Order Date */}
@@ -326,7 +327,8 @@ const UserDashboard = () => {
                     )}
                   </td>
                   <td className="border px-4 py-2">
-                    {order.status ? (
+                    <OrderProgress order={order}/>
+                    {/* {order.status ? (
                       <span className="text-green-500 flex items-center">
                         <FaCheckCircle className="mr-1" /> Completed
                       </span>
@@ -334,7 +336,7 @@ const UserDashboard = () => {
                       <span className="text-red-500 flex items-center">
                         <FaTimesCircle className="mr-1" /> Cash on Delivery
                       </span>
-                    )}
+                    )} */}
                   </td>
                 </tr>
               ))
