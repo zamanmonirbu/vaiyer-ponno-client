@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptOrder } from "../../actions/sellerOrderToCourierActions";
-import { fetchDeliveryMenByCourier } from "../../actions/DeliveryManActions";
-import { assignOrder } from "../../actions/courierToDeliveryManActions"; // Import the assignOrder action
+
+import { assignOrder, fetchDeliveryMenByCourier } from "../../actions/courierToDeliveryManActions"; // Import the assignOrder action
 
 const AcceptOrders = ({ courierId }) => {
   const dispatch = useDispatch();
@@ -24,9 +24,11 @@ const AcceptOrders = ({ courierId }) => {
   }, [dispatch, courierId]);
 
   // Handle assigning an order to a delivery man
-  const handleAssignOrder = (orderId, deliveryManId) => {
+  const handleAssignOrder = (orderId, deliveryManId,mainOrderId) => {
     const note = notes[orderId] || ""; // Get the note for the specific order
-    dispatch(assignOrder({ orderId, deliveryManId, courierId, note })); // Dispatch the action with the note
+
+    // console.log(orderId, deliveryManId, courierId, note,mainOrderId)
+    dispatch(assignOrder({ orderId, deliveryManId, courierId, note,mainOrderId })); // Dispatch the action with the note
   };
 
   return (
@@ -102,7 +104,7 @@ const AcceptOrders = ({ courierId }) => {
                 </div>
                 <button
                   onClick={() =>
-                    handleAssignOrder(order._id, selectedDeliveryMen[order._id])
+                    handleAssignOrder(order._id, selectedDeliveryMen[order._id],order?.orderId?._id)
                   }
                   disabled={!selectedDeliveryMen[order._id]}
                   className="mt-4 px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 disabled:bg-gray-400"

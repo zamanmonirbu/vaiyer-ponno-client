@@ -6,8 +6,10 @@ const DeliveryAssignments = ({ deliveryManId }) => {
   const dispatch = useDispatch();
 
   const { assignments = [], loading, error } = useSelector(
-    (state) => state.courierToDeliveryMan
+    (state) => state.deliveryMan
   );
+
+  console.log(assignments)
 
   // Fetch assignments on component mount
   useEffect(() => {

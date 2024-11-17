@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerDeliveryMan } from "../../actions/DeliveryManActions";
 import { getAllCouriers } from "../../actions/courierActions";
 import { getAllVehicleTypes } from "../../actions/vehicleTypeActions";
 import { toast,ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
+import { registerDeliveryMan } from "../../actions/courierToDeliveryManActions";
 
 const DeliveryManRegister = () => {
   const dispatch = useDispatch();

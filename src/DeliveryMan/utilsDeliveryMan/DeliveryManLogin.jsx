@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
-import { loginDeliveryMan } from "../../actions/DeliveryManActions";
+// import { loginDeliveryMan } from "../../actions/DeliveryManActions";
 import { toast, ToastContainer } from "react-toastify"; // Import Toastify
 import "react-toastify/dist/ReactToastify.css"; // Import styles for Toastify
+import { loginDeliveryMan } from "../../actions/courierToDeliveryManActions";
+
 
 const DeliveryManLogin = () => {
   const dispatch = useDispatch();

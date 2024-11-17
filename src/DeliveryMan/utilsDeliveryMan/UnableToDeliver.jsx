@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchRejectedOrders } from "../../actions/DeliveryManActions";
+import { fetchRejectedOrders } from "../../actions/courierToDeliveryManActions";
+
 
 const UnableToDeliver = ({ deliveryManId }) => {
   const dispatch = useDispatch();
 
-  const { loading, rejections=[], error } = useSelector((state) => state.courierToDeliveryMan);
+  const { loading, rejections=[], error } = useSelector((state) => state.deliveryMan);
 
   useEffect(() => {
     dispatch(fetchRejectedOrders(deliveryManId));

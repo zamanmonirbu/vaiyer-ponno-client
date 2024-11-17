@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDeliveryMenByCourier } from "../../actions/DeliveryManActions";
+import { fetchDeliveryMenByCourier } from "../../actions/courierToDeliveryManActions";
 
 
 const DeliveryManList = ({ courierId }) => {

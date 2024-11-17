@@ -8,7 +8,8 @@ import { BsArrowRightCircle } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi"; // Importing Logout icon
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearDeliveryManData } from "../actions/DeliveryManActions";
+import { clearDeliveryManData } from "../actions/courierToDeliveryManActions";
+
 
 const DashboardDeliveryMan = ({ children }) => {
   const [showDashboard, setShowDashboard] = useState(false);

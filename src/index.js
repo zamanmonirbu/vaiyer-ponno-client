@@ -24,13 +24,15 @@ import taskReducer from "./reducers/taskReducer";
 import { videoUploadReducer } from "./reducers/videoUploadReducer";
 import courierReducer from "./reducers/courierReducers";
 import vehicleTypeReducer from "./reducers/vehicleTypeReducer";
-import deliveryManReducer from "./reducers/deliveryManReducers";
 import { sellerOrderToCourierReducer } from "./reducers/sellerOrderToCourierReducer";
-import { courierToDeliveryManReducer } from "./reducers/courierToDeliveryManReducer";
+import deliveryManReducer from "./reducers/courierToDeliveryManReducer";
+
+
+
 
 const rootReducer = combineReducers({
   sellerOrderToCourier: sellerOrderToCourierReducer,
-  courierToDeliveryMan: courierToDeliveryManReducer,
+  // courierToDeliveryMan: courierToDeliveryManReducer,
   commentUpdate: commentUpdateReducer,
   commentDelete: commentDeleteReducer,
   commentCreate: commentCreateReducer,
