@@ -40,7 +40,7 @@ const CourierDashboard = ({ children }) => {
               className={`ml-auto transition-transform ${showStoreManagement ? "rotate-90" : ""}`}
             />
           </button>
-          {showStoreManagement && (
+          {/* {showStoreManagement && (
             <div className="ml-8 space-y-1">
               <button
                 className="flex items-center px-4 py-2 w-full text-left hover:bg-gray-700"
@@ -48,8 +48,8 @@ const CourierDashboard = ({ children }) => {
               >
                 <AiOutlineUnorderedList className="mr-3" />
                 Orders
-              </button>
-              {showOrders && (
+              </button> */}
+              {showStoreManagement && (
                 <div className="ml-6 space-y-1 text-gray-400">
                   <a href="/courier/dashboard/seller/request" className="block px-4 py-2 hover:bg-gray-700">
                     Request Orders
@@ -71,15 +71,15 @@ const CourierDashboard = ({ children }) => {
                   </a>
                 </div>
               )}
-            </div>
-          )}
+            {/* </div> */}
+          {/* )} */}
 
           {/* Manage Deliveries */}
           <button
             className="flex items-center px-4 py-2 w-full text-left hover:bg-gray-700"
             onClick={() => setShowManageDeliveries(!showManageDeliveries)}
           >
-            <CiDeliveryTruck className="mr-3 h-6 w-6" />
+            <AiOutlineUnorderedList className="mr-3" />
             Manage Deliveries
             <BsArrowRightCircle
               className={`ml-auto transition-transform ${showManageDeliveries ? "rotate-90" : ""}`}

@@ -23,12 +23,13 @@ export const assignOrder = (data) => async (dispatch) => {
     dispatch({ type: ASSIGN_ORDER_REQUEST });
 
     const response = await axiosInstance.post(`/api/courierToDeliveryMan`, data);
-
+console.log(response.data);
     dispatch({
       type: ASSIGN_ORDER_SUCCESS,
       payload: response.data,
     });
   } catch (error) {
+    console.log(error)
     dispatch({
       type: ASSIGN_ORDER_FAIL,
       payload: error.response?.data?.message || error.message,

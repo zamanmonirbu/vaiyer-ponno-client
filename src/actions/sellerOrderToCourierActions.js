@@ -18,11 +18,12 @@ import axiosInstance from "../api/axiosInstance";
 const BASE_URL = "/api/sellerOrderToCourier";
 
 // Fetch all seller orders to couriers
-export const getSellerOrdersToCourier = () => async (dispatch) => {
+export const getSellerOrdersToCourier = (courierId) => async (dispatch) => {
   try {
     dispatch({ type: SELLER_ORDER_TO_COURIER_REQUEST });
 
-    const { data } = await axiosInstance.get(`${BASE_URL}`);
+    const { data } = await axiosInstance.get(`${BASE_URL}/request/${courierId}`);
+    console.log(data)
     dispatch({
       type: SELLER_ORDER_TO_COURIER_SUCCESS,
       payload: data,
@@ -93,11 +94,11 @@ export const deleteSellerOrderToCourier = (id) => async (dispatch) => {
 };
 
 // Accept an order
-export const acceptOrder = () => async (dispatch) => {
+export const acceptOrder = (courierId) => async (dispatch) => {
   try {
     dispatch({ type: ACCEPT_ORDER_REQUEST });
 
-    const { data } = await axiosInstance.get(`${BASE_URL}/accept/by/courier`);
+    const { data } = await axiosInstance.get(`${BASE_URL}/accept/by/courier/${courierId}`);
     // console.log(data)
     dispatch({
       type: GET_ACCEPT_ORDER_SUCCESS,

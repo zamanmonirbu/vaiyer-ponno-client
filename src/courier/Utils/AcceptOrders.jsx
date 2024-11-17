@@ -16,10 +16,10 @@ const AcceptOrders = ({ courierId }) => {
   const [selectedDeliveryMen, setSelectedDeliveryMen] = useState({}); // Store selected delivery man for each order
   const [notes, setNotes] = useState({}); // Store notes for each order
 
-  console.log(deliveryMen);
+  console.log(deliveryMen,orders);
 
   useEffect(() => {
-    dispatch(acceptOrder()); // Fetch accepted orders
+    dispatch(acceptOrder(courierId)); // Fetch accepted orders
     dispatch(fetchDeliveryMenByCourier(courierId)); // Fetch all delivery men once
   }, [dispatch, courierId]);
 
@@ -58,7 +58,7 @@ const AcceptOrders = ({ courierId }) => {
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-semibold">Order ID: {order.orderId.tran_id}</p>
+                    <p className="font-semibold">Order ID: {order.orderId._id}</p>
                     <p className="text-sm text-gray-600">
                       Courier: {order.courierId.name}
                     </p>

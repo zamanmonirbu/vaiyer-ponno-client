@@ -183,8 +183,7 @@ function App() {
         element={
           courierInfo ? (
             <CourierDashboard>
-              {/* <HomeViewDefault /> */}
-              <SellerOrdersToCourier />
+              <SellerOrdersToCourier courierId={courierInfo._id}/>
             </CourierDashboard>
           ) : (
             <Navigate to="/courier/login" />

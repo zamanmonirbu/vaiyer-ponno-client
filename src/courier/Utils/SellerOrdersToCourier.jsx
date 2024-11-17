@@ -2,15 +2,15 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSellerOrdersToCourier, updateSellerOrderToCourier } from "../../actions/sellerOrderToCourierActions";
 
-const SellerOrdersToCourier = () => {
+const SellerOrdersToCourier = ({courierId}) => {
   const dispatch = useDispatch();
   const { sellerOrdersToCourier=[], loading, error } = useSelector(
     (state) => state.sellerOrderToCourier
   );
 
   useEffect(() => {
-    dispatch(getSellerOrdersToCourier());
-  }, [dispatch]);
+    dispatch(getSellerOrdersToCourier(courierId));
+  }, [dispatch,courierId]);
 
   // Handle Accept or Reject of an order
   const handleStatusChange = (dId, actionType) => {
