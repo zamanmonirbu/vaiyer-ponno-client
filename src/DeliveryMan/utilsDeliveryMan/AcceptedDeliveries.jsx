@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAssignedOrders } from "../../actions/courierToDeliveryManActions";
@@ -10,14 +10,12 @@ const AcceptedDeliveries = ({ deliveryManId }) => {
   const { loading, assignments = [], error } = useSelector((state) => state.deliveryMan);
   const { specificOrder } = useSelector((state) => state.orders); // Track order completion
 
-  console.log(assignments)
-
   useEffect(() => {
     dispatch(fetchAssignedOrders(deliveryManId));
-  }, [dispatch, deliveryManId, specificOrder]); // Refresh assignments on completion
+  }, [dispatch, deliveryManId, specificOrder]);
 
   const handleCompleteDelivery = (orderId) => {
-    dispatch(markOrderAsCompleted(orderId)); // Dispatch complete order action
+    dispatch(markOrderAsCompleted(orderId));
   };
 
   return (
@@ -30,21 +28,21 @@ const AcceptedDeliveries = ({ deliveryManId }) => {
         </div>
       ) : error ? (
         <p className="text-red-500">Error: {error}</p>
-      ) : assignments.length === 0 ? (
+      ) : !Array.isArray(assignments) || assignments.length === 0 ? (
         <p>No accepted deliveries yet.</p>
       ) : (
         <ul className="space-y-4">
           {assignments.map((delivery) => (
             <li key={delivery._id} className="p-4 bg-white shadow rounded-md">
-              {/* Order Details */}
               <p className="font-bold">Order ID: {delivery?.orderId?._id}</p>
               <p>Delivery Notes: {delivery?.notes || "No notes provided"}</p>
               <p>
-                Total Amount: <span className="font-semibold">BDT {delivery?.orderId?.totalAmount}</span>
+                Total Amount:{" "}
+                <span className="font-semibold">BDT {delivery?.orderId?.totalAmount}</span>
               </p>
               <p>
                 Products:{" "}
-                {delivery?.orderId?.products.map((product) => (
+                {delivery?.orderId?.products?.map((product) => (
                   <span key={product.productId}>
                     {product.productName} (Qty: {product.qty})
                   </span>
@@ -52,7 +50,6 @@ const AcceptedDeliveries = ({ deliveryManId }) => {
               </p>
               <hr className="my-2" />
 
-              {/* Customer Details */}
               <h3 className="font-bold text-lg">Customer Details:</h3>
               <p>Name: {delivery?.orderId?.customerName}</p>
               <p>Email: {delivery?.orderId?.customerEmail}</p>
@@ -60,14 +57,12 @@ const AcceptedDeliveries = ({ deliveryManId }) => {
               <p>Address: {delivery?.orderId?.customerAddress}</p>
               <hr className="my-2" />
 
-              {/* Courier Details */}
               <h3 className="font-bold text-lg">Courier Details:</h3>
               <p>Courier: {delivery?.courierId?.name}</p>
               <p>Phone: {delivery?.courierId?.phone}</p>
               <p>Address: {delivery?.courierId?.address}</p>
               <hr className="my-2" />
 
-              {/* Complete Delivery Button */}
               <button
                 onClick={() => handleCompleteDelivery(delivery?.orderId?._id)}
                 className="bg-green-500 text-white px-4 py-2 rounded mt-4 hover:bg-green-600"
