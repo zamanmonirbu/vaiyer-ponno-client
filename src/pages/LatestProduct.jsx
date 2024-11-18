@@ -27,14 +27,13 @@ const LatestProduct = () => {
       }
     };
 
-
     // console.log( userLat,userLng)
     fetchLocation();
     dispatch(getProducts());
   }, [dispatch]);
 
   const calculateDistance = (lat1, lng1, lat2, lng2) => {
-    if (!lat1 || !lng1 || !lat2 || !lng2) return 'Location unavailable';
+    if (!lat1 || !lng1 || !lat2 || !lng2) return "Location unavailable";
 
     const R = 6371; // Radius of Earth in km
     const dLat = ((lat2 - lat1) * Math.PI) / 180;

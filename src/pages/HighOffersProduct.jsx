@@ -48,7 +48,9 @@ const HighOffersProduct = () => {
   useEffect(() => {
     if (offerBanners.length > 0) {
       const interval = setInterval(() => {
-        setCurrentBanner((prevBanner) => (prevBanner + 1) % offerBanners.length);
+        setCurrentBanner(
+          (prevBanner) => (prevBanner + 1) % offerBanners.length
+        );
       }, 3000); // Change banner every 3 seconds
 
       return () => clearInterval(interval); // Clean up the interval on unmount
@@ -56,11 +58,16 @@ const HighOffersProduct = () => {
   }, [offerBanners]);
 
   const handleNextProduct = () => {
-    setCurrentProduct((prevProduct) => (prevProduct + 1) % highOfferProducts.length);
+    setCurrentProduct(
+      (prevProduct) => (prevProduct + 1) % highOfferProducts.length
+    );
   };
 
   const handlePrevProduct = () => {
-    setCurrentProduct((prevProduct) => (prevProduct - 1 + highOfferProducts.length) % highOfferProducts.length);
+    setCurrentProduct(
+      (prevProduct) =>
+        (prevProduct - 1 + highOfferProducts.length) % highOfferProducts.length
+    );
   };
 
   // Helper function to calculate distance
@@ -73,8 +80,10 @@ const HighOffersProduct = () => {
 
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return (R * c).toFixed(1); // Return distance in km with 1 decimal
@@ -88,7 +97,6 @@ const HighOffersProduct = () => {
       </h3>
       <div className="flex flex-col md:flex-row">
         <div className="flex w-full p-4 space-x-0 md:space-x-4">
-          {/* Left Side: Rotating Banner */}
           <div className="w-full md:w-1/5 h-64 relative">
             {bannerLoading ? (
               <div className="flex justify-center items-center h-full">
@@ -109,7 +117,6 @@ const HighOffersProduct = () => {
             )}
           </div>
 
-          {/* Right Side: Offered Products */}
           <div className="w-full md:w-4/5 relative">
             {productLoading ? (
               <div className="flex justify-center items-center h-full">
@@ -161,12 +168,12 @@ const HighOffersProduct = () => {
                           <span className="text-sm text-green-600 mb-1">
                             $
                             {Math.round(
-                              product.unitPrice - product.unitPrice * (product.offer / 100)
+                              product.unitPrice -
+                                product.unitPrice * (product.offer / 100)
                             )}{" "}
                             with {product.offer}% off
                           </span>
 
-                          {/* Display distance if available */}
                           {distance && (
                             <div className="text-sm text-gray-500 flex items-center justify-center space-x-2 mt-2">
                               <div className="flex items-center justify-center w-6 h-6 bg-teal-500 text-white rounded-full shadow-md">
@@ -182,19 +189,19 @@ const HighOffersProduct = () => {
                     );
                   })}
                 </div>
-                {/* Previous Button */}
+
                 <button
                   onClick={handlePrevProduct}
                   className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-500 bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full mr-8"
                 >
-                  &#8249; {/* Left-pointing triangle */}
+                  &#8249;
                 </button>
-                {/* Next Button */}
+
                 <button
                   onClick={handleNextProduct}
                   className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-500 bg-opacity-50 hover:bg-opacity-100 p-2 rounded-full"
                 >
-                  &#8250; {/* Right-pointing triangle */}
+                  &#8250;
                 </button>
               </div>
             )}

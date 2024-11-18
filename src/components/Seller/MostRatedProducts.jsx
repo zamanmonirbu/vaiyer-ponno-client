@@ -37,9 +37,11 @@ const MostRatedProducts = () => {
     });
   }, [dispatch]);
 
-  const { mostRatedProducts, loading, error } = useSelector(
-    (state) => state.product
-  );
+  const {
+    mostRatedProducts = [],
+    loading,
+    error,
+  } = useSelector((state) => state.product);
 
   if (loading)
     return (
@@ -69,7 +71,6 @@ const MostRatedProducts = () => {
   return (
     <div>
       <div className="relative">
-        {/* <StrikeLine /> */}
         <h3 className="font-bold mb-4 text-2xl text-center">
           <span className="text-yellow-400">Most Rated </span>Product Details
         </h3>

@@ -96,7 +96,7 @@ const ProductSearch = ({ active, handleClick }) => {
       >
         <h2 className="text-xl font-bold mb-4">All Categories</h2>
         <ul>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <li
               key={category._id}
               className="py-2 px-4 hover:bg-gray-200 cursor-pointer"

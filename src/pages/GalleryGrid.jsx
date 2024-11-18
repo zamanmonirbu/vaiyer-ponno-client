@@ -5,7 +5,7 @@ import { fetchGalleryItems } from "../actions/galleryActions";
 
 const GalleryGrid = () => {
   const dispatch = useDispatch();
-  const galleryItems = useSelector((state) => state.galleryItems.galleryItems);
+  const { galleryItems = [] } = useSelector((state) => state.galleryItems);
 
   useEffect(() => {
     dispatch(fetchGalleryItems());
