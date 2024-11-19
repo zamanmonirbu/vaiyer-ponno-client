@@ -80,7 +80,7 @@ const DashboardDeliveryMan = ({ children }) => {
           </a>
           {/* Profile Link */}
           <a
-            href="/deliveryman/profile"
+            href="/deliveryMan/dashboard/profile"
             className="flex items-center px-4 py-2 hover:bg-gray-700"
           >
             <RiUser3Line className="mr-3" />

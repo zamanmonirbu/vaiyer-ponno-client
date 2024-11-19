@@ -3,14 +3,11 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { uploadImageToImgBB } from "../../actions/imageService";
 import { updateSeller } from "../../actions/sellerActions";
-import { FaImage } from "react-icons/fa"; // Ensure you import FaImage
-import { FaStar } from 'react-icons/fa';
-
+import { FaImage, FaStar } from "react-icons/fa";
 
 const SellerProfile = ({ seller }) => {
   const dispatch = useDispatch();
 
-  // Local state for editing
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ ...seller });
   const [imageUrl, setImageUrl] = useState(seller.img);
@@ -23,15 +20,8 @@ const SellerProfile = ({ seller }) => {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Generate a 9-digit random number
-      const randomNineDigitNumber = Math.floor(
-        100000000 + Math.random() * 900000000
-      );
-
-      // Construct a new image name with the random number and original file name
+      const randomNineDigitNumber = Math.floor(100000000 + Math.random() * 900000000);
       const newImageName = `${randomNineDigitNumber}-${file.name}`;
-
-      // Upload image with new image name
       const uploadedUrl = await uploadImageToImgBB(file, newImageName);
       if (uploadedUrl) setImageUrl(uploadedUrl);
       else alert("Image upload failed. Please try again.");
@@ -41,179 +31,159 @@ const SellerProfile = ({ seller }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateSeller(seller._id, { ...formData, img: imageUrl }));
-    setIsEditing(false); // Close the edit mode after submission
+    setIsEditing(false);
   };
 
   return (
-    <div className="w-full mx-auto p-6 border border-gray-300 rounded-lg shadow-lg bg-white">
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md border border-gray-200">
       {isEditing ? (
-        <form onSubmit={handleSubmit}>
-          <h2 className="text-2xl font-semibold text-center">
-            Edit Seller Info
-          </h2>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full p-2 mt-4 border border-gray-300 rounded"
-            placeholder="Name"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full p-2 mt-4 border border-gray-300 rounded"
-            placeholder="Email"
-            required
-          />
-          <input
-            type="text"
-            name="mobile"
-            value={formData.mobile}
-            onChange={handleChange}
-            className="w-full p-2 mt-4 border border-gray-300 rounded"
-            placeholder="Mobile"
-            required
-          />
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full p-2 mt-4 border border-gray-300 rounded"
-            placeholder="Address"
-            required
-          />
-          <textarea
-            name="about"
-            value={formData.about}
-            onChange={handleChange}
-            className="w-full p-2 mt-4 border border-gray-300 rounded"
-            placeholder="About"
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-2xl font-bold text-gray-700 text-center">Edit Seller Info</h2>
+          <div className="space-y-2">
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+              placeholder="Name"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+              placeholder="Email"
+              required
+            />
+            <input
+              type="text"
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+              placeholder="Mobile"
+              required
+            />
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+              placeholder="Address"
+              required
+            />
+            <textarea
+              name="about"
+              value={formData.about}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+              placeholder="About"
+              rows="3"
+              required
+            />
+          </div>
 
-          {/* New Image Upload Section */}
-          <div className="mt-4">
-            <label className="flex items-center cursor-pointer px-4 py-2 border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100">
-              <FaImage className="mr-2" size={20} color="#3498db" />
-              Upload New Image
+          <div className="flex items-center space-x-3">
+            <label className="cursor-pointer text-blue-600 flex items-center">
+              <FaImage size={20} className="mr-2" />
+              <span>Upload New Image</span>
               <input
                 type="file"
                 onChange={handleImageUpload}
-                className="hidden" // Hide the default file input
-                accept="image/*" // Restrict file types to images
+                className="hidden"
+                accept="image/*"
               />
             </label>
           </div>
 
           <button
             type="submit"
-            className="mt-4 w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600"
+            className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600"
           >
             Save Changes
           </button>
         </form>
       ) : (
-        <>
-          <div className="relative mb-4">
-            {/* Cover photo */}
+        <div className="space-y-6">
+          <div className="relative">
             <img
-              src={seller.img} // Use seller's image as the cover photo
+              src={seller.img}
               alt={`${seller.name}'s cover`}
-              className="w-full h-48 rounded-lg object-cover"
+              className="w-full h-60 object-cover rounded-lg"
             />
-            <div className="absolute top-32 left-1/2 transform -translate-x-1/2">
-              {/* Avatar */}
+            <div className="absolute top-40 left-1/2 transform -translate-x-1/2">
               <img
                 src={imageUrl}
                 alt={`${seller.name}'s avatar`}
-                className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+                className="w-28 h-28 rounded-full border-4 border-white shadow-md"
               />
             </div>
           </div>
-
-          <h2 className="text-2xl font-semibold text-center mt-8">
-            {seller.name}
-          </h2>
-
-          {/* Seller Info Table */}
-          <table className="w-full mt-4 border-collapse border border-gray-300">
-            <tbody>
-              <tr>
-                <td className="border border-gray-300 p-2">
-                  <strong>Email:</strong>
-                </td>
-                <td className="border border-gray-300 p-2">{seller.email}</td>
-              </tr>
-              <tr>
-                <td className="border border-gray-300 p-2">
-                  <strong>Mobile:</strong>
-                </td>
-                <td className="border border-gray-300 p-2">{seller.mobile}</td>
-              </tr>
-              <tr>
-                <td className="border border-gray-300 p-2">
-                  <strong>Address:</strong>
-                </td>
-                <td className="border border-gray-300 p-2">{seller.address}</td>
-              </tr>
-              <tr>
-                <td className="border border-gray-300 p-2">
-                  <strong>About:</strong>
-                </td>
-                <td className="border border-gray-300 p-2">{seller.about}</td>
-              </tr>
-
-              <tr>
-                <td className="border border-gray-300 p-2">
-                  <strong>Star Rating:</strong>
-                </td>
-                <td className="border border-gray-300 p-2 flex items-center">
-                  {seller.star}
-                  <FaStar className="text-yellow-500 ml-1" /> {/* Star icon */}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3 className="mt-4 text-lg font-semibold">Account Numbers</h3>
-          <ul className="list-disc list-inside mt-2">
-            {seller.accountNumbers.map((account, index) => (
-              <li key={index}>
-                {account.name}: {account.number}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-4">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-bold text-gray-800">{seller.name}</h2>
+            <p className="text-gray-600 text-sm">{seller.about}</p>
+          </div>
+          <div className="space-y-4">
+            <table className="w-full text-left border-collapse">
+              <tbody>
+                <tr className="border-b">
+                  <td className="py-2 font-semibold text-gray-600">Email</td>
+                  <td className="py-2">{seller.email}</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2 font-semibold text-gray-600">Mobile</td>
+                  <td className="py-2">{seller.mobile}</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2 font-semibold text-gray-600">Address</td>
+                  <td className="py-2">{seller.address}</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2 font-semibold text-gray-600">Rating</td>
+                  <td className="py-2 flex items-center">
+                    {seller.star}
+                    <FaStar className="text-yellow-400 ml-2" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div>
+              <h3 className="font-semibold text-gray-600">Account Numbers:</h3>
+              <ul className="list-disc pl-6">
+                {seller.accountNumbers.map((account, index) => (
+                  <li key={index} className="text-gray-700">
+                    {account.name}: {account.number}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="text-center">
             <a
               href={seller.video}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 underline hover:text-blue-600"
             >
               Watch Video
             </a>
           </div>
-
-          {/* Edit Button */}
           <button
             onClick={() => setIsEditing(true)}
-            className="mt-4 w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600"
+            className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600"
           >
-            Edit
+            Edit Profile
           </button>
-        </>
+        </div>
       )}
     </div>
   );
 };
 
-// Prop validation
 SellerProfile.propTypes = {
   seller: PropTypes.shape({
     name: PropTypes.string.isRequired,

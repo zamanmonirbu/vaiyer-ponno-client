@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaTruck } from "react-icons/fa";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import ImageUpload from "./ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
 import { getCourierProfileById, updateCourierProfile } from "../../actions/courierActions";
@@ -14,12 +14,10 @@ const CourierProfile = ({ admin }) => {
     dispatch(getCourierProfileById(adminId));
   }, [dispatch, adminId]);
 
-  // Local state for editable fields
   const [formData, setFormData] = useState({
     email: profile?.email || "",
     phone: profile?.phone || "",
     address: profile?.address || "",
-    vehicleType: profile?.vehicleType || "",
   });
 
   const [image, setImageUrl] = useState(null);
@@ -30,7 +28,6 @@ const CourierProfile = ({ admin }) => {
         email: profile.email,
         phone: profile.phone,
         address: profile.address,
-        vehicleType: profile.vehicleType,
       });
     }
   }, [profile]);
@@ -51,77 +48,84 @@ const CourierProfile = ({ admin }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 shadow-md rounded bg-white">
-      <div>
-        <img src={profile?.image} alt="AdminImage" className="rounded-full w-32 h-32 mx-auto" />
+    <div className="max-w-lg mx-auto p-8 shadow-lg rounded-lg bg-gradient-to-r from-white to-blue-50">
+      <div className="text-center">
+        {/* Profile Image */}
+        <div className="relative w-32 h-32 mx-auto">
+          <img
+            src={
+              profile?.image ||
+              "https://via.placeholder.com/150?text=No+Image"
+            }
+            alt="Admin Profile"
+            className="w-full h-full rounded-full border-4 border-blue-500 shadow-md object-cover"
+          />
+        </div>
+        <h2 className="text-2xl font-semibold text-gray-800 mt-4">
+          {profile?.name || "Courier Profile"}
+        </h2>
+        <p className="text-sm text-gray-500">{profile?.email}</p>
       </div>
-      <h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-        {profile?.name || "Courier Profile"}
-      </h2>
 
-      {/* Profile Image Upload */}
-      <ImageUpload onImageUpload={handleImageUpload} />
-      {image && (
-        <img
-          src={image}
-          alt="Profile"
-          className="w-32 h-32 mx-auto rounded-full mb-4"
-        />
-      )}
+      {/* Image Upload */}
+      <div className="mt-6">
+        <ImageUpload onImageUpload={handleImageUpload} />
+        {image && (
+          <img
+            src={image}
+            alt="Uploaded Preview"
+            className="w-20 h-20 mx-auto rounded-full mt-4 shadow-sm"
+          />
+        )}
+      </div>
 
-      <div className="space-y-4">
+      {/* Profile Details */}
+      <div className="mt-6 space-y-6">
         {/* Email */}
-        <div className="flex items-center space-x-3">
-          <FaEnvelope className="text-gray-600" />
+        <div className="flex items-center bg-white shadow-sm p-4 rounded-lg space-x-3">
+          <FaEnvelope className="text-blue-500" />
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className="text-gray-700 font-medium bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
+            className="flex-1 border-none bg-transparent text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            placeholder="Enter email"
           />
         </div>
 
         {/* Phone */}
-        <div className="flex items-center space-x-3">
-          <FaPhone className="text-gray-600" />
+        <div className="flex items-center bg-white shadow-sm p-4 rounded-lg space-x-3">
+          <FaPhone className="text-blue-500" />
           <input
             type="text"
             name="phone"
             value={formData.phone}
             onChange={handleInputChange}
-            className="text-gray-700 font-medium bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
+            className="flex-1 border-none bg-transparent text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            placeholder="Enter phone"
           />
         </div>
 
         {/* Address */}
-        <div className="flex items-center space-x-3">
-          <FaMapMarkerAlt className="text-gray-600" />
+        <div className="flex items-center bg-white shadow-sm p-4 rounded-lg space-x-3">
+          <FaMapMarkerAlt className="text-blue-500" />
           <input
             type="text"
             name="address"
             value={formData.address}
             onChange={handleInputChange}
-            className="text-gray-700 font-medium bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
+            className="flex-1 border-none bg-transparent text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            placeholder="Enter address"
           />
         </div>
+      </div>
 
-        {/* Vehicle Type */}
-        <div className="flex items-center space-x-3">
-          <FaTruck className="text-gray-600" />
-          <input
-            type="text"
-            name="vehicleType"
-            value={formData.vehicleType}
-            onChange={handleInputChange}
-            className="text-gray-700 font-medium bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        {/* Update Button */}
+      {/* Update Button */}
+      <div className="mt-6 text-center">
         <button
           onClick={handleUpdateProfile}
-          className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          className="px-6 py-2 bg-blue-500 text-white font-bold rounded-lg shadow hover:bg-blue-600 transition duration-200"
         >
           Update Profile
         </button>

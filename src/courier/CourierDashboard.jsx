@@ -10,6 +10,7 @@ import { BiLogOut } from "react-icons/bi"; // Importing Logout icon
 import { useDispatch } from "react-redux";
 import { courierClear } from "../actions/courierActions";
 import { useNavigate } from "react-router-dom";
+import ViewImage from "./Utils/ViewImage";
 
 const CourierDashboard = ({ children }) => {
   const [showStoreManagement, setShowStoreManagement] = useState(false);
@@ -17,6 +18,7 @@ const CourierDashboard = ({ children }) => {
   const [showManageDeliveries, setShowManageDeliveries] = useState(false); // New state for Manage Deliveries
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
 
   const handleLogout = () => {
     dispatch(courierClear());
@@ -137,12 +139,7 @@ const CourierDashboard = ({ children }) => {
                 <FaBell className="text-xl" />
               </button>
             </div>
-            {/* Profile Picture */}
-            <img
-              src={""}
-              alt="Profile"
-              className="w-10 h-10 rounded-full border-2 border-gray-600"
-            />
+                        <ViewImage/>
           </div>
         </header>
 

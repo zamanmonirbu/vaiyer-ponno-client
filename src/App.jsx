@@ -55,6 +55,8 @@ import DeliveryAssignments from "./DeliveryMan/utilsDeliveryMan/DeliveryAssignme
 import CompletedDeliveries from "./DeliveryMan/utilsDeliveryMan/CompletedDeliveries";
 import AcceptedDeliveries from "./DeliveryMan/utilsDeliveryMan/AcceptedDeliveries";
 import UnableToDeliver from "./DeliveryMan/utilsDeliveryMan/UnableToDeliver";
+import DeliveryManProfile from "./DeliveryMan/utilsDeliveryMan/DeliveryManProfile";
+import SellerDashboard from "./components/TestData/SellerDashboard";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -64,6 +66,8 @@ function App() {
   const { deliveryManInfo } = useSelector((state) => state.deliveryMan);
   const location = useLocation();
 
+  console.log(courierInfo);
+
   return (
     <Routes>
       <Route
@@ -71,6 +75,15 @@ function App() {
         element={
           <AuthLayout>
             <SellerLogin />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/seller/login/test"
+        element={
+          <AuthLayout>
+            {/* <SellerLogin /> */}
+            <SellerDashboard/>
           </AuthLayout>
         }
       />
@@ -583,6 +596,20 @@ function App() {
         }
       />
 
+      <Route
+        path="/deliveryMan/dashboard/profile"
+        element={
+          deliveryManInfo ? (
+            <DashboardDeliveryMan>
+              <DeliveryManProfile
+                deliveryManId={deliveryManInfo?.deliveryMan?._id}
+              />
+            </DashboardDeliveryMan>
+          ) : (
+            <Navigate to="/courier/login" />
+          )
+        }
+      />
       {/* Fallback Route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
