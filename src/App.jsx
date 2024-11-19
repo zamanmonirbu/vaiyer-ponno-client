@@ -56,7 +56,7 @@ import CompletedDeliveries from "./DeliveryMan/utilsDeliveryMan/CompletedDeliver
 import AcceptedDeliveries from "./DeliveryMan/utilsDeliveryMan/AcceptedDeliveries";
 import UnableToDeliver from "./DeliveryMan/utilsDeliveryMan/UnableToDeliver";
 import DeliveryManProfile from "./DeliveryMan/utilsDeliveryMan/DeliveryManProfile";
-import SellerDashboard from "./components/TestData/SellerDashboard";
+// import SellerDashboard from "./components/TestData/SellerDashboard";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -65,8 +65,6 @@ function App() {
   const { courierInfo } = useSelector((state) => state.courier);
   const { deliveryManInfo } = useSelector((state) => state.deliveryMan);
   const location = useLocation();
-
-  console.log(courierInfo);
 
   return (
     <Routes>
@@ -78,15 +76,7 @@ function App() {
           </AuthLayout>
         }
       />
-      <Route
-        path="/seller/login/test"
-        element={
-          <AuthLayout>
-            {/* <SellerLogin /> */}
-            <SellerDashboard/>
-          </AuthLayout>
-        }
-      />
+
       <Route
         path="/seller/register"
         element={

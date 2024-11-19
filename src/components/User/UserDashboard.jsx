@@ -95,7 +95,7 @@ const UserDashboard = () => {
 
   return (
     <div>
-      <div className="mx-auto bg-gray-100 shadow-xl rounded-lg overflow-hidden my-4 p-6">
+      <div className="mx-auto bg-gray-100 shadow-xl rounded-lg overflow-hidden my-4 p-6 max-w-[50%]">
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
@@ -103,8 +103,9 @@ const UserDashboard = () => {
         ) : (
           <>
             <div className="flex items-center justify-center p-4">
+              
               <img
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-24 h-24 rounded-full object-cover border-blue-500 shadow-lg"
                 src={imageUrl || "https://via.placeholder.com/150"}
                 alt={firstName}
               />

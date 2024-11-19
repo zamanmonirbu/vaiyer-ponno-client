@@ -29,7 +29,7 @@ const AcceptOrders = ({ courierId }) => {
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
       <div className="w-full max-w-5xl bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-          Accepted Orders
+          Accepted Orders by courier
         </h1>
 
         {loading ? (

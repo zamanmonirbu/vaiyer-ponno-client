@@ -7,8 +7,12 @@ import { markOrderAsCompleted } from "../../actions/orderAction";
 const AcceptedDeliveries = ({ deliveryManId }) => {
   const dispatch = useDispatch();
 
-  const { loading, assignments = [], error } = useSelector((state) => state.deliveryMan);
-  const { specificOrder } = useSelector((state) => state.orders); // Track order completion
+  const {
+    loading,
+    assignments = [],
+    error,
+  } = useSelector((state) => state.deliveryMan);
+  const { specificOrder } = useSelector((state) => state.orders); 
 
   useEffect(() => {
     dispatch(fetchAssignedOrders(deliveryManId));
@@ -38,7 +42,9 @@ const AcceptedDeliveries = ({ deliveryManId }) => {
               <p>Delivery Notes: {delivery?.notes || "No notes provided"}</p>
               <p>
                 Total Amount:{" "}
-                <span className="font-semibold">BDT {delivery?.orderId?.totalAmount}</span>
+                <span className="font-semibold">
+                  BDT {delivery?.orderId?.totalAmount}
+                </span>
               </p>
               <p>
                 Products:{" "}

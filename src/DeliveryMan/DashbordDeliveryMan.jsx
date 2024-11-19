@@ -9,6 +9,7 @@ import { BiLogOut } from "react-icons/bi"; // Importing Logout icon
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearDeliveryManData } from "../actions/courierToDeliveryManActions";
+import DeliveryManImage from "./utilsDeliveryMan/DeveryManImage";
 
 
 const DashboardDeliveryMan = ({ children }) => {
@@ -116,11 +117,12 @@ const DashboardDeliveryMan = ({ children }) => {
               </button>
             </div>
             {/* Profile Picture */}
-            <img
+            <DeliveryManImage/>
+            {/* <img
               src={""}
               alt="Profile"
               className="w-10 h-10 rounded-full border-2 border-gray-600"
-            />
+            /> */}
           </div>
         </header>
 

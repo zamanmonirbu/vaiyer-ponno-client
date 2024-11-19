@@ -1,27 +1,55 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { FaIdCard, FaPhone, FaEnvelope, FaMapMarkerAlt, FaTruck, FaClipboardList } from "react-icons/fa";
-import { fetchDeliveryManProfile,updateDeliveryManProfile } from "../../actions/courierToDeliveryManActions";
-
+import {
+  FaIdCard,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaTruck,
+  FaClipboardList,
+} from "react-icons/fa";
+import {
+  fetchDeliveryManProfile,
+  updateDeliveryManProfile,
+} from "../../actions/courierToDeliveryManActions";
+import { uploadImageToImgBB } from "../../actions/imageService";
 
 const DeliveryManProfile = ({ deliveryManId }) => {
   const { profile } = useSelector((state) => state.deliveryMan);
   const dispatch = useDispatch();
 
-  console.log(profile)
+  // console.log(profile)
 
   useEffect(() => {
     dispatch(fetchDeliveryManProfile(deliveryManId));
   }, [dispatch, deliveryManId]);
 
   const [formData, setFormData] = useState({
-    firstName: profile?.firstName || "",
-    lastName: profile?.lastName || "",
-    phone: profile?.phone || "",
-    email: profile?.email || "",
-    address: profile?.address || "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    address: "",
+    profilePicture: "",
   });
+
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        firstName: profile.firstName || "",
+        lastName: profile.lastName || "",
+        phone: profile.phone || "",
+        email: profile.email || "",
+        address: profile.address || "",
+        profilePicture: profile.profilePicture || "",
+      });
+      setImagePreview(profile.profilePicture || "");
+    }
+  }, [profile]);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -30,33 +58,76 @@ const DeliveryManProfile = ({ deliveryManId }) => {
     });
   };
 
-  const handleUpdateProfile = () => {
-    dispatch(updateDeliveryManProfile(deliveryManId, formData));
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Generate a unique image name
+      const randomNineDigitNumber = Math.floor(100000000 + Math.random() * 900000000);
+      const newImageName = `${randomNineDigitNumber}-${file.name}`;
+
+      // Upload image to ImgBB
+      const uploadedUrl = await uploadImageToImgBB(file, newImageName);
+      if (uploadedUrl) {
+        setImagePreview(uploadedUrl); // Update preview
+        setFormData((prevState) => ({
+          ...prevState,
+          profilePicture: uploadedUrl,
+        }));
+      } else {
+        alert("Image upload failed. Please try again.");
+      }
+    }
   };
 
-  useEffect(() => {
-    if (profile) {
-      setFormData({
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        phone: profile.phone,
-        email: profile.email,
-        address: profile.address,
-      });
+  const handleUpdateProfile = () => {
+    if (!formData.profilePicture) {
+      alert("Please upload a profile picture before updating the profile.");
+      return;
     }
-  }, [profile]);
+    dispatch(updateDeliveryManProfile(deliveryManId, formData));
+  };
 
   return (
     <div className="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-lg">
       {/* Profile Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-blue-600">{`${profile?.firstName || "Delivery"} ${profile?.lastName || "Profile"}`}</h1>
+        <h1 className="text-4xl font-bold text-blue-600">{`${formData.firstName || "Delivery"} ${
+          formData.lastName || "Profile"
+        }`}</h1>
         <p className="text-gray-600">Dedicated to ensuring timely and safe deliveries.</p>
+      </div>
+
+      {/* Profile Picture */}
+      <div className="text-center mb-6">
+        <div className="w-32 h-32 mx-auto mb-4">
+          
+        {profile.image &&
+            <img
+              src={profile.image}
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover border-4 border-blue-500"
+            />
+        }
+
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover border-4 border-blue-500"
+            />
+          )}
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="block mx-auto text-sm text-gray-600"
+        />
       </div>
 
       {/* Profile Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Name */}
+        {/* First Name */}
         <div className="flex items-center space-x-3">
           <FaIdCard className="text-blue-500 text-xl" />
           <input
@@ -68,6 +139,8 @@ const DeliveryManProfile = ({ deliveryManId }) => {
             className="text-gray-700 w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
           />
         </div>
+
+        {/* Last Name */}
         <div className="flex items-center space-x-3">
           <FaIdCard className="text-blue-500 text-xl" />
           <input
@@ -126,7 +199,7 @@ const DeliveryManProfile = ({ deliveryManId }) => {
         <div className="flex items-center space-x-3 mb-4">
           <FaTruck className="text-blue-500 text-xl" />
           <p className="text-gray-700">
-            <strong>Vehicle Type:</strong> {profile?.vehicleType.name || "Not Assigned"}
+            <strong>Vehicle Type:</strong> {profile?.vehicleType?.name || "Not Assigned"}
           </p>
         </div>
         <div className="flex items-center space-x-3">

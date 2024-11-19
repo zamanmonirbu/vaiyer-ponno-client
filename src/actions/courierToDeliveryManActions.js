@@ -92,6 +92,8 @@ export const updateDeliveryManProfile = (id, profileData) => async (dispatch) =>
   try {
     dispatch({ type: DELIVERYMAN_UPDATE_PROFILE_REQUEST });
     const { data } = await axiosInstance.put(`/api/deliveryman/profile/${id}`, profileData);
+
+    console.log(profileData)
     dispatch({ type: DELIVERYMAN_UPDATE_PROFILE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

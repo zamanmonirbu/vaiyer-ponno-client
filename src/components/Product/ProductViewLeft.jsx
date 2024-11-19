@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 const ProductViewLeft = ({ mainImageView, videoUrl, subImages }) => {
   const [mainImage, setMainImage] = useState(mainImageView);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Synchronize mainImage with mainImageView when mainImageView prop changes
   useEffect(() => {
@@ -11,6 +12,16 @@ const ProductViewLeft = ({ mainImageView, videoUrl, subImages }) => {
 
   const handleImageClick = (image) => {
     setMainImage(image);
+  };
+
+  // Function to extract YouTube video ID and generate embed URL
+  const getYouTubeEmbedUrl = (url) => {
+    const videoId = url.split("v=")[1]?.split("&")[0]; // Extract video ID
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
   };
 
   return (
@@ -26,17 +37,26 @@ const ProductViewLeft = ({ mainImageView, videoUrl, subImages }) => {
             onClick={() => handleImageClick(image)}
           />
         ))}
-        {/* Embed YouTube Video */}
-        <div className="relative">
-          <iframe
-            className="w-32 h-48 rounded-lg"
-            src={videoUrl}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
+        {/* Video Thumbnail */}
+        {videoUrl && (
+          <div className="relative cursor-pointer" onClick={toggleModal}>
+            <img
+              className="w-32 h-48 rounded-lg object-cover"
+              src={`https://img.youtube.com/vi/${videoUrl.split("v=")[1]?.split("&")[0]}/hqdefault.jpg`}
+              alt="Video thumbnail"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-white"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Right Side: Main Image */}
@@ -49,6 +69,43 @@ const ProductViewLeft = ({ mainImageView, videoUrl, subImages }) => {
           />
         </div>
       </div>
+
+      {/* Modal for Video */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="relative bg-white rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
+            {/* Close Button */}
+            <button
+              className="absolute top-3 right-3 text-black text-2xl"
+              onClick={toggleModal}
+            >
+              &times;
+            </button>
+
+            {/* Modal Content */}
+            <div className="p-4">
+              <iframe
+                className="w-full h-64 md:h-96 rounded-lg"
+                src={`${getYouTubeEmbedUrl(videoUrl)}?autoplay=1&controls=1`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+
+              {/* Cancel Button */}
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={toggleModal}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

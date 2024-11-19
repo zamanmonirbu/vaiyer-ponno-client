@@ -129,6 +129,7 @@ export const markOrderAsCompleted = (orderId) => async (dispatch) => {
   try {
     dispatch({ type: ORDER_REQUEST });
     const { data } = await axiosInstance.put(`/api/orders/${orderId}/complete`);
+    console.log(data)
     dispatch({ type: GET_SPECIFIC_PRODUCTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: ORDER_FAIL, payload: error.message });
