@@ -525,7 +525,7 @@ function App() {
               <ViewHello />
             </DashboardDeliveryMan>
           ) : (
-            <Navigate to="/courier/login" />
+            <Navigate to="/deliveryMan/login" />
           )
         }
       />
@@ -539,7 +539,7 @@ function App() {
               />
             </DashboardDeliveryMan>
           ) : (
-            <Navigate to="/courier/login" />
+            <Navigate to="/deliveryMan/login" />
           )
         }
       />
@@ -553,7 +553,7 @@ function App() {
               />
             </DashboardDeliveryMan>
           ) : (
-            <Navigate to="/courier/login" />
+            <Navigate to="/deliveryMan/login" />
           )
         }
       />
@@ -567,7 +567,7 @@ function App() {
               />
             </DashboardDeliveryMan>
           ) : (
-            <Navigate to="/courier/login" />
+            <Navigate to="/deliveryMan/login" />
           )
         }
       />
@@ -581,7 +581,7 @@ function App() {
               />
             </DashboardDeliveryMan>
           ) : (
-            <Navigate to="/courier/login" />
+            <Navigate to="/deliveryMan/login" />
           )
         }
       />
@@ -596,7 +596,7 @@ function App() {
               />
             </DashboardDeliveryMan>
           ) : (
-            <Navigate to="/courier/login" />
+            <Navigate to="/deliveryMan/login" />
           )
         }
       />

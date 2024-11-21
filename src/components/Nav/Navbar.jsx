@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiShoppingCart, FiMapPin } from "react-icons/fi";
+import { FiShoppingCart, FiMapPin, FiHome } from "react-icons/fi";
+
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../actions/categoryActions";
 import { fetchLocation } from "../../actions/locationActions";
@@ -9,10 +10,9 @@ import ProductSearch from "../../pages/ProductSearch";
 import "./Nav.css";
 import { SiGooglegemini } from "react-icons/si";
 
-
 const Navbar = () => {
   const dispatch = useDispatch();
-  
+
   const { cartItems } = useSelector((state) => state.cart);
   const { userProfile } = useSelector((state) => state.user);
 
@@ -47,6 +47,11 @@ const Navbar = () => {
     <div className="navbar bg-gray-900 p-2 flex justify-between items-center md:flex-row flex-col">
       {/* Left Section */}
       <div className="flex items-center space-x-4 md:w-4/5 w-full mb-2 md:mb-0">
+        {/* Home Icon */}
+        <Link to={"/"} className="flex items-center hover:text-yellow-400 text-white space-x-2">
+          <FiHome className="text-3xl" />
+          {/* <span className="hidden sm:block">Home</span> */}
+        </Link>
         {/* Location and Search Bar */}
         <div className="flex items-center md:space-x-8 w-full">
           <Link to={"/"}>
@@ -75,14 +80,13 @@ const Navbar = () => {
         <div className="hover:bg-yellow-400 rounded-md hover:text-black p-1 text-center flex items-center space-x-2">
           <Link to={'/suggest/product/with/ai'} className="flex items-center">
             <SiGooglegemini className="w-6 h-6" />
-            {/* <span className="ml-1">Ai</span> */}
           </Link>
         </div>
         <div className="hover:bg-yellow-400 rounded-md hover:text-black p-1 text-center">
           <Link to="/user/dashboard">
             <span className="block">
               Hello,
-              <br /> 
+              <br />
               {userProfile ? <p>{userProfile.firstName}</p> : <p>Sign in</p>}
             </span>
           </Link>
