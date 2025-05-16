@@ -1,15 +1,15 @@
-import HomeNotificationBar from "../../pages/HomeNotificationBar";
-import MenuBar from "./MenuBar";
-import Navbar from "./Navbar";
+import HomeNotificationBar from "../../pages/HomeNotificationBar"
+import MenuBar from "./MenuBar"
+import Navbar from "./Navbar"
 
 const AllNavSections = () => {
   return (
-    <div>
+    <header className="sticky top-0 z-50 w-full">
       <HomeNotificationBar />
       <Navbar />
       <MenuBar />
-    </div>
-  );
-};
+    </header>
+  )
+}
 
-export default AllNavSections;
+export default AllNavSections

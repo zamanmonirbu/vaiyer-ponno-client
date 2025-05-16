@@ -1,16 +1,16 @@
 // BreadcrumbComponent.js
-import { Breadcrumb } from "antd";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { Breadcrumb } from "antd"
+import { Link } from "react-router-dom"
+import PropTypes from "prop-types"
 
 const BreadcrumbComponent = ({ items }) => {
   return (
-    <div className="py-2 font-semi-bold px-12 bg-[#e6eeee]">
-      <Breadcrumb>
+    <div className="py-2 px-3 sm:px-6 md:px-12 bg-[#e6eeee] overflow-x-auto whitespace-nowrap">
+      <Breadcrumb className="text-sm sm:text-base">
         {items.map((item, index) => (
           <Breadcrumb.Item key={index}>
             {item.link ? (
-              <Link to={item.link} className="text-black hover:text-gray-200 underline">
+              <Link to={item.link} className="text-black hover:text-gray-600 hover:underline">
                 {item.label}
               </Link>
             ) : (
@@ -20,17 +20,17 @@ const BreadcrumbComponent = ({ items }) => {
         ))}
       </Breadcrumb>
     </div>
-  );
-};
+  )
+}
 
 // Define prop types for validation
 BreadcrumbComponent.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      label: PropTypes.string.isRequired, // Text to display
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired, // Text or node to display
       link: PropTypes.string, // Link path; if undefined, displays as plain text
-    })
+    }),
   ).isRequired,
-};
+}
 
-export default BreadcrumbComponent;
+export default BreadcrumbComponent

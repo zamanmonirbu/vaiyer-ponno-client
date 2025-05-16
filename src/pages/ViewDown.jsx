@@ -1,14 +1,13 @@
-import Footer from "../components/Utilities/Footer";
-import TextEffect from "../components/Utilities/TextEffect";
-
+import Footer from "../components/Utilities/Footer"
+import TextEffect from "../components/Utilities/TextEffect"
 
 const ViewDown = () => {
-    return (
-        <div>
-            <TextEffect/>
-            <Footer/>
-        </div>
-    );
-};
+  return (
+    <footer className="mt-auto">
+      <TextEffect />
+      <Footer />
+    </footer>
+  )
+}
 
-export default ViewDown;
+export default ViewDown
