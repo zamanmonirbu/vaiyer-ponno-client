@@ -140,7 +140,7 @@ const ViewSpecificProduct = ({ product }) => {
         </div>
       </div>
 
-      // Divider for mobile view
+      // Divider for mobile 
 
       {/* Mobile Layout */}
       <div className="md:hidden">
